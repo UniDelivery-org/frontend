@@ -1,1 +1,101 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme{
+  --color-uni-50: #f2fcf0;
+  --color-uni-100: #e1f8dc;
+  --color-uni-300: #b2edaa;
+  --color-uni-500: #65d654;
+  --color-uni-600: #46b436;
+  --color-uni-900: #143310;
+  --color-uni-950: #0a1f08;
+
+  --color-gray-50:  var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+  --color-gray-950: var(--gray-950);
+}
+:root {
+  --primary-color: #b7e41d;
+  --bg-color: #f3f4f6;
+
+    --gray-50:  #f5f5f5;
+    --gray-100: #e6e6e6;
+    --gray-200: #d1d1d1;
+    --gray-300: #b3b3b3;
+    --gray-400: #8c8c8c;
+    --gray-500: #666666;
+    --gray-600: #404040;
+    --gray-700: #282828;
+    --gray-800: #1f1f1f;
+    --gray-900: #121212;
+    --gray-950: #080808;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glass-dark {
+  background: rgba(17, 24, 39, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Bottom Sheet Animation */
+.bottom-sheet {
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+@keyframes shine {
+  0% { transform: translateX(-200%) skewX(-12deg); }
+  100% { transform: translateX(300%) skewX(-12deg); }
+}
+[data-theme="dark"]{
+  --color-gray-50: var(--gray-950);
+  --color-gray-100: var(--gray-900);
+  --color-gray-200: var(--gray-800);
+  --color-gray-300: var(--gray-700);
+  --color-gray-400: var(--gray-600);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-400);
+  --color-gray-700: var(--gray-300);
+  --color-gray-800: var(--gray-200);
+  --color-gray-900: var(--gray-100);
+  --color-gray-950: var(--gray-50);
+}
