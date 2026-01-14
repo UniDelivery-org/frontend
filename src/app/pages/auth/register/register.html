@@ -1,0 +1,151 @@
+<div class="w-full max-w-md mx-auto relative group">
+  
+  <!-- BACKGROUND GLOW (Subtle Green Blob) -->
+  <div class="absolute -inset-1 bg-linear-to-r from-uni-600 to-uni-400 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+
+  <!-- MAIN CARD -->
+  <div class="relative bg-gray-900 ring-1 ring-white/10 rounded-2xl p-8 shadow-2xl backdrop-blur-xl">
+    
+    <!-- HEADER -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-black text-white tracking-tight">Create Account</h2>
+      <p class="mt-2 text-sm text-gray-400">Join the UniDelivery network today</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+      
+      <!-- ROLE SELECTION (Visual Cards) -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <!-- Sender Role -->
+        <button 
+          type="button" 
+          (click)="setRole('SENDER')"
+          class="relative p-4 rounded-xl border-2 text-left transition-all duration-300 group/role overflow-hidden"
+          [ngClass]="selectedRole === 'SENDER' 
+            ? 'border-uni-500 bg-uni-500/10 shadow-[0_0_20px_rgba(101,214,84,0.2)]' 
+            : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'"
+        >
+          <div class="relative z-10 flex flex-col items-center justify-center gap-2">
+            <lucide-icon [img]="Package" [class]="selectedRole === 'SENDER' ? 'text-uni-500' : 'text-gray-400'" [size]="28"></lucide-icon>
+            <span class="text-xs font-bold uppercase tracking-wider" [class]="selectedRole === 'SENDER' ? 'text-white' : 'text-gray-400'">Sender</span>
+          </div>
+          <!-- Selection Indicator -->
+          <div *ngIf="selectedRole === 'SENDER'" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-uni-500 shadow-[0_0_8px_#65d654]"></div>
+        </button>
+
+        <!-- Courier Role -->
+        <button 
+          type="button" 
+          (click)="setRole('COURIER')"
+          class="relative p-4 rounded-xl border-2 text-left transition-all duration-300 group/role overflow-hidden"
+          [ngClass]="selectedRole === 'COURIER' 
+            ? 'border-uni-500 bg-uni-500/10 shadow-[0_0_20px_rgba(101,214,84,0.2)]' 
+            : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'"
+        >
+          <div class="relative z-10 flex flex-col items-center justify-center gap-2">
+            <lucide-icon [img]="Car" [class]="selectedRole === 'COURIER' ? 'text-uni-500' : 'text-gray-400'" [size]="28"></lucide-icon>
+            <span class="text-xs font-bold uppercase tracking-wider" [class]="selectedRole === 'COURIER' ? 'text-white' : 'text-gray-400'">Courier</span>
+          </div>
+          <!-- Selection Indicator -->
+          <div *ngIf="selectedRole === 'COURIER'" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-uni-500 shadow-[0_0_8px_#65d654]"></div>
+        </button>
+      </div>
+
+      <!-- INPUT: Name -->
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+        <div class="relative group/input">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-uni-500 transition-colors">
+            <lucide-icon [img]="User" [size]="18"></lucide-icon>
+          </div>
+          <input 
+            type="text" 
+            formControlName="name" 
+            class="block w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all font-medium"
+            placeholder="John Doe"
+          >
+        </div>
+      </div>
+
+      <!-- INPUT: Email -->
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+        <div class="relative group/input">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-uni-500 transition-colors">
+            <lucide-icon [img]="Mail" [size]="18"></lucide-icon>
+          </div>
+          <input 
+            type="email" 
+            formControlName="email" 
+            class="block w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all font-medium"
+            placeholder="name@example.com"
+          >
+        </div>
+      </div>
+
+       <!-- INPUT: Phone -->
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
+        <div class="relative group/input">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-uni-500 transition-colors">
+            <lucide-icon [img]="Phone" [size]="18"></lucide-icon>
+          </div>
+          <input 
+            type="tel" 
+            formControlName="phone" 
+            class="block w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all font-medium"
+            placeholder="+212 600 000 000"
+          >
+        </div>
+      </div>
+
+      <!-- INPUT: Password -->
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Password</label>
+        <div class="relative group/input">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-uni-500 transition-colors">
+            <lucide-icon [img]="Lock" [size]="18"></lucide-icon>
+          </div>
+          <input 
+            type="password" 
+            formControlName="password" 
+            class="block w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all font-medium"
+            placeholder="••••••••"
+          >
+        </div>
+        <!-- Simple Strength Hint -->
+        <div class="flex gap-1 mt-2 px-1">
+            <div class="h-1 flex-1 rounded-full bg-uni-500"></div>
+            <div class="h-1 flex-1 rounded-full bg-uni-500/30"></div>
+            <div class="h-1 flex-1 rounded-full bg-gray-700"></div>
+            <div class="h-1 flex-1 rounded-full bg-gray-700"></div>
+        </div>
+      </div>
+
+      <!-- SUBMIT BUTTON -->
+      <button 
+        type="submit" 
+        [disabled]="registerForm.invalid || isLoading"
+        class="group relative w-full flex justify-center py-4 px-4 border border-transparent rounded-xl text-sm font-black text-uni-950 bg-uni-500 hover:bg-uni-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-uni-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_0_20px_rgba(101,214,84,0.1)] hover:shadow-[0_0_30px_rgba(101,214,84,0.4)] active:scale-[0.98] mt-2"
+      >
+        <span *ngIf="!isLoading" class="flex items-center gap-2">
+          Create Account <lucide-icon [img]="ArrowRight" [size]="18" class="group-hover:translate-x-1 transition-transform"></lucide-icon>
+        </span>
+        <span *ngIf="isLoading" class="flex items-center gap-2">
+          <svg class="animate-spin h-5 w-5 text-uni-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </span>
+      </button>
+
+      <!-- LOGIN LINK -->
+      <div class="text-center mt-6">
+        <p class="text-sm text-gray-500">
+          Already have an account? 
+          <a routerLink="/auth/login" class="font-bold text-white hover:text-uni-500 transition-colors">Sign in</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
