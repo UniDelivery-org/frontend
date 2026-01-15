@@ -1,0 +1,93 @@
+<div class="w-full max-w-md mx-auto relative group">
+  
+  <!-- BACKGROUND GLOW EFFECT (Subtle Green Blob behind form) -->
+  <div class="absolute -inset-1 bg-linear-to-r from-uni-500 to-uni-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+
+  <!-- MAIN CARD -->
+  <div class="relative bg-gray-900 ring-1 ring-white/10 rounded-2xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+    
+    <!-- HEADER -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-uni-500/10 mb-4 text-uni-500 ring-1 ring-uni-500/20">
+        <lucide-icon [img]="User" [size]="24"></lucide-icon>
+      </div>
+      <h2 class="text-3xl font-black text-white tracking-tight">Welcome back</h2>
+      <p class="mt-2 text-sm text-gray-400">Enter your credentials to access your account</p>
+    </div>
+
+    <!-- FORM -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      
+      <!-- Email Field -->
+      <div class="space-y-1">
+        <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Email address</label>
+        <div class="relative group/input">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-uni-500 transition-colors">
+            <lucide-icon [img]="Mail" [size]="18"></lucide-icon>
+          </div>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            class="block w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all duration-300 sm:text-sm font-medium"
+            placeholder="name@example.com"
+          >
+        </div>
+        <!-- Error Msg -->
+        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+           <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid email.
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="space-y-1">
+        <div class="flex items-center justify-between ml-1">
+          <label for="password" class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Password</label>
+          <a href="#" class="text-xs font-bold text-uni-500 hover:text-uni-400 hover:underline transition-colors">Forgot password?</a>
+        </div>
+        <div class="relative group/input">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-uni-500 transition-colors">
+            <lucide-icon [img]="Lock" [size]="18"></lucide-icon>
+          </div>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password"
+            class="block w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all duration-300 sm:text-sm font-medium"
+            placeholder="••••••••"
+          >
+        </div>
+        <!-- Error Msg -->
+        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+          <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Password must be at least 6 characters.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        [disabled]="loginForm.invalid || isLoading"
+        class="group relative w-full flex justify-center py-4 px-4 border border-transparent rounded-xl text-sm font-black text-uni-950 bg-uni-500 hover:bg-uni-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-uni-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_0_20px_rgba(101,214,84,0.1)] hover:shadow-[0_0_30px_rgba(101,214,84,0.4)] active:scale-[0.98]"
+      >
+        <span *ngIf="!isLoading" class="flex items-center gap-2">
+          Sign In <lucide-icon [img]="ArrowRight" [size]="18" class="group-hover:translate-x-1 transition-transform"></lucide-icon>
+        </span>
+        <span *ngIf="isLoading" class="flex items-center gap-2">
+          <svg class="animate-spin h-5 w-5 text-uni-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing...
+        </span>
+      </button>
+
+      <!-- Register Link -->
+      <div class="text-center mt-6">
+        <p class="text-sm text-gray-500">
+          Don't have an account? 
+          <a routerLink="/auth/register" class="font-bold text-white hover:text-uni-500 transition-colors">Sign up for free</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
