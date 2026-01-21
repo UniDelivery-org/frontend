@@ -1,0 +1,144 @@
+<div class="h-full flex flex-col max-w-lg mx-auto w-full">
+  
+  <!-- ===========================
+       HEADER: STATUS & EARNINGS
+       =========================== -->
+  <div class="relative z-10 mb-6">
+    <!-- Background Card -->
+    <div class="bg-gray-900 rounded-3xl p-6 border border-white/5 shadow-2xl relative overflow-hidden group">
+      
+      <!-- Ambient Glow (Changes color based on status) -->
+      <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-[60px] transition-colors duration-500"
+           [ngClass]="isOnline ? 'bg-uni-500/20' : 'bg-red-500/10'"></div>
+
+      <div class="relative z-10 flex justify-between items-center">
+        <!-- Earnings -->
+        <div>
+          <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Today's Earnings</h2>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-black text-white tracking-tight">120.00</span>
+            <span class="text-sm font-bold text-uni-500">DH</span>
+          </div>
+          <div class="flex items-center gap-2 mt-2">
+            <div class="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[10px] font-bold text-gray-400">
+              4 Trips
+            </div>
+            <div class="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[10px] font-bold text-gray-400">
+              2.5 hrs
+            </div>
+          </div>
+        </div>
+
+        <!-- Toggle Button (Big Pill) -->
+        <button 
+          (click)="toggleStatus()"
+          class="relative pl-4 pr-5 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-3 border shadow-lg overflow-hidden active:scale-95"
+          [ngClass]="isOnline 
+            ? 'bg-uni-950 border-uni-500 text-uni-500 shadow-uni-500/20' 
+            : 'bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-750'">
+          
+          <!-- Indicator Light -->
+          <span class="relative flex h-3 w-3">
+            <span *ngIf="isOnline" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-uni-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3" [ngClass]="isOnline ? 'bg-uni-500' : 'bg-gray-500'"></span>
+          </span>
+          
+          <span class="text-xs font-black tracking-wider uppercase">
+            {{ isOnline ? 'Online' : 'Offline' }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       JOB FEED CONTAINER
+       =========================== -->
+  <div class="flex-1 overflow-y-auto pb-32 relative min-h-[400px]">
+    
+    <!-- STATE: OFFLINE (Radar Animation) -->
+    <div *ngIf="!isOnline" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 animate-fade-in">
+      <div class="relative w-32 h-32 mb-8 flex items-center justify-center">
+        <!-- Static Rings -->
+        <div class="absolute inset-0 border-2 border-gray-800 rounded-full"></div>
+        <div class="absolute inset-4 border border-gray-800 rounded-full opacity-50"></div>
+        <!-- Icon -->
+        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center text-gray-500 z-10">
+          <lucide-icon [img]="Power" [size]="32"></lucide-icon>
+        </div>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">You are Offline</h3>
+      <p class="text-sm text-gray-500 max-w-[200px]">Go online to start receiving delivery requests in your area.</p>
+    </div>
+
+    <!-- STATE: ONLINE (Job Feed) -->
+    <div *ngIf="isOnline" class="space-y-5 px-1">
+      
+      <!-- Job Card -->
+      <div #jobCard *ngFor="let req of requests" class="bg-gray-900 rounded-3xl p-5 border border-white/5 relative shadow-xl overflow-hidden group">
+        
+        <!-- Header: User & Distance -->
+        <div class="flex justify-between items-start mb-5 relative z-10">
+          <div class="flex items-center gap-3">
+             <div class="w-12 h-12 rounded-2xl bg-gray-800 flex items-center justify-center font-bold text-xl text-white border border-white/5">
+               {{req.passenger.charAt(0)}}
+             </div>
+             <div>
+               <h3 class="font-bold text-white text-lg leading-tight">{{req.passenger}}</h3>
+               <div class="flex items-center gap-1 text-xs font-medium text-gray-400 mt-1">
+                 <lucide-icon [img]="Navigation" [size]="12"></lucide-icon> {{req.distance}} away
+               </div>
+             </div>
+          </div>
+          <!-- Price Badge -->
+          <div class="bg-uni-500/10 border border-uni-500/20 px-3 py-1.5 rounded-lg">
+             <span class="block text-xl font-black text-uni-500 leading-none">{{req.price}} <span class="text-[10px] font-bold">DH</span></span>
+          </div>
+        </div>
+
+        <!-- Route Visual -->
+        <div class="relative pl-4 space-y-6 mb-6 z-10">
+           <!-- Connecting Line -->
+           <div class="absolute left-[21px] top-3 bottom-4 w-0.5 border-l-2 border-dashed border-gray-700"></div>
+
+           <!-- Pickup -->
+           <div class="relative flex items-start gap-4">
+             <div class="w-2.5 h-2.5 mt-1.5 rounded-full bg-uni-500 shadow-[0_0_10px_#65d654] z-10 shrink-0"></div>
+             <div>
+               <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Pickup</p>
+               <p class="text-sm font-bold text-gray-200 leading-tight">{{req.pickup}}</p>
+             </div>
+           </div>
+           
+           <!-- Dropoff -->
+           <div class="relative flex items-start gap-4">
+             <div class="w-2.5 h-2.5 mt-1.5 bg-white z-10 shrink-0 rotate-45"></div>
+             <div>
+               <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Dropoff</p>
+               <p class="text-sm font-bold text-gray-200 leading-tight">{{req.dropoff}}</p>
+             </div>
+           </div>
+        </div>
+
+        <!-- Footer: Actions -->
+        <div class="grid grid-cols-[1fr_2fr] gap-3 relative z-10">
+           <button class="py-4 rounded-xl border border-white/10 font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-colors text-sm">
+             Decline
+           </button>
+           <button (click)="acceptRequest(req.id)" class="py-4 rounded-xl bg-uni-500 font-black text-uni-950 hover:bg-uni-400 shadow-[0_0_20px_rgba(101,214,84,0.3)] transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2">
+             Accept Job <lucide-icon [img]="ArrowRight" [size]="18"></lucide-icon>
+           </button>
+        </div>
+
+      </div>
+
+      <!-- Loading/Searching State (Bottom of feed) -->
+      <div class="flex justify-center py-4">
+        <div class="flex items-center gap-2 text-xs font-bold text-uni-500/50 uppercase tracking-widest animate-pulse">
+           Searching Area...
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

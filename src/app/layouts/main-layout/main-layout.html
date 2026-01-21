@@ -1,0 +1,110 @@
+<div class="min-h-screen bg-uni-950 text-white font-sans selection:bg-uni-500 selection:text-uni-950">
+  
+  <nav class="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5 bg-uni-950/80 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-3 group cursor-pointer">
+          <div class="relative w-10 h-10 flex items-center justify-center bg-uni-500/10 rounded-xl border border-uni-500/20 group-hover:bg-uni-500/20 transition-all">
+            <!-- FIXED SYNTAX -->
+            <lucide-icon [img]="Box" class="text-uni-500" [size]="20"></lucide-icon>
+            <span class="absolute top-2 right-2 flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-uni-500 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-uni-500"></span>
+            </span>
+          </div>
+          <span class="font-black text-xl tracking-tight text-white group-hover:tracking-wide transition-all duration-300">
+            UniDelivery<span class="text-uni-500">.</span>
+          </span>
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden lg:flex items-center gap-2 bg-white/5 px-2 py-1.5 rounded-full border border-white/5 backdrop-blur-md">
+          <a routerLink="/sender/dashboard" routerLinkActive="bg-uni-500 text-uni-950 shadow-[0_0_20px_rgba(101,214,84,0.3)]" 
+             class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-gray-400 hover:text-white transition-all duration-300">
+            <!-- FIXED SYNTAX -->
+            <lucide-icon [img]="Package" [size]="16"></lucide-icon> Sender
+          </a>
+          <a routerLink="/courier/dashboard" routerLinkActive="bg-uni-500 text-uni-950 shadow-[0_0_20px_rgba(101,214,84,0.3)]" 
+             class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-gray-400 hover:text-white transition-all duration-300">
+            <!-- FIXED SYNTAX -->
+            <lucide-icon [img]="Car" [size]="16"></lucide-icon> Courier
+          </a>
+        </div>
+
+        <!-- Right Side -->
+        <div class="flex items-center gap-4">
+          <button class="relative p-2.5 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+            <!-- FIXED SYNTAX -->
+            <lucide-icon [img]="Bell" [size]="20"></lucide-icon>
+            <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-uni-950"></span>
+          </button>
+
+          <div class="flex items-center gap-3 pl-4 border-l border-white/10">
+             <div class="text-right hidden sm:block">
+               <div class="text-sm font-bold text-white">Achraf Sikal</div>
+               <div class="text-[10px] text-uni-500 font-bold uppercase tracking-wider">Verified</div>
+             </div>
+             <div class="relative w-10 h-10 rounded-full p-[2px] bg-linear-to-br from-uni-500 to-gray-800 cursor-pointer hover:scale-105 transition-transform">
+               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Achraf" alt="User" class="w-full h-full rounded-full border-2 border-uni-950 object-cover bg-gray-800">
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <main class="relative pt-24 pb-32 lg:pb-10 px-4 max-w-7xl mx-auto min-h-screen z-0">
+    <div class="fixed inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[32px_32px] pointer-events-none z-[-1]"></div>
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Mobile Floating Dock -->
+  <div class="fixed bottom-6 left-4 right-4 z-50 lg:hidden">
+    <div class="flex justify-between items-center bg-gray-900/90 backdrop-blur-xl border border-white/10 px-2 py-2 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+      
+      <a routerLink="/sender/dashboard" routerLinkActive="text-uni-500 bg-white/5" class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        <div class="relative">
+          <lucide-icon [img]="Package" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
+          <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+        </div>
+        <span class="text-[10px] font-bold">Send</span>
+      </a>
+
+      <a routerLink="/courier/dashboard" routerLinkActive="text-uni-500 bg-white/5" class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        <div class="relative">
+           <lucide-icon [img]="Car" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
+           <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+        </div>
+        <span class="text-[10px] font-bold">Drive</span>
+      </a>
+
+      <!-- FAB -->
+      <div class="relative -top-8 mx-2">
+        <button class="w-16 h-16 bg-uni-500 rounded-full flex items-center justify-center text-uni-950 shadow-[0_0_20px_rgba(101,214,84,0.4)] hover:scale-110 active:scale-95 transition-all border-[6px] border-uni-950">
+          <!-- FIXED SYNTAX -->
+          <lucide-icon [img]="Plus" [size]="32" strokeWidth="3"></lucide-icon>
+        </button>
+      </div>
+
+      <a routerLink="/activity" routerLinkActive="text-uni-500 bg-white/5" class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        <div class="relative">
+           <lucide-icon [img]="Activity" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
+           <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+        </div>
+        <span class="text-[10px] font-bold">Activity</span>
+      </a>
+
+      <a routerLink="/profile" routerLinkActive="text-uni-500 bg-white/5" class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        <div class="relative">
+           <lucide-icon [img]="User" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
+           <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+        </div>
+        <span class="text-[10px] font-bold">Profile</span>
+      </a>
+
+    </div>
+  </div>
+</div>
