@@ -1,0 +1,42 @@
+<div class="max-w-2xl mx-auto w-full space-y-6">
+  
+  <!-- HEADER -->
+  <div>
+    <h1 class="text-3xl font-black text-white tracking-tight">Activity</h1>
+    <p class="text-sm text-gray-400 mt-1">Your recent delivery history.</p>
+  </div>
+
+  <!-- LIST -->
+  <div class="space-y-4">
+    
+    <div #activityItem *ngFor="let item of activities" 
+         class="bg-gray-900 border border-white/5 rounded-2xl p-5 flex items-center justify-between group hover:border-uni-500/30 transition-all hover:bg-white/5 cursor-pointer">
+      
+      <div class="flex items-center gap-4">
+        <!-- Icon/Status -->
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-gray-800"
+          [ngClass]="item.status === 'COMPLETED' ? 'text-uni-500 bg-uni-500/10' : 'text-red-500 bg-red-500/10'">
+          <lucide-icon [img]="item.status === 'COMPLETED' ? Package : XCircle" [size]="24"></lucide-icon>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <h3 class="font-bold text-white group-hover:text-uni-500 transition-colors">{{ item.title }}</h3>
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span>{{ item.id }}</span>
+            <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+            <span>{{ item.date }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price & Arrow -->
+      <div class="flex items-center gap-4">
+        <span class="text-lg font-black text-white">{{ item.price }}</span>
+        <lucide-icon [img]="ChevronRight" [size]="20" class="text-gray-600 group-hover:text-white transition-colors"></lucide-icon>
+      </div>
+
+    </div>
+
+  </div>
+</div>
