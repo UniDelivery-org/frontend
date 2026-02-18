@@ -24,7 +24,9 @@ export const routes: Routes = [
       { path: 'profile', loadComponent: () => import('./pages/profile/profile').then(m => m.ProfileComponent) },
       { path: 'wallet', loadComponent: () => import('./pages/wallet/wallet').then(m => m.WalletComponent) },
       { path: 'activity', loadComponent: () => import('./pages/activity/activity').then(m => m.ActivityComponent) },
-      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.SettingsComponent) }
+      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.SettingsComponent) },
+      { path: 'new-delivery', loadComponent: () => import('./pages/sender/new-delivery/new-delivery').then(m => m.NewDeliveryComponent) },
+      { path: 'delivery/:id', loadComponent: () => import('./pages/shared/delivery-details/delivery-details').then(m => m.DeliveryDetailsComponent) }
     ]
   },
   {
@@ -37,7 +39,9 @@ export const routes: Routes = [
       { path: 'wallet', loadComponent: () => import('./pages/wallet/wallet').then(m => m.WalletComponent) },
       { path: 'documents', loadComponent: () => import('./pages/courier/documents/documents').then(m => m.DocumentsComponent) },
       { path: 'activity', loadComponent: () => import('./pages/activity/activity').then(m => m.ActivityComponent) },
-      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.SettingsComponent) }
+      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.SettingsComponent) },
+      { path: 'vehicles', loadComponent: () => import('./pages/courier/vehicles/vehicles').then(m => m.VehiclesComponent) },
+      { path: 'delivery/:id', loadComponent: () => import('./pages/shared/delivery-details/delivery-details').then(m => m.DeliveryDetailsComponent) }
     ]
   },
   {
@@ -48,7 +52,8 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent) },
       { path: 'verifications', loadComponent: () => import('./pages/admin/verifications/verifications').then(m => m.VerificationsComponent) },
       { path: 'users', loadComponent: () => import('./pages/admin/users/users').then(m => m.Users) },
-      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.SettingsComponent) }
+      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.SettingsComponent) },
+      { path: 'deliveries', loadComponent: () => import('./pages/admin/deliveries/deliveries').then(m => m.AdminDeliveriesComponent) }
     ]
   },
   {
