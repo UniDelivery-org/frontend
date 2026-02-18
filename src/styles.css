@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @theme{
   --color-uni-50: #f2fcf0;
   --color-uni-100: #e1f8dc;
@@ -24,20 +23,21 @@
 :root {
   --primary-color: #b7e41d;
   --bg-color: #f3f4f6;
+  --map-theme: brightness(105%);
 
-    --gray-50:  #f5f5f5;
-    --gray-100: #e6e6e6;
-    --gray-200: #d1d1d1;
-    --gray-300: #b3b3b3;
-    --gray-400: #8c8c8c;
-    --gray-500: #666666;
-    --gray-600: #404040;
-    --gray-700: #282828;
-    --gray-800: #1f1f1f;
-    --gray-900: #121212;
-    --gray-950: #080808;
+  --gray-50:  #f5f5f5;
+  --gray-100: #e6e6e6;
+  --gray-200: #d1d1d1;
+  --gray-300: #b3b3b3;
+  --gray-400: #8c8c8c;
+  --gray-500: #666666;
+  --gray-600: #404040;
+  --gray-700: #282828;
+  --gray-800: #1f1f1f;
+  --gray-900: #121212;
+  --gray-950: #080808;
+
 }
-
 body {
   background-color: var(--bg-color);
   font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
@@ -98,4 +98,8 @@ body {
   --color-gray-800: var(--gray-200);
   --color-gray-900: var(--gray-100);
   --color-gray-950: var(--gray-50);
+  --map-theme: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+.bw-map-tiles {
+  filter: var(--map-theme); 
 }
