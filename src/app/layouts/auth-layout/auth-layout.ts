@@ -9,7 +9,7 @@ import gsap from 'gsap';
   standalone: true,
   imports: [RouterOutlet, CommonModule, LucideAngularModule],
   template: `
-    <div class="min-h-screen flex bg-uni-950 text-white font-sans overflow-hidden selection:bg-uni-500 selection:text-uni-950">
+    <div class="min-h-screen flex bg-uni-950 text-uni-white font-sans overflow-hidden selection:bg-uni-500 selection:text-uni-950">
       
       <!-- LEFT SIDE: Brand & Visuals (Desktop Only) -->
       <div class="hidden lg:flex w-1/2 relative bg-gray-900 items-center justify-center overflow-hidden">
@@ -26,9 +26,9 @@ import gsap from 'gsap';
           
           <!-- Floating UI Element (Mock Notification) -->
           <div class="mb-12 transform -rotate-2 hover:rotate-0 transition-transform duration-500 ease-out cursor-default">
-             <div class="glass-panel p-5 rounded-2xl border border-white/10 bg-gray-900/80 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+             <div class="glass-panel p-5 rounded-2xl border border-uni-white/10 bg-gray-900/80 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
                 <!-- Shine Effect -->
-                <div class="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent skew-x-12 translate-x-[-200%] group-hover:animate-[shine_1.5s_infinite]"></div>
+                <div class="absolute inset-0 bg-linear-to-r from-transparent via-uni-white/5 to-transparent skew-x-12 translate-x-[-200%] group-hover:animate-[shine_1.5s_infinite]"></div>
                 
                 <div class="flex items-center gap-4 relative z-10">
                   <div class="w-12 h-12 rounded-full bg-uni-500/20 flex items-center justify-center border border-uni-500/30 text-uni-500">
@@ -54,7 +54,7 @@ import gsap from 'gsap';
           </div>
 
           <!-- Text -->
-          <h1 class="text-5xl lg:text-6xl font-black mb-6 tracking-tighter leading-[1.1]">
+          <h1 class="text-5xl lg:text-6xl font-uni-black mb-6 tracking-tighter leading-[1.1]">
             Move it <br>
             <span class="text-transparent bg-clip-text bg-linear-to-r from-uni-500 to-white">Your Way.</span>
           </h1>

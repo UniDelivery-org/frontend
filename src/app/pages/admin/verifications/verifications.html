@@ -3,7 +3,7 @@
   <!-- HEADER -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
     <div>
-      <h1 class="text-3xl font-black text-white tracking-tight">Pending Verifications</h1>
+      <h1 class="text-3xl font-uni-black text-uni-white tracking-tight">Pending Verifications</h1>
       <p class="text-sm text-gray-400 mt-1">Review and approve courier documents.</p>
     </div>
 
@@ -12,10 +12,10 @@
       <div class="hidden lg:flex items-center relative w-80 group">
          <lucide-icon [img]="Search" [size]="18" class="absolute left-2 top-1.5 text-gray-500 group-focus-within:text-uni-500 transition-colors"></lucide-icon>
          <input type="text" placeholder="Search by name, ID..." 
-                class="w-full bg-gray-950 border border-white/10 rounded-full py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
+                class="w-full bg-gray-950 border border-uni-white/10 rounded-full py-2.5 pl-11 pr-4 text-sm text-uni-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
       </div>
 
-      <button class="flex items-center gap-2 px-4 py-2.5 bg-gray-900 border border-white/10 rounded-xl hover:bg-white/5 transition-all font-bold text-sm text-gray-300 hover:text-white active:scale-95">
+      <button class="flex items-center gap-2 px-4 py-2.5 bg-gray-900 border border-uni-white/10 rounded-xl hover:bg-uni-white/5 transition-all font-bold text-sm text-gray-300 hover:text-uni-white active:scale-95">
         <lucide-icon [img]="SlidersHorizontal" [size]="18"></lucide-icon>
         Filter
       </button>
@@ -26,14 +26,14 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     
     <div #docCard *ngFor="let doc of docs" 
-         class="group bg-gray-900 rounded-3xl border border-white/5 overflow-hidden hover:border-uni-500/30 transition-all duration-300 shadow-xl shadow-black/20 hover:shadow-uni-500/5">
+         class="group bg-gray-900 rounded-3xl border border-uni-white/5 overflow-hidden hover:border-uni-500/30 transition-all duration-300 shadow-xl shadow-uni-black/20 hover:shadow-uni-500/5">
       
       <!-- Image Preview -->
       <div class="h-52 w-full bg-gray-800 relative overflow-hidden">
         <img [src]="doc.url" alt="Document" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
         
         <!-- Overlay -->
-        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300 backdrop-blur-sm">
+        <div class="absolute inset-0 bg-uni-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300 backdrop-blur-sm">
           <button class="flex items-center gap-2 px-5 py-2.5 bg-uni-500 text-slate-900 rounded-full font-bold text-sm hover:scale-105 active:scale-95 transition-all font-outfit shadow-lg shadow-uni-500/20">
             <lucide-icon [img]="Eye" [size]="18"></lucide-icon>
             Inspect
@@ -42,11 +42,11 @@
 
         <!-- Status Badge -->
         <div class="absolute top-4 right-4">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border shadow-sm backdrop-blur-md"
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-uni-black uppercase tracking-wider border shadow-sm backdrop-blur-md"
             [ngClass]="{
-              'bg-yellow-500/80 text-white border-yellow-400/50': doc.status === 'PENDING',
+              'bg-yellow-500/80 text-uni-white border-yellow-400/50': doc.status === 'PENDING',
               'bg-uni-500/80 text-slate-900 border-uni-400/50': doc.status === 'APPROVED',
-              'bg-red-500/80 text-white border-red-400/50': doc.status === 'REJECTED'
+              'bg-red-500/80 text-uni-white border-red-400/50': doc.status === 'REJECTED'
             }">
             {{doc.status}}
           </span>
@@ -58,17 +58,17 @@
         <div class="flex justify-between items-start mb-4">
           <div>
              <div class="flex items-center gap-2 mb-1">
-                <div class="p-1.5 rounded-lg bg-white/5 text-uni-500">
+                <div class="p-1.5 rounded-lg bg-uni-white/5 text-uni-500">
                     <lucide-icon [img]="FileText" [size]="16"></lucide-icon>
                 </div>
-                <h3 class="font-bold text-lg text-white group-hover:text-uni-500 transition-colors">{{doc.type}}</h3>
+                <h3 class="font-bold text-lg text-uni-white group-hover:text-uni-500 transition-colors">{{doc.type}}</h3>
              </div>
             <p class="text-sm text-gray-400 pl-1">{{doc.user}}</p>
           </div>
         </div>
 
         <!-- Meta -->
-        <div class="flex items-center gap-4 py-4 border-t border-white/5 mb-4 text-xs font-medium text-gray-500">
+        <div class="flex items-center gap-4 py-4 border-t border-uni-white/5 mb-4 text-xs font-medium text-gray-500">
             <div class="flex items-center gap-1.5">
                 <div class="w-1.5 h-1.5 rounded-full bg-uni-500"></div>
                 Submitted {{ doc.date }}

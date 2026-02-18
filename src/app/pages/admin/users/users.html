@@ -3,7 +3,7 @@
   <!-- HEADER -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
     <div>
-      <h1 class="text-3xl font-black text-white tracking-tight">User Management</h1>
+      <h1 class="text-3xl font-uni-black text-uni-white tracking-tight">User Management</h1>
       <p class="text-sm text-gray-400 mt-1">Manage platform users, roles, and permissions.</p>
     </div>
 
@@ -12,10 +12,10 @@
       <div class="hidden lg:flex items-center relative w-80 group">
          <lucide-icon [img]="Search" [size]="18" class="absolute left-2 top-1.5 text-gray-500 group-focus-within:text-uni-500 transition-colors"></lucide-icon>
          <input type="text" placeholder="Search users by name, email..." 
-                class="w-full bg-gray-950 border border-white/10 rounded-full py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
+                class="w-full bg-gray-950 border border-uni-white/10 rounded-full py-2.5 pl-11 pr-4 text-sm text-uni-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
       </div>
 
-      <button class="flex items-center gap-2 px-4 py-2.5 bg-gray-900 border border-white/10 rounded-xl hover:bg-white/5 transition-all font-bold text-sm text-gray-300 hover:text-white active:scale-95">
+      <button class="flex items-center gap-2 px-4 py-2.5 bg-gray-900 border border-uni-white/10 rounded-xl hover:bg-uni-white/5 transition-all font-bold text-sm text-gray-300 hover:text-uni-white active:scale-95">
         <lucide-icon [img]="Filter" [size]="18"></lucide-icon>
         Filter
       </button>
@@ -23,13 +23,13 @@
   </div>
 
   <!-- USERS TABLE -->
-  <div class="bg-gray-900 border border-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-black/20">
+  <div class="bg-gray-900 border border-uni-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-uni-black/20">
     
     <!-- Table Content -->
     <div class="overflow-x-auto">
       <table class="w-full text-left">
         <thead>
-          <tr class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-white/5 bg-gray-900/50 backdrop-blur-sm">
+          <tr class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-uni-white/5 bg-gray-900/50 backdrop-blur-sm">
             <th class="px-6 py-4">User Details</th>
             <th class="px-6 py-4">Role</th>
             <th class="px-6 py-4">Contact</th>
@@ -37,9 +37,9 @@
             <th class="px-6 py-4 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-white/5 text-sm">
+        <tbody class="divide-y divide-uni-white/5 text-sm">
           
-          <tr #tableRow *ngFor="let user of users" class="group hover:bg-white/2 transition-colors">
+          <tr #tableRow *ngFor="let user of users" class="group hover:bg-uni-white/2 transition-colors">
             <!-- User -->
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
@@ -47,7 +47,7 @@
                   <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=random'" alt="" class="rounded-full w-full h-full object-cover">
                 </div>
                 <div>
-                  <div class="font-bold text-white group-hover:text-uni-500 transition-colors">{{ user.name }}</div>
+                  <div class="font-bold text-uni-white group-hover:text-uni-500 transition-colors">{{ user.name }}</div>
                   <div class="text-xs text-gray-500 font-mono mt-0.5">ID: #{{ user.id }}</div>
                 </div>
               </div>
@@ -107,7 +107,7 @@
                     <lucide-icon [img]="Ban" [size]="18"></lucide-icon>
                   }
                 </button>
-                <button class="text-gray-500 hover:text-white p-2 hover:bg-white/5 rounded-lg transition-all border border-transparent hover:border-white/10">
+                <button class="text-gray-500 hover:text-uni-white p-2 hover:bg-uni-white/5 rounded-lg transition-all border border-transparent hover:border-uni-white/10">
                   <lucide-icon [img]="MoreVertical" [size]="18"></lucide-icon>
                 </button>
               </div>
@@ -119,11 +119,11 @@
     </div>
 
     <!-- Pagination (Static for visual) -->
-    <div class="p-4 border-t border-white/5 bg-gray-900/50 flex justify-between items-center text-xs text-gray-500 font-bold uppercase tracking-wider">
+    <div class="p-4 border-t border-uni-white/5 bg-gray-900/50 flex justify-between items-center text-xs text-gray-500 font-bold uppercase tracking-wider">
       <span>Showing 6 of 142 Users</span>
       <div class="flex gap-2">
-        <button class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50">Prev</button>
-        <button class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">Next</button>
+        <button class="px-3 py-1.5 rounded-lg bg-uni-white/5 hover:bg-uni-white/10 transition-colors disabled:opacity-50">Prev</button>
+        <button class="px-3 py-1.5 rounded-lg bg-uni-white/5 hover:bg-uni-white/10 transition-colors">Next</button>
       </div>
     </div>
 

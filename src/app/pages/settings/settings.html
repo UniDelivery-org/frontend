@@ -2,7 +2,7 @@
   
   <!-- HEADER -->
   <div>
-    <h1 class="text-3xl font-black text-white tracking-tight">Settings</h1>
+    <h1 class="text-3xl font-uni-black text-uni-white tracking-tight">Settings</h1>
     <p class="text-sm text-gray-400 mt-1">Manage your account preferences and security.</p>
   </div>
 
@@ -12,20 +12,20 @@
     <div *ngFor="let section of sections" class="space-y-4">
       <h2 class="text-xs font-bold text-gray-500 uppercase tracking-widest pl-2">{{ section.title }}</h2>
       
-      <div class="bg-gray-900 border border-white/5 rounded-3xl overflow-hidden shadow-xl shadow-black/20 divide-y divide-white/5">
+      <div class="bg-gray-900 border border-uni-white/5 rounded-3xl overflow-hidden shadow-xl shadow-uni-black/20 divide-y divide-uni-white/5">
         
         <button *ngFor="let item of section.items" 
-                class="settings-item w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors group text-left">
+                class="settings-item w-full flex items-center justify-between p-5 hover:bg-uni-white/5 transition-colors group text-left">
           <div class="flex items-center gap-4">
             <div class="p-2.5 rounded-xl bg-gray-800 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 transition-colors">
               <lucide-icon [img]="item.icon" [size]="20"></lucide-icon>
             </div>
             <div>
-              <div class="font-bold text-white group-hover:text-uni-500 transition-colors">{{ item.label }}</div>
+              <div class="font-bold text-uni-white group-hover:text-uni-500 transition-colors">{{ item.label }}</div>
               <div class="text-xs text-gray-500 font-medium">{{ item.desc }}</div>
             </div>
           </div>
-          <lucide-icon [img]="ChevronRight" [size]="18" class="text-gray-600 group-hover:text-white transition-colors"></lucide-icon>
+          <lucide-icon [img]="ChevronRight" [size]="18" class="text-gray-600 group-hover:text-uni-white transition-colors"></lucide-icon>
         </button>
 
       </div>
@@ -33,7 +33,7 @@
 
     <!-- LOGOUT SECTION -->
     <div class="pt-4">
-      <button (click)="logout()" class="w-full bg-red-500/10 border border-red-500/20 rounded-3xl p-4 flex items-center justify-center gap-2 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all active:scale-95 shadow-lg shadow-transparent hover:shadow-red-500/20">
+      <button (click)="logout()" class="w-full bg-red-500/10 border border-red-500/20 rounded-3xl p-4 flex items-center justify-center gap-2 text-red-500 font-bold hover:bg-red-500 hover:text-uni-white transition-all active:scale-95 shadow-lg shadow-transparent hover:shadow-red-500/20">
         <lucide-icon [img]="LogOut" [size]="20"></lucide-icon>
         Log Out
       </button>

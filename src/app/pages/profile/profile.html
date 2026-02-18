@@ -4,13 +4,13 @@
   <div class="absolute top-20 left-10 right-10 bottom-10 bg-uni-500/20 blur-[100px] rounded-full pointer-events-none opacity-50"></div>
 
   <!-- MAIN CARD -->
-  <div class="relative bg-gray-900 rounded-3xl border border-white/10 shadow-2xl overflow-hidden backdrop-blur-xl">
+  <div class="relative bg-gray-900 rounded-3xl border border-uni-white/10 shadow-2xl overflow-hidden backdrop-blur-xl">
     
     <!-- HEADER BANNER (Abstract Pattern) -->
     <div class="h-32 w-full bg-linear-to-r from-gray-800 to-uni-950 relative overflow-hidden">
       <div class="absolute inset-0 bg-[radial-gradient(#ffffff10_1px,transparent_1px)] bg-size-[16px_16px] opacity-30"></div>
       <!-- Edit Cover Button (Optional visual) -->
-      <button class="absolute top-4 right-4 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur transition-colors">
+      <button class="absolute top-4 right-4 bg-uni-black/30 hover:bg-uni-black/50 text-uni-white p-2 rounded-full backdrop-blur transition-colors">
          <lucide-icon [img]="Camera" [size]="16"></lucide-icon>
       </button>
     </div>
@@ -26,13 +26,13 @@
           </div>
           
           <!-- Edit Avatar Button -->
-          <button class="absolute bottom-1 right-1 bg-uni-500 text-uni-950 p-2.5 rounded-full shadow-lg shadow-uni-500/40 hover:scale-110 hover:bg-white transition-all duration-300 border-4 border-gray-900 cursor-pointer z-10">
+          <button class="absolute bottom-1 right-1 bg-uni-500 text-uni-950 p-2.5 rounded-full shadow-lg shadow-uni-500/40 hover:scale-110 hover:bg-uni-white transition-all duration-300 border-4 border-gray-900 cursor-pointer z-10">
             <lucide-icon [img]="Camera" [size]="16"></lucide-icon>
           </button>
         </div>
 
         <div class="text-center mt-4">
-          <h3 class="text-2xl font-black text-white flex items-center gap-2 justify-center">
+          <h3 class="text-2xl font-uni-black text-uni-white flex items-center gap-2 justify-center">
             {{user.name}}
             <lucide-icon [img]="BadgeCheck" [size]="20" class="text-uni-500 fill-uni-500/20"></lucide-icon>
           </h3>
@@ -42,19 +42,19 @@
 
       <!-- STATS GRID -->
       <div class="grid grid-cols-3 gap-4 mb-8">
-        <div class="bg-white/5 rounded-2xl p-3 text-center border border-white/5">
+        <div class="bg-uni-white/5 rounded-2xl p-3 text-center border border-uni-white/5">
           <div class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Rating</div>
-          <div class="text-lg font-black text-white flex items-center justify-center gap-1">
+          <div class="text-lg font-uni-black text-uni-white flex items-center justify-center gap-1">
             <lucide-icon [img]="Star" [size]="16" class="text-yellow-500 fill-yellow-500"></lucide-icon> 4.9
           </div>
         </div>
-        <div class="bg-white/5 rounded-2xl p-3 text-center border border-white/5">
+        <div class="bg-uni-white/5 rounded-2xl p-3 text-center border border-uni-white/5">
           <div class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Trips</div>
-          <div class="text-lg font-black text-white">128</div>
+          <div class="text-lg font-uni-black text-white">128</div>
         </div>
-        <div class="bg-white/5 rounded-2xl p-3 text-center border border-white/5">
+        <div class="bg-uni-white/5 rounded-2xl p-3 text-center border border-uni-white/5">
            <div class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Joined</div>
-           <div class="text-lg font-black text-white">2024</div>
+           <div class="text-lg font-uni-black text-white">2024</div>
         </div>
       </div>
 
@@ -73,7 +73,7 @@
               type="text" 
               [(ngModel)]="user.name" 
               [disabled]="!isEditing"
-              class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-white/5 border-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
+              class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-uni-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-uni-white/5 border-uni-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
               [ngClass]="!isEditing ? 'border-transparent bg-transparent pl-11' : ''"
             >
              <!-- Edit Icon Indicator (Only visible when NOT editing) -->
@@ -95,7 +95,7 @@
               type="email" 
               [(ngModel)]="user.email" 
               [disabled]="!isEditing"
-              class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-white/5 border-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
+              class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-uni-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-uni-white/5 border-uni-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
             >
             <div *ngIf="!isEditing" class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-600">
                <lucide-icon [img]="Lock" [size]="14"></lucide-icon>
@@ -115,7 +115,7 @@
               type="tel" 
               [(ngModel)]="user.phone" 
               [disabled]="!isEditing"
-              class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-white/5 border-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
+              class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-uni-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-uni-white/5 border-uni-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
             >
             <div *ngIf="!isEditing" class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-600">
                <lucide-icon [img]="Lock" [size]="14"></lucide-icon>
@@ -139,7 +139,7 @@
         
         <!-- Edit Mode: Cancel & Save -->
         <ng-container *ngIf="isEditing">
-          <button (click)="toggleEdit()" class="flex-1 py-4 rounded-xl border border-white/10 bg-white/5 font-bold text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
+          <button (click)="toggleEdit()" class="flex-1 py-4 rounded-xl border border-uni-white/10 bg-uni-white/5 font-bold text-gray-400 hover:bg-uni-white/10 hover:text-uni-white transition-colors">
             Cancel
           </button>
           <button (click)="saveProfile()" class="flex-1 py-4 rounded-xl bg-uni-500 text-uni-950 font-bold hover:bg-uni-400 shadow-lg shadow-uni-500/20 transition-all active:scale-[0.98]">

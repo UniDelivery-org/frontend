@@ -4,14 +4,14 @@
   <div class="absolute -inset-1 bg-linear-to-r from-uni-500 to-uni-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
 
   <!-- MAIN CARD -->
-  <div class="relative bg-gray-900 ring-1 ring-white/10 rounded-2xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+  <div class="relative bg-gray-900 ring-1 ring-uni-white/10 rounded-2xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
     
     <!-- HEADER -->
     <div class="text-center mb-10">
       <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-uni-500/10 mb-4 text-uni-500 ring-1 ring-uni-500/20">
         <lucide-icon [img]="User" [size]="24"></lucide-icon>
       </div>
-      <h2 class="text-3xl font-black text-white tracking-tight">Welcome back</h2>
+      <h2 class="text-3xl font-uni-black text-uni-white tracking-tight">Welcome back</h2>
       <p class="mt-2 text-sm text-gray-400">Enter your credentials to access your account</p>
     </div>
 
@@ -29,7 +29,7 @@
             type="email" 
             id="email" 
             formControlName="email"
-            class="block w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all duration-300 sm:text-sm font-medium"
+            class="block w-full pl-11 pr-4 py-4 bg-uni-white/5 border border-uni-white/10 rounded-xl text-uni-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-uni-white/10 transition-all duration-300 sm:text-sm font-medium"
             placeholder="name@example.com"
           >
         </div>
@@ -53,7 +53,7 @@
             type="password" 
             id="password" 
             formControlName="password"
-            class="block w-full pl-11 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-white/10 transition-all duration-300 sm:text-sm font-medium"
+            class="block w-full pl-11 pr-4 py-4 bg-uni-white/5 border border-uni-white/10 rounded-xl text-uni-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 focus:bg-uni-white/10 transition-all duration-300 sm:text-sm font-medium"
             placeholder="••••••••"
           >
         </div>
@@ -67,7 +67,7 @@
       <button 
         type="submit" 
         [disabled]="loginForm.invalid || isLoading"
-        class="group relative w-full flex justify-center py-4 px-4 border border-transparent rounded-xl text-sm font-black text-uni-950 bg-uni-500 hover:bg-uni-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-uni-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_0_20px_rgba(101,214,84,0.1)] hover:shadow-[0_0_30px_rgba(101,214,84,0.4)] active:scale-[0.98]"
+        class="group relative w-full flex justify-center py-4 px-4 border border-transparent rounded-xl text-sm font-uni-black text-uni-950 bg-uni-500 hover:bg-uni-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-uni-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_0_20px_rgba(101,214,84,0.1)] hover:shadow-[0_0_30px_rgba(101,214,84,0.4)] active:scale-[0.98]"
       >
         <span *ngIf="!isLoading" class="flex items-center gap-2">
           Sign In <lucide-icon [img]="ArrowRight" [size]="18" class="group-hover:translate-x-1 transition-transform"></lucide-icon>
@@ -85,7 +85,7 @@
       <div class="text-center mt-6">
         <p class="text-sm text-gray-500">
           Don't have an account? 
-          <a routerLink="/auth/register" class="font-bold text-white hover:text-uni-500 transition-colors">Sign up for free</a>
+          <a routerLink="/auth/register" class="font-bold text-uni-white hover:text-uni-500 transition-colors">Sign up for free</a>
         </p>
       </div>
     </form>

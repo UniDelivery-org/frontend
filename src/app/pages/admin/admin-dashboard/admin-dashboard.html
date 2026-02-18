@@ -3,10 +3,10 @@
   <!-- HEADER -->
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-3xl font-black text-white tracking-tight">Dashboard</h1>
+      <h1 class="text-3xl font-uni-black text-uni-white tracking-tight">Dashboard</h1>
       <p class="text-sm text-gray-400 mt-1">Overview of system performance and activities.</p>
     </div>
-    <button class="group flex items-center gap-2 px-5 py-2.5 bg-gray-900 border border-white/10 rounded-xl hover:bg-white/5 hover:border-uni-500/50 transition-all font-bold text-sm text-gray-300 hover:text-white shadow-lg shadow-black/20 active:scale-95">
+    <button class="group flex items-center gap-2 px-5 py-2.5 bg-gray-900 border border-uni-white/10 rounded-xl hover:bg-uni-white/5 hover:border-uni-500/50 transition-all font-bold text-sm text-gray-300 hover:text-uni-white shadow-lg shadow-uni-black/20 active:scale-95">
       <lucide-icon [img]="Download" [size]="18"></lucide-icon>
       Export Report
     </button>
@@ -16,13 +16,13 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
     
     <div #statCard *ngFor="let stat of stats; let i = index" 
-         class="relative bg-gray-900 rounded-3xl p-6 border border-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
+         class="relative bg-gray-900 rounded-3xl p-6 border border-uni-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
       
       <!-- Hover Gradient -->
       <div class="absolute inset-0 bg-linear-to-br from-uni-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
       <div class="relative z-10 flex justify-between items-start mb-4">
-        <div class="p-3 rounded-2xl bg-white/5 border border-white/5 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 group-hover:border-uni-500/20 transition-all duration-300">
+        <div class="p-3 rounded-2xl bg-uni-white/5 border border-uni-white/5 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 group-hover:border-uni-500/20 transition-all duration-300">
            <!-- FIXED SYNTAX: Dynamic Component -->
            <lucide-icon [img]="stat.icon" [size]="24"></lucide-icon>
         </div>
@@ -38,7 +38,7 @@
       </div>
 
       <div class="relative z-10">
-        <h3 class="text-3xl font-black text-white tracking-tight mb-1">{{ stat.value }}</h3>
+        <h3 class="text-3xl font-uni-black text-uni-white tracking-tight mb-1">{{ stat.value }}</h3>
         <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">{{ stat.title }}</p>
       </div>
     </div>
@@ -46,15 +46,15 @@
   </div>
 
   <!-- RECENT VERIFICATIONS TABLE -->
-  <div class="bg-gray-900 border border-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-black/20">
+  <div class="bg-gray-900 border border-uni-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-uni-black/20">
     
     <!-- Table Header -->
-    <div class="p-6 border-b border-white/5 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm">
-      <h2 class="text-lg font-bold text-white flex items-center gap-2">
+    <div class="p-6 border-b border-uni-white/5 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm">
+      <h2 class="text-lg font-bold text-uni-white flex items-center gap-2">
         Recent Verifications
-        <span class="px-2 py-0.5 rounded-full bg-white/5 text-xs text-gray-400 font-medium">12 New</span>
+        <span class="px-2 py-0.5 rounded-full bg-uni-white/5 text-xs text-gray-400 font-medium">12 New</span>
       </h2>
-      <a routerLink="/admin/verifications" class="text-xs font-bold text-uni-500 hover:text-white transition-colors uppercase tracking-widest">
+      <a routerLink="/admin/verifications" class="text-xs font-bold text-uni-500 hover:text-uni-white transition-colors uppercase tracking-widest">
         View All
       </a>
     </div>
@@ -63,7 +63,7 @@
     <div class="overflow-x-auto">
       <table class="w-full text-left">
         <thead>
-          <tr class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-white/5 bg-gray-900/50">
+          <tr class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-uni-white/5 bg-gray-900/50">
             <th class="px-6 py-4">User</th>
             <th class="px-6 py-4">Document Type</th>
             <th class="px-6 py-4">Date</th>
@@ -71,9 +71,9 @@
             <th class="px-6 py-4 text-right">Action</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-white/5 text-sm">
+        <tbody class="divide-y divide-uni-white/5 text-sm">
           
-          <tr #tableRow *ngFor="let item of recentVerifs" class="group hover:bg-white/5 transition-colors">
+          <tr #tableRow *ngFor="let item of recentVerifs" class="group hover:bg-uni-white/5 transition-colors">
             <!-- ID -->
             <td class="px-6 py-4 text-gray-400 font-medium">{{ item.id }}</td>
             <!-- User -->
@@ -109,7 +109,7 @@
 
             <!-- Action -->
             <td class="px-6 py-4 text-right">
-              <button class="text-gray-500 hover:text-white p-2 hover:bg-white/5 rounded-lg transition-all">
+              <button class="text-gray-500 hover:text-uni-white p-2 hover:bg-uni-white/5 rounded-lg transition-all">
                 <lucide-icon [img]="MoreHorizontal" [size]="18"></lucide-icon>
               </button>
             </td>

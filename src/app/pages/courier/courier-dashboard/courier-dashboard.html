@@ -5,7 +5,7 @@
        =========================== -->
   <div class="relative z-10 mb-6">
     <!-- Background Card -->
-    <div class="bg-gray-900 rounded-3xl p-6 border border-white/5 shadow-2xl relative overflow-hidden group">
+    <div class="bg-gray-900 rounded-3xl p-6 border border-uni-white/5 shadow-2xl relative overflow-hidden group">
       
       <!-- Ambient Glow (Changes color based on status) -->
       <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-[60px] transition-colors duration-500"
@@ -16,14 +16,14 @@
         <div>
           <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Today's Earnings</h2>
           <div class="flex items-baseline gap-1">
-            <span class="text-4xl font-black text-white tracking-tight">120.00</span>
+            <span class="text-4xl font-uni-black text-uni-white tracking-tight">120.00</span>
             <span class="text-sm font-bold text-uni-500">DH</span>
           </div>
           <div class="flex items-center gap-2 mt-2">
-            <div class="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[10px] font-bold text-gray-400">
+            <div class="px-2 py-0.5 rounded bg-uni-white/5 border border-uni-white/5 text-[10px] font-bold text-gray-400">
               4 Trips
             </div>
-            <div class="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[10px] font-bold text-gray-400">
+            <div class="px-2 py-0.5 rounded bg-uni-white/5 border border-uni-white/5 text-[10px] font-bold text-gray-400">
               2.5 hrs
             </div>
           </div>
@@ -43,7 +43,7 @@
             <span class="relative inline-flex rounded-full h-3 w-3" [ngClass]="isOnline ? 'bg-uni-500' : 'bg-gray-500'"></span>
           </span>
           
-          <span class="text-xs font-black tracking-wider uppercase">
+          <span class="text-xs font-uni-black tracking-wider uppercase">
             {{ isOnline ? 'Online' : 'Offline' }}
           </span>
         </button>
@@ -67,7 +67,7 @@
           <lucide-icon [img]="Power" [size]="32"></lucide-icon>
         </div>
       </div>
-      <h3 class="text-xl font-bold text-white mb-2">You are Offline</h3>
+      <h3 class="text-xl font-bold text-uni-white mb-2">You are Offline</h3>
       <p class="text-sm text-gray-500 max-w-[200px]">Go online to start receiving delivery requests in your area.</p>
     </div>
 
@@ -75,16 +75,16 @@
     <div *ngIf="isOnline" class="space-y-5 px-1">
       
       <!-- Job Card -->
-      <div #jobCard *ngFor="let req of requests" class="bg-gray-900 rounded-3xl p-5 border border-white/5 relative shadow-xl overflow-hidden group">
+      <div #jobCard *ngFor="let req of requests" class="bg-gray-900 rounded-3xl p-5 border border-uni-white/5 relative shadow-xl overflow-hidden group">
         
         <!-- Header: User & Distance -->
         <div class="flex justify-between items-start mb-5 relative z-10">
           <div class="flex items-center gap-3">
-             <div class="w-12 h-12 rounded-2xl bg-gray-800 flex items-center justify-center font-bold text-xl text-white border border-white/5">
+             <div class="w-12 h-12 rounded-2xl bg-gray-800 flex items-center justify-center font-bold text-xl text-uni-white border border-uni-white/5">
                {{req.passenger.charAt(0)}}
              </div>
              <div>
-               <h3 class="font-bold text-white text-lg leading-tight">{{req.passenger}}</h3>
+               <h3 class="font-bold text-uni-white text-lg leading-tight">{{req.passenger}}</h3>
                <div class="flex items-center gap-1 text-xs font-medium text-gray-400 mt-1">
                  <lucide-icon [img]="Navigation" [size]="12"></lucide-icon> {{req.distance}} away
                </div>
@@ -92,7 +92,7 @@
           </div>
           <!-- Price Badge -->
           <div class="bg-uni-500/10 border border-uni-500/20 px-3 py-1.5 rounded-lg">
-             <span class="block text-xl font-black text-uni-500 leading-none">{{req.price}} <span class="text-[10px] font-bold">DH</span></span>
+             <span class="block text-xl font-uni-black text-uni-500 leading-none">{{req.price}} <span class="text-[10px] font-bold">DH</span></span>
           </div>
         </div>
 
@@ -112,7 +112,7 @@
            
            <!-- Dropoff -->
            <div class="relative flex items-start gap-4">
-             <div class="w-2.5 h-2.5 mt-1.5 bg-white z-10 shrink-0 rotate-45"></div>
+             <div class="w-2.5 h-2.5 mt-1.5 bg-uni-white z-10 shrink-0 rotate-45"></div>
              <div>
                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Dropoff</p>
                <p class="text-sm font-bold text-gray-200 leading-tight">{{req.dropoff}}</p>
@@ -122,10 +122,10 @@
 
         <!-- Footer: Actions -->
         <div class="grid grid-cols-[1fr_2fr] gap-3 relative z-10">
-           <button class="py-4 rounded-xl border border-white/10 font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-colors text-sm">
+           <button class="py-4 rounded-xl border border-uni-white/10 font-bold text-gray-400 hover:bg-uni-white/5 hover:text-uni-white transition-colors text-sm">
              Decline
            </button>
-           <button (click)="acceptRequest(req.id)" class="py-4 rounded-xl bg-uni-500 font-black text-uni-950 hover:bg-uni-400 shadow-[0_0_20px_rgba(101,214,84,0.3)] transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2">
+           <button (click)="acceptRequest(req.id)" class="py-4 rounded-xl bg-uni-500 font-uni-black text-uni-950 hover:bg-uni-400 shadow-[0_0_20px_rgba(101,214,84,0.3)] transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2">
              Accept Job <lucide-icon [img]="ArrowRight" [size]="18"></lucide-icon>
            </button>
         </div>

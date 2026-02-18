@@ -1,7 +1,7 @@
 <div class="max-w-2xl mx-auto w-full p-4 sm:p-6">
   
   <div class="flex items-center justify-between mb-6">
-    <h2 class="text-2xl font-black text-white tracking-tight">My Wallet</h2>
+    <h2 class="text-2xl font-uni-black text-uni-white tracking-tight">My Wallet</h2>
     <button class="text-xs font-bold text-uni-500 bg-uni-500/10 px-3 py-1.5 rounded-full hover:bg-uni-500 hover:text-uni-950 transition-colors">
        <lucide-icon [img]="History" [size]="14" class="inline mb-0.5 mr-1"></lucide-icon> History
     </button>
@@ -26,16 +26,16 @@
       
       <!-- Top Row -->
       <div class="flex justify-between items-start">
-        <div class="bg-white/10 backdrop-blur-md border border-white/10 p-2 rounded-lg">
+        <div class="bg-uni-white/10 backdrop-blur-md border border-uni-white/10 p-2 rounded-lg">
            <lucide-icon [img]="Wallet" class="text-white" [size]="24"></lucide-icon>
         </div>
-        <span class="text-sm font-bold text-white/50 tracking-widest uppercase">UniCard &bull; Virtual</span>
+        <span class="text-sm font-bold text-uni-white/50 tracking-widest uppercase">UniCard &bull; Virtual</span>
       </div>
 
       <!-- Balance (Middle) -->
       <div>
         <p class="text-sm font-medium text-gray-400 mb-1">Total Balance</p>
-        <h1 class="text-4xl sm:text-5xl font-black text-white tracking-tight flex items-baseline gap-2">
+        <h1 class="text-4xl sm:text-5xl font-uni-black text-uni-white tracking-tight flex items-baseline gap-2">
           {{ balance | number:'1.2-2' }} 
           <span class="text-lg sm:text-2xl font-bold text-uni-500">DH</span>
         </h1>
@@ -45,9 +45,9 @@
       <div class="flex justify-between items-end">
         <div class="flex flex-col">
            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Card Holder</span>
-           <span class="text-sm font-bold text-white tracking-wide">ACHRAF SIKAL</span>
+           <span class="text-sm font-bold text-uni-white tracking-wide">ACHRAF SIKAL</span>
         </div>
-        <lucide-icon [img]="Nfc" class="text-white/30" [size]="32"></lucide-icon>
+        <lucide-icon [img]="Nfc" class="text-uni-white/30" [size]="32"></lucide-icon>
       </div>
 
     </div>
@@ -59,16 +59,16 @@
   <div class="grid grid-cols-2 gap-4 mt-6 mb-8">
     
     <!-- Withdraw -->
-    <button class="group relative overflow-hidden bg-gray-900 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-uni-500/50 transition-all active:scale-95">
-      <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-uni-500 group-hover:text-uni-950 transition-colors">
+    <button class="group relative overflow-hidden bg-gray-900 border border-uni-white/10 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-uni-500/50 transition-all active:scale-95">
+      <div class="w-10 h-10 rounded-full bg-uni-white/5 flex items-center justify-center text-uni-white group-hover:bg-uni-500 group-hover:text-uni-950 transition-colors">
         <lucide-icon [img]="ArrowUpRight" [size]="20"></lucide-icon>
       </div>
       <span class="text-sm font-bold text-gray-300 group-hover:text-white">Withdraw</span>
     </button>
 
     <!-- Top Up -->
-    <button class="group relative overflow-hidden bg-gray-900 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-uni-500/50 transition-all active:scale-95">
-      <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-white group-hover:text-gray-900 transition-colors">
+    <button class="group relative overflow-hidden bg-gray-900 border border-uni-white/10 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-uni-500/50 transition-all active:scale-95">
+      <div class="w-10 h-10 rounded-full bg-uni-white/5 flex items-center justify-center text-uni-white group-hover:bg-uni-white group-hover:text-gray-900 transition-colors">
         <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
       </div>
       <span class="text-sm font-bold text-gray-300 group-hover:text-white">Add Funds</span>
@@ -84,27 +84,27 @@
   <div class="space-y-3">
     
     <div *ngFor="let tx of transactions" 
-         class="group bg-gray-900/50 hover:bg-gray-900 border border-white/5 hover:border-white/10 rounded-2xl p-4 flex items-center justify-between transition-all duration-300">
+         class="group bg-gray-900/50 hover:bg-gray-900 border border-uni-white/5 hover:border-uni-white/10 rounded-2xl p-4 flex items-center justify-between transition-all duration-300">
       
       <div class="flex items-center gap-4">
         <!-- Icon Box -->
         <div class="w-12 h-12 rounded-xl flex items-center justify-center border transition-all shrink-0"
              [ngClass]="tx.type === 'CREDIT' 
                ? 'bg-uni-500/10 border-uni-500/20 text-uni-500 group-hover:bg-uni-500/20' 
-               : 'bg-white/5 border-white/10 text-gray-400 group-hover:bg-white/10'">
+               : 'bg-uni-white/5 border-uni-white/10 text-gray-400 group-hover:bg-uni-white/10'">
            
            <lucide-icon *ngIf="tx.type === 'CREDIT'" [img]="ArrowDownLeft" [size]="20"></lucide-icon>
            <lucide-icon *ngIf="tx.type === 'DEBIT'" [img]="ArrowUpRight" [size]="20"></lucide-icon>
         </div>
 
         <div>
-          <h4 class="font-bold text-white text-sm sm:text-base">{{tx.title}}</h4>
+          <h4 class="font-bold text-uni-white text-sm sm:text-base">{{tx.title}}</h4>
           <p class="text-xs text-gray-500 mt-0.5">{{tx.date}}</p>
         </div>
       </div>
 
       <div class="text-right">
-        <span class="block font-black text-sm sm:text-base" 
+        <span class="block font-uni-black text-sm sm:text-base" 
               [ngClass]="tx.type === 'CREDIT' ? 'text-uni-500' : 'text-white'">
           {{tx.type === 'CREDIT' ? '+' : '-'}}{{tx.amount}} DH
         </span>
