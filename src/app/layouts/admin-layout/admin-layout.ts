@@ -72,7 +72,7 @@ import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu,
         <!-- Admin Profile (Bottom) -->
         <div class="p-4 border-t border-white/5 bg-gray-900/50">
             <div class="flex items-center gap-3 mb-4 px-2">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-uni-500 to-gray-700 p-[2px]">
+                <div class="w-10 h-10 rounded-full bg-linear-to-tr from-uni-500 to-gray-700 p-[2px]">
                     <img src="https://ui-avatars.com/api/?name=Admin+User&background=0a1f08&color=65d654" class="rounded-full w-full h-full border-2 border-gray-900">
                 </div>
                 <div>
@@ -93,7 +93,7 @@ import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu,
       <div class="flex-1 flex flex-col relative overflow-hidden bg-uni-950">
         
         <!-- Background Grid Pattern -->
-        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[32px_32px] pointer-events-none z-0"></div>
 
         <!-- Top Header (Glass) -->
         <header class="h-20 border-b border-white/5 bg-gray-900/50 backdrop-blur-md flex justify-between items-center px-6 lg:px-10 relative z-20">
