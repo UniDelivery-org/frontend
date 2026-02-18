@@ -169,7 +169,12 @@
                    class="w-full bg-gray-950 border border-white/10 rounded-full py-2 pl-10 pr-4 text-xs font-bold text-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
          </div>
 
-         <div class="h-8 w-[1px] bg-white/10 hidden lg:block"></div>
+         <div class="h-8 w-px bg-white/10 hidden lg:block"></div>
+
+         <!-- Theme Toggle -->
+         <button (click)="themeService.toggle()" class="relative p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+            <lucide-icon [img]="themeService.isDark() ? Sun : Moon" [size]="20"></lucide-icon>
+         </button>
 
          <button (click)="toggleNotifications()" class="relative p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
            <lucide-icon [img]="Bell" [size]="20"></lucide-icon>

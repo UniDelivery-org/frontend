@@ -1,8 +1,9 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Search, Menu, LogOut, Wallet, FileText, Settings, Truck, X, Check, Clock } from 'lucide-angular';
+import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Search, Menu, LogOut, Wallet, FileText, Settings, Truck, X, Check, Clock, Sun, Moon } from 'lucide-angular';
 import { filter } from 'rxjs/operators';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -34,6 +35,10 @@ export class MainLayoutComponent implements OnInit {
   readonly X = X;
   readonly Check = Check;
   readonly Clock = Clock;
+  readonly Sun = Sun;
+  readonly Moon = Moon;
+
+  themeService = inject(ThemeService);
 
   // Notifications
   showNotifications = signal(false);

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu, Box, Search, Bell, Settings, Truck } from 'lucide-angular';
+import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu, Box, Search, Bell, Settings, Truck, Sun, Moon } from 'lucide-angular';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -153,4 +154,8 @@ export class AdminLayoutComponent {
   readonly Bell = Bell;
   readonly Settings = Settings;
   readonly Truck = Truck;
+  readonly Sun = Sun;
+  readonly Moon = Moon;
+
+  themeService = inject(ThemeService);
 }
