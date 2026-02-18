@@ -16,16 +16,16 @@ export class Map implements OnInit, OnDestroy {
 
   options: L.MapOptions = {
     layers: [
-      L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', {
-        attribution: '© Stamen Design, © OpenStreetMap',
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
         subdomains: 'abcd',
         maxZoom: 20,
-        className: 'bw-map-tiles' // <--- ADD THIS CLASS for the CSS filter
+        className: 'bw-map-tiles'
       })
     ],
     zoom: 15,
     center: L.latLng(0, 0),
-    zoomControl: false // Optional: inDrive usually hides default controls
+    zoomControl: false
   };
 
   constructor(private geolocationService: GeolocationService) {}
@@ -41,13 +41,12 @@ export class Map implements OnInit, OnDestroy {
           if (!this.map) return;
 
           if (!this.circle) {
-            // --- UPDATED CIRCLE STYLING ---
             this.circle = L.circleMarker(coords, {
-              radius: 12,           // Size in pixels (fixed)
-              color: '#ffffff',     // White border
-              weight: 3,            // Border thickness
-              fillColor: '#65D54B', // inDrive Green
-              fillOpacity: 1        // Solid color
+              radius: 12,
+              color: '#ffffff',
+              weight: 3,
+              fillColor: '#65D54B',
+              fillOpacity: 1
             }).addTo(this.map);
 
             this.map.setView(coords, 15);
