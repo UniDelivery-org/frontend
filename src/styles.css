@@ -23,7 +23,7 @@
 :root {
   --primary-color: #b7e41d;
   --bg-color: #f3f4f6;
-  --map-theme: brightness(105%);
+  --map-theme: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 
   --gray-50:  #f5f5f5;
   --gray-100: #e6e6e6;
@@ -98,7 +98,7 @@ body {
   --color-gray-800: var(--gray-200);
   --color-gray-900: var(--gray-100);
   --color-gray-950: var(--gray-50);
-  --map-theme: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  --map-theme: brightness(100%);
 }
 .bw-map-tiles {
   filter: var(--map-theme); 

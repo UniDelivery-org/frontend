@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import { LeafletDirective, LeafletModule } from '@bluehalo/ngx-leaflet';
 import { GeolocationService } from '../../../services/geoloaction-service';
 import { Subscription } from 'rxjs';
+import { PathService } from '../../../services/path-service';
 @Component({
   selector: 'app-map',
   imports: [LeafletModule, LeafletDirective],
@@ -12,6 +13,7 @@ export class Map implements OnInit, OnDestroy {
 
   map!: L.Map;
   circle!: L.CircleMarker;
+  pathLine!: L.Polyline;
   watchSub!: Subscription;
 
   options: L.MapOptions = {
@@ -19,6 +21,7 @@ export class Map implements OnInit, OnDestroy {
       L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap &copy; CARTO',
         subdomains: 'abcd',
+        maxNativeZoom: 19,
         maxZoom: 20,
         className: 'bw-map-tiles'
       })
@@ -28,7 +31,10 @@ export class Map implements OnInit, OnDestroy {
     zoomControl: false
   };
 
-  constructor(private geolocationService: GeolocationService) {}
+  constructor(
+    private geolocationService: GeolocationService,
+    private pathService: PathService
+  ) {}
 
   ngOnInit(): void {
     this.watchSub = this.geolocationService.getPositionStream()
@@ -49,10 +55,27 @@ export class Map implements OnInit, OnDestroy {
               fillOpacity: 1
             }).addTo(this.map);
 
+            const savedPath = this.pathService.getSavedPath();
+            
+            this.pathLine = L.polyline(savedPath, {
+              color: '#65D54B',
+              weight: 8,
+              opacity: 1.0,
+              lineCap: 'round',
+              lineJoin: 'round',
+              smoothFactor: 1.0
+            }).addTo(this.map);
+
             this.map.setView(coords, 15);
+            
           } else {
             this.circle.setLatLng(coords);
             this.map.panTo(coords);
+
+            if (this.pathLine) {
+              this.pathLine.addLatLng(coords); 
+              this.pathService.addPoint(coords); 
+            }
           }
         },
         error: (err) => console.error(err)
@@ -65,12 +88,5 @@ export class Map implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.watchSub) this.watchSub.unsubscribe();
-    if (this.map) this.map.off('zoomend');
-  }
-
-  private getRadiusForZoom(zoom: number): number {
-    const baseZoom = 15;
-    const baseRadius = 30;
-    return baseRadius * Math.pow(2, baseZoom - zoom);
   }
 }
