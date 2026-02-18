@@ -1,7 +1,7 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Search, Menu, LogOut, Wallet, FileText, Settings } from 'lucide-angular';
+import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Search, Menu, LogOut, Wallet, FileText, Settings, Truck, X, Check, Clock } from 'lucide-angular';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -30,6 +30,49 @@ export class MainLayoutComponent implements OnInit {
   readonly Wallet = Wallet;
   readonly FileText = FileText;
   readonly Settings = Settings;
+  readonly Truck = Truck;
+  readonly X = X;
+  readonly Check = Check;
+  readonly Clock = Clock;
+
+  // Notifications
+  showNotifications = signal(false);
+  notifications = signal([
+    {
+      id: 1,
+      title: 'Driver Found!',
+      message: 'Ahmed B. accepted your delivery request for #DEL-8821.',
+      time: '2 mins ago',
+      read: false,
+      type: 'success'
+    },
+    {
+      id: 2,
+      title: 'Delivery Completed',
+      message: 'Your package to Residence Al Yassamine has been delivered.',
+      time: '1 hour ago',
+      read: true,
+      type: 'info'
+    },
+    {
+      id: 3,
+      title: 'Payment Successful',
+      message: 'You have successfully topped up your wallet with 500 DH.',
+      time: '3 hours ago',
+      read: true,
+      type: 'payment'
+    }
+  ]);
+
+  toggleNotifications() {
+    this.showNotifications.update(v => !v);
+  }
+
+  markAsRead(id: number) {
+    this.notifications.update(list => 
+      list.map(n => n.id === id ? { ...n, read: true } : n)
+    );
+  }
 
   ngOnInit() {
     // Initial check

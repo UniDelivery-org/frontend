@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu, Box, Search, Bell, Settings } from 'lucide-angular';
+import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu, Box, Search, Bell, Settings, Truck } from 'lucide-angular';
 
 @Component({
   selector: 'app-admin-layout',
@@ -47,6 +47,13 @@ import { LucideAngularModule, LayoutDashboard, Users, ShieldCheck, LogOut, Menu,
              class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-white/5 transition-all duration-300">
             <lucide-icon [img]="Users" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
             <span class="font-bold text-sm tracking-wide">Users Management</span>
+          </a>
+
+          <!-- Deliveries -->
+          <a routerLink="/admin/deliveries" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+             class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-white/5 transition-all duration-300">
+            <lucide-icon [img]="Truck" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
+            <span class="font-bold text-sm tracking-wide">Deliveries</span>
           </a>
 
           <!-- Verifications -->
@@ -145,4 +152,5 @@ export class AdminLayoutComponent {
   readonly Search = Search;
   readonly Bell = Bell;
   readonly Settings = Settings;
+  readonly Truck = Truck;
 }

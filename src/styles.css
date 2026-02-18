@@ -38,6 +38,15 @@
   --gray-950: #080808;
 
 }
+/* Global Reset for SPA Layout */
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent native body scroll */
+}
+
 body {
   background-color: var(--bg-color);
   font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;

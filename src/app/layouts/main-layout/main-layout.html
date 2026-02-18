@@ -29,6 +29,12 @@
 
       <!-- SENDER NAVIGATION -->
       @if (currentRole() === 'sender') {
+        <a routerLink="/sender/new-delivery" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+           class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-white/5 text-gray-300 mb-6 hover:text-uni-500 transition-all duration-300">
+          <lucide-icon [img]="Plus" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
+          <span class="font-bold text-sm tracking-wide">New Delivery</span>
+        </a>
+
         <a routerLink="/sender/dashboard" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
            class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-white/5 transition-all duration-300">
           <lucide-icon [img]="Box" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
@@ -78,6 +84,12 @@
            class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-white/5 transition-all duration-300">
           <lucide-icon [img]="FileText" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
           <span class="font-bold text-sm tracking-wide">Documents</span>
+        </a>
+
+        <a routerLink="/courier/vehicles" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+           class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-white/5 transition-all duration-300">
+          <lucide-icon [img]="Truck" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
+          <span class="font-bold text-sm tracking-wide">Vehicles</span>
         </a>
 
         <a routerLink="/courier/activity" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
@@ -159,10 +171,67 @@
 
          <div class="h-8 w-[1px] bg-white/10 hidden lg:block"></div>
 
-         <button class="relative p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+         <button (click)="toggleNotifications()" class="relative p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
            <lucide-icon [img]="Bell" [size]="20"></lucide-icon>
            <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-uni-950"></span>
          </button>
+
+         <!-- Notification Dropdown -->
+         @if (showNotifications()) {
+           <div class="absolute top-20 right-6 lg:right-10 w-96 bg-gray-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fade-in-up">
+             <!-- Header -->
+             <div class="p-4 border-b border-white/5 flex justify-between items-center bg-gray-900/50 backdrop-blur-md">
+               <h3 class="font-bold text-white">Notifications</h3>
+               <button (click)="toggleNotifications()" class="text-gray-400 hover:text-white">
+                 <lucide-icon [img]="X" [size]="16"></lucide-icon>
+               </button>
+             </div>
+
+             <!-- List -->
+             <div class="max-h-96 overflow-y-auto">
+               @for (notification of notifications(); track notification.id) {
+                 <div class="p-4 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer group relative"
+                      [class.bg-uni-500-5]="!notification.read">
+                   
+                   <!-- Unread Dot -->
+                   @if (!notification.read) {
+                     <div class="absolute left-2 top-6 w-1.5 h-1.5 bg-uni-500 rounded-full"></div>
+                   }
+
+                   <div class="flex gap-3 pl-2">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                           [ngClass]="{
+                             'bg-green-500/10 text-green-500': notification.type === 'success',
+                             'bg-blue-500/10 text-blue-500': notification.type === 'info',
+                             'bg-purple-500/10 text-purple-500': notification.type === 'payment'
+                           }">
+                         @if(notification.type === 'success') { <lucide-icon [img]="Check" [size]="14"></lucide-icon> }
+                         @if(notification.type === 'info') { <lucide-icon [img]="Box" [size]="14"></lucide-icon> }
+                         @if(notification.type === 'payment') { <lucide-icon [img]="Wallet" [size]="14"></lucide-icon> }
+                      </div>
+                      <div>
+                        <h4 class="text-xs font-bold text-white mb-0.5" [class.text-gray-400]="notification.read">{{notification.title}}</h4>
+                        <p class="text-[10px] text-gray-500 leading-relaxed line-clamp-2">{{notification.message}}</p>
+                        <div class="flex items-center gap-1 mt-1.5 text-[10px] font-bold text-gray-600">
+                           <lucide-icon [img]="Clock" [size]="10"></lucide-icon> {{notification.time}}
+                        </div>
+                      </div>
+                   </div>
+                 </div>
+               }
+             </div>
+
+             <!-- Footer -->
+             <div class="p-3 bg-gray-900/50 border-t border-white/5 text-center">
+               <button class="text-[10px] font-bold text-uni-500 hover:text-white transition-colors uppercase tracking-wider">
+                 Mark all as read
+               </button>
+             </div>
+           </div>
+
+           <!-- Backdrop to close -->
+           <div class="fixed inset-0 z-40 bg-transparent" (click)="toggleNotifications()"></div>
+         }
 
          <!-- User Profile -->
          <div class="flex items-center gap-3 pl-2 cursor-pointer group">
