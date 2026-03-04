@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
 import { LeafletDirective, LeafletModule } from '@bluehalo/ngx-leaflet';
-import { GeolocationService } from '../../../services/geoloaction-service';
 import { Subscription } from 'rxjs';
-import { PathService } from '../../../services/path-service';
+import { GeolocationService } from '../../../../core/services/geoloaction-service';
+import { PathService } from '../../../../core/services/path-service';
 @Component({
   selector: 'app-map',
   imports: [LeafletModule, LeafletDirective],

@@ -1,6 +1,5 @@
 import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnimationService } from '../../services/animation';
 import { LucideAngularModule, Package, Clock, MapPin, ChevronRight, CheckCircle, XCircle } from 'lucide-angular';
 
 @Component({
@@ -20,7 +19,7 @@ export class ActivityComponent implements AfterViewInit {
 
   @ViewChildren('activityItem') activityItems!: QueryList<ElementRef>;
 
-  constructor(private animService: AnimationService) {}
+  constructor() {}
 
   ngAfterViewInit() {
     // this.animService.staggerFadeIn(this.activityItems.map(c => c.nativeElement), 0.1);

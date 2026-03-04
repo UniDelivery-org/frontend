@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, CheckCircle, Clock, FileUp, Upload, Eye, AlertCircle, ShieldCheck } from 'lucide-angular';
-import { VerificationStatus } from '../../../core/models/models';
+import { VerificationStatus } from '../../../../core/models/models';
 
 interface DocItem {
   id: number;

@@ -1,9 +1,8 @@
 import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AnimationService } from '../../../services/animation';
-import { VerificationStatus, IdentityType } from '../../../core/models/models';
-import { LucideAngularModule, Search, Bell, Menu, Users, Bike, FileText, Wallet, ArrowUpRight, CheckCircle, XCircle, Clock, MoreHorizontal, Download } from 'lucide-angular';
+import { LucideAngularModule, Users, Bike, FileText, Wallet, ArrowUpRight, CheckCircle, XCircle, Clock, MoreHorizontal, Download } from 'lucide-angular';
+import { VerificationStatus, IdentityType } from '../../../../core/models/models';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -30,11 +29,9 @@ export class AdminDashboardComponent implements AfterViewInit {
   @ViewChildren('statCard') statCards!: QueryList<ElementRef>;
   @ViewChildren('tableRow') tableRows!: QueryList<ElementRef>;
 
-  constructor(private animService: AnimationService) {}
+  constructor() {}
 
   ngAfterViewInit() {
-    // this.animService.staggerFadeIn(this.statCards.map(c => c.nativeElement), 0.1);
-    // this.animService.staggerFadeIn(this.tableRows.map(c => c.nativeElement), 0.5);
   }
 
   // Stats Data

@@ -1,6 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnimationService } from '../../services/animation';
 import { LucideAngularModule, Bell, Shield, Moon, Globe, LogOut, ChevronRight, User, Smartphone, Lock } from 'lucide-angular';
 
 @Component({
@@ -40,10 +39,9 @@ export class SettingsComponent implements AfterViewInit {
     }
   ];
 
-  constructor(private animService: AnimationService) {}
+  constructor() {}
 
   ngAfterViewInit() {
-    // this.animService.staggerFadeIn('.settings-item', 0.1);
   }
 
   logout() {

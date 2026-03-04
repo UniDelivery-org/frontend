@@ -1,8 +1,7 @@
 import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnimationService } from '../../../services/animation';
-import { VerificationStatus, IdentityType, VehicleDocumentType } from '../../../core/models/models';
 import { LucideAngularModule, Search, Filter, CheckCircle, XCircle, Eye, FileText, ChevronRight, Check, X, SlidersHorizontal, ArrowUpRight } from 'lucide-angular';
+import { VerificationStatus, IdentityType, VehicleDocumentType } from '../../../../core/models/models';
 
 interface VerificationRequest {
   id: number;
@@ -38,10 +37,9 @@ export class VerificationsComponent implements AfterViewInit {
   // Expose Enum to Template
   readonly VerificationStatus = VerificationStatus;
 
-  constructor(private animService: AnimationService) {}
+  constructor() {}
 
   ngAfterViewInit() {
-    // this.animService.staggerFadeIn(this.docCards.map(c => c.nativeElement), 0.1);
   }
 
   docs: VerificationRequest[] = [

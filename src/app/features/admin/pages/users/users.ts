@@ -1,8 +1,7 @@
 import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnimationService } from '../../../services/animation';
-import { User, Role } from '../../../core/models/models';
 import { LucideAngularModule, Search, Shield, User as UserIcon, Mail, Ban, Trash2, Bike, Package, CircleAlert, CircleCheckBig, CircleX, EllipsisVertical, Funnel } from 'lucide-angular';
+import { User, Role } from '../../../../core/models/models';
 
 @Component({
   selector: 'app-users',
@@ -28,10 +27,9 @@ export class Users implements AfterViewInit {
 
   @ViewChildren('tableRow') tableRows!: QueryList<ElementRef>;
 
-  constructor(private animService: AnimationService) {}
+  constructor() {}
 
   ngAfterViewInit() {
-    // this.animService.staggerFadeIn(this.tableRows.map(c => c.nativeElement), 0.1);
   }
 
   users: User[] = [
