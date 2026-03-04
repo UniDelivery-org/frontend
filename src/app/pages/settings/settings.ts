@@ -43,7 +43,7 @@ export class SettingsComponent implements AfterViewInit {
   constructor(private animService: AnimationService) {}
 
   ngAfterViewInit() {
-    this.animService.staggerFadeIn('.settings-item', 0.1);
+    // this.animService.staggerFadeIn('.settings-item', 0.1);
   }
 
   logout() {

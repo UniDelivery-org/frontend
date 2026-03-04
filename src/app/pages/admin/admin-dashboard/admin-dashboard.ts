@@ -33,8 +33,8 @@ export class AdminDashboardComponent implements AfterViewInit {
   constructor(private animService: AnimationService) {}
 
   ngAfterViewInit() {
-    this.animService.staggerFadeIn(this.statCards.map(c => c.nativeElement), 0.1);
-    this.animService.staggerFadeIn(this.tableRows.map(c => c.nativeElement), 0.5);
+    // this.animService.staggerFadeIn(this.statCards.map(c => c.nativeElement), 0.1);
+    // this.animService.staggerFadeIn(this.tableRows.map(c => c.nativeElement), 0.5);
   }
 
   // Stats Data

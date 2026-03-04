@@ -43,17 +43,17 @@ export class CourierDashboardComponent implements AfterViewInit {
   toggleStatus() {
     this.isOnline = !this.isOnline;
     
-    if (this.isOnline) {
-      setTimeout(() => {
-        gsap.from(this.jobCards.map(el => el.nativeElement), {
-          y: 50,
-          opacity: 0,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: 'back.out(1.2)'
-        });
-      }, 100); 
-    }
+    // if (this.isOnline) {
+    //   setTimeout(() => {
+    //     gsap.from(this.jobCards.map(el => el.nativeElement), {
+    //       y: 50,
+    //       opacity: 0,
+    //       duration: 0.6,
+    //       stagger: 0.15,
+    //       ease: 'back.out(1.2)'
+    //     });
+    //   }, 100); 
+    // }
   }
 
   acceptRequest(id: number) {

@@ -106,18 +106,18 @@ export class AuthLayout implements AfterViewInit {
   @ViewChild('formContent') formContent!: ElementRef;
 
   ngAfterViewInit() {
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    // const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    tl.to(this.brandingContent.nativeElement, {
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      delay: 0.2
-    })
-    .to(this.formContent.nativeElement, {
-      y: 0,
-      opacity: 1,
-      duration: 0.8
-    }, '-=0.6');
+    // tl.to(this.brandingContent.nativeElement, {
+    //   y: 0,
+    //   opacity: 1,
+    //   duration: 1,
+    //   delay: 0.2
+    // })
+    // .to(this.formContent.nativeElement, {
+    //   y: 0,
+    //   opacity: 1,
+    //   duration: 0.8
+    // }, '-=0.6');
   }
 }

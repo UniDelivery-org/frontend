@@ -41,7 +41,7 @@ export class VerificationsComponent implements AfterViewInit {
   constructor(private animService: AnimationService) {}
 
   ngAfterViewInit() {
-    this.animService.staggerFadeIn(this.docCards.map(c => c.nativeElement), 0.1);
+    // this.animService.staggerFadeIn(this.docCards.map(c => c.nativeElement), 0.1);
   }
 
   docs: VerificationRequest[] = [

@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Placeholder Card -->
-        <div class="bg-gray-900 border border-uni-white/5 rounded-2xl p-6 flex flex-col items-center text-center justify-center min-h-[200px] border-dashed border-gray-700">
+        <div class="bg-gray-900 border border-uni-white/5 rounded-2xl p-6 flex flex-col items-center text-center justify-center min-h-[200px] border-dashed">
            <p class="text-gray-500 font-bold">No vehicles added yet.</p>
         </div>
       </div>

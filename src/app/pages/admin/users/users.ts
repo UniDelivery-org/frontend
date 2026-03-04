@@ -31,7 +31,7 @@ export class Users implements AfterViewInit {
   constructor(private animService: AnimationService) {}
 
   ngAfterViewInit() {
-    this.animService.staggerFadeIn(this.tableRows.map(c => c.nativeElement), 0.1);
+    // this.animService.staggerFadeIn(this.tableRows.map(c => c.nativeElement), 0.1);
   }
 
   users: User[] = [

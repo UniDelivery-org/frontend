@@ -23,7 +23,7 @@ export class ActivityComponent implements AfterViewInit {
   constructor(private animService: AnimationService) {}
 
   ngAfterViewInit() {
-    this.animService.staggerFadeIn(this.activityItems.map(c => c.nativeElement), 0.1);
+    // this.animService.staggerFadeIn(this.activityItems.map(c => c.nativeElement), 0.1);
   }
 
   activities = [

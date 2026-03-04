@@ -51,14 +51,14 @@ export class NewDeliveryComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.bookingPanel) {
-        gsap.to(this.bookingPanel.nativeElement, {
-        x: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.2
-        });
-    }
+    // if (this.bookingPanel) {
+    //     gsap.to(this.bookingPanel.nativeElement, {
+    //     x: 0,
+    //     opacity: 1,
+    //     duration: 0.8,
+    //     ease: 'power3.out',
+    //     delay: 0.2
+    //     });
+    // }
   }
 }
