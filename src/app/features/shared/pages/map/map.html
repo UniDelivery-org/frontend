@@ -1,4 +1,76 @@
-<div style="height: 100vh;"
- leaflet 
- [leafletOptions]="options"
- (leafletMapReady)="onMapReady($event)"></div>
+<div class="relative w-full h-full">
+    <div style="height: 100%; width: 100%;" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)">
+    </div>
+
+    <!-- Premium Directions List -->
+    <div *ngIf="instructionSteps.length > 0"
+        class="absolute top-4 right-4 z-1000 w-72 max-h-[80%] flex flex-col pointer-events-auto">
+
+        <!-- Header/Toggle Bar -->
+        <div (click)="toggleDirections(); $event.stopPropagation()"
+            class="uni-glass rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer group transition-all shadow-xl">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-lg bg-uni-500/10 flex items-center justify-center text-uni-500 shadow-inner">
+                    <lucide-icon [name]="Route" class="w-4.5 h-4.5"></lucide-icon>
+                </div>
+                <span class="text-[11px] font-bold text-uni-white uppercase tracking-wider">Directions</span>
+            </div>
+            <div class="text-gray-400 group-hover:text-uni-500 transition-colors">
+                <lucide-icon [name]="ChevronDown" class="w-4 h-4 transform transition-transform duration-300"
+                    [class.rotate-180]="showDirections"></lucide-icon>
+            </div>
+        </div>
+
+        <!-- Instructions Body -->
+        <div *ngIf="showDirections"
+            class="mt-2 uni-glass border-uni-black/10 rounded-xl overflow-hidden flex-1 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+
+            <!-- List Scrollable Area -->
+            <div class="max-h-[400px] overflow-y-auto overflow-x-hidden py-2 custom-scrollbar">
+                <div *ngFor="let step of instructionSteps; let first = first; let last = last"
+                    class="px-4 py-3 hover:bg-uni-black/5 transition-colors group flex gap-4">
+
+                    <!-- Icon Column -->
+                    <div class="flex flex-col items-center shrink-0">
+                        <div class="w-2.5 h-2.5 rounded-full"
+                            [ngClass]="first ? 'bg-uni-500 shadow-[0_0_8px_rgba(101,214,84,0.5)]' : last ? 'bg-red-500' : 'bg-gray-400'">
+                        </div>
+                        <div *ngIf="!last" class="w-px flex-1 bg-linear-to-b from-gray-400/30 to-gray-400/10 my-1">
+                        </div>
+                    </div>
+
+                    <!-- Text content -->
+                    <div class="flex-1 min-w-0">
+                        <p
+                            class="text-[11px] font-bold text-uni-white/90 leading-tight mb-0.5 truncate group-hover:text-uni-white transition-colors">
+                            {{ first ? 'Start Route' : last ? 'Arrive at destination' : step.name || 'Unnamed Road' }}
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-medium text-uni-300 uppercase tracking-tight">
+                                {{ step.type === 'turn' ? step.modifier : step.type }}
+                            </span>
+                            <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                            <span class="text-[10px] font-bold text-uni-500">
+                                {{ (step.distance / 1000).toFixed(2) }} km
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Stats -->
+            <div class="bg-uni-black/5 border-t border-uni-black/10 px-4 py-3 flex justify-between items-center">
+                <div class="text-[10px] text-gray-400 font-medium tracking-wide">Route Summary</div>
+                <div class="flex items-center gap-3">
+                    <div class="flex flex-col items-end">
+                        <span class="text-[11px] font-extrabold text-uni-white">{{ (totalDistance / 1000).toFixed(2) }}
+                            km</span>
+                        <span class="text-[9px] text-gray-500 font-medium">{{ (totalDuration / 60).toFixed(0) }}
+                            min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
