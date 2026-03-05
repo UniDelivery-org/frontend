@@ -116,7 +116,7 @@ import { ThemeService } from '../../core/services/theme.service';
 
           <!-- Search Bar (Desktop) -->
           <div class="hidden lg:flex items-center relative w-96 group">
-             <lucide-icon [img]="Search" [size]="18" class="absolute left-2 top-1.5 text-gray-500 group-focus-within:text-uni-500 transition-colors"></lucide-icon>
+             <lucide-icon [img]="Search" [size]="18" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-uni-500 transition-colors pointer-events-none"></lucide-icon>
              <input type="text" placeholder="Search users, deliveries, IDs..." 
                     class="w-full bg-gray-950 border border-uni-white/10 rounded-full py-2.5 pl-11 pr-4 text-sm text-uni-white placeholder-gray-600 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
           </div>

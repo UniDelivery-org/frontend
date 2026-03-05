@@ -22,7 +22,7 @@ import gsap from 'gsap';
         </div>
 
         <!-- Content Container -->
-        <div #brandingContent class="relative z-10 max-w-lg px-12 opacity-0 translate-y-8">
+        <div #brandingContent class="relative z-10 max-w-lg px-12">
           
           <!-- Floating UI Element (Mock Notification) -->
           <div class="mb-12 transform -rotate-2 hover:rotate-0 transition-transform duration-500 ease-out cursor-default">
@@ -82,7 +82,7 @@ import gsap from 'gsap';
 
         <!-- Main Content Area -->
         <div class="flex-1 flex items-center justify-center p-6 sm:p-12">
-          <div #formContent class="w-full max-w-md opacity-0 translate-y-4 relative z-10">
+          <div #formContent class="w-full max-w-md relative z-10">
             <router-outlet></router-outlet>
           </div>
         </div>
