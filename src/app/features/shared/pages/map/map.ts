@@ -130,7 +130,6 @@ export class Map implements OnInit, OnDestroy, OnChanges {
       this.map.removeControl(this.routingControl);
     }
     
-    // Clear our old markers if they exist
     this.map.eachLayer((layer) => {
       // @ts-ignore
       if (layer instanceof L.Marker && layer.options.icon && layer.options.icon.options.className === 'uni-custom-div-icon') {
@@ -143,10 +142,8 @@ export class Map implements OnInit, OnDestroy, OnChanges {
     });
 
     if (this.routePoints.length > 0) {
-       // Draw Pickup Marker
        this.createCustomMarker('pickup', this.routePoints[0]).addTo(this.map);
 
-       // Draw Dropoff Marker if available
        if (this.routePoints.length > 1) {
           this.createCustomMarker('dropoff', this.routePoints[1]).addTo(this.map);
        }
@@ -163,8 +160,8 @@ export class Map implements OnInit, OnDestroy, OnChanges {
            lineOptions: {
              styles: [{ color: '#65D54B', weight: 6, opacity: 1.0, lineCap: 'round', lineJoin: 'round' }]
            },
-           show: false, // hide instructions panel
-           createMarker: function() { return null; } // We draw our own markers above
+           show: false,
+           createMarker: function() { return null; }
          }).addTo(this.map);
        }
     }
