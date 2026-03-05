@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+@import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+
 @theme{
   --color-uni-50: #f2fcf0;
   --color-uni-100: #e1f8dc;
@@ -26,7 +29,7 @@
 :root {
   --primary-color: #b7e41d;
   --bg-color: #f3f4f6;
-  --map-theme: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  --map-theme: brightness(100%);
 
   --gray-50:  #f5f5f5;
   --gray-100: #e6e6e6;
@@ -43,6 +46,17 @@
   --uni-black: #000;
   --uni-white: #fff;
 
+  --glass-bg: rgba(17, 24, 39, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+
+
+
+
+  --uni-glass-bg: rgba(212, 212, 212, 0.2); /* neutral-300/20 */
+  --uni-glass-bg-hover: rgba(212, 212, 212, 0.3); /* neutral-300/30 */
+  --uni-glass-text: #525252; /* neutral-600 */
+  --uni-glass-border: rgba(163, 163, 163, 0.2); /* neutral-400/20 */
 }
 /* Global Reset for SPA Layout */
 html, body {
@@ -77,6 +91,17 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.uni-glass {
+  background: var(--uni-glass-bg);
+  color: var(--uni-glass-text);
+  border: 1px solid var(--uni-glass-border);
+  backdrop-filter: blur(1px);
+  transition: background 0.2s ease;
+}
+.uni-glass:hover {
+  background: var(--uni-glass-bg-hover);
+}
+
 /* Bottom Sheet Animation */
 .bottom-sheet {
   animation: slideUp 0.3s ease-out forwards;
@@ -96,6 +121,22 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Custom Scrollbar for Directions Panel */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(101, 214, 84, 0.2);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(101, 214, 84, 0.4);
+}
+
 
 @keyframes shine {
   0% { transform: translateX(-200%) skewX(-12deg); }
@@ -124,8 +165,122 @@ body {
 
   --color-uni-black: var(--uni-white);
   --color-uni-white: var(--uni-black);
-  --map-theme: brightness(100%);
+  --map-theme: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-shadow: rgba(31, 38, 135, 0.05);
+
+
+  --uni-glass-bg: rgba(163, 163, 163, 0.2); /* neutral-400/20 */
+  --uni-glass-bg-hover: rgba(163, 163, 163, 0.3); /* neutral-400/30 */
+  --uni-glass-text: #d4d4d4; /* neutral-300 */
 }
 .bw-map-tiles {
   filter: var(--map-theme); 
+}
+
+/* Entry Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInFromTop {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-in {
+  animation-duration: 300ms;
+  animation-fill-mode: both;
+}
+.fade-in { animation-name: fadeIn; }
+.slide-in-from-top-2 { animation-name: slideInFromTop; }
+
+
+/* -------------------------------------
+   ANIMATED TITLE TOOLTIP DIRECTIVE 
+   ------------------------------------- */
+.uni-animated-title {
+  position: fixed;
+  z-index: 99999;
+  background-color: var(--color-gray-800);
+  color: var(--color-uni-white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 8px;
+  pointer-events: none;
+  transform: translate(-50%, 10px) scale(0.95);
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.uni-animated-title::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-gray-800) transparent transparent transparent;
+}
+
+.uni-animated-title.uni-animated-title-visible {
+  transform: translate(-50%, 0) scale(1);
+  opacity: 1;
+}
+button{
+  cursor: pointer;
+}
+
+/* -------------------------------------
+   PREMIUM MAP MARKERS 
+   ------------------------------------- */
+.uni-marker-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uni-marker-pin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 900;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  position: relative;
+  z-index: 10;
+}
+
+.uni-marker-pickup { background-color: #65d654; }
+.uni-marker-dropoff { background-color: #ef4444; }
+.uni-marker-live { background-color: #65d654; }
+
+.uni-marker-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  z-index: 5;
+  animation: uni-pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+.uni-pulse-pickup { background-color: rgba(101, 214, 84, 0.5); }
+.uni-pulse-dropoff { background-color: rgba(239, 68, 68, 0.5); }
+.uni-pulse-live { background-color: rgba(101, 214, 84, 0.7); }
+
+@keyframes uni-pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3.5); opacity: 0; }
 }
