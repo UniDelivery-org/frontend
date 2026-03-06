@@ -73,7 +73,7 @@ export class RegisterComponent {
       const registerDto: RegisterDto = {
         fullName: formData.fullName,
         email: formData.email,
-        phone: formData.phone,
+        phone: `+212${formData.phone}`,
         password: formData.password,
         role: formData.role
       }
