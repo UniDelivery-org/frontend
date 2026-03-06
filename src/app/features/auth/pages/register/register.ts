@@ -1,9 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AlertCircle, ArrowRight, Car, CircleAlert, Lock, LucideAngularModule, Mail, Package, Phone, User } from 'lucide-angular';
 import { passwordMatchValidator } from '../../../../core/validators/passwordMatch.validator';
+import { RegisterDto } from '../../data-access/register.dto';
+import { UserRole } from '../../../shared/enums/user.enums';
+import { Observable } from 'rxjs';
+import { ApiError } from '../../../../shared/models/api.error.model';
+import { Store } from '@ngrx/store';
+import { selectError, selectIsLoading } from '../../store/auth.reducer';
+import { authActions } from '../../store/auth.actions';
 
 @Component({
   selector: 'app-register',
@@ -20,24 +27,29 @@ export class RegisterComponent {
   readonly Car = Car;
   readonly ArrowRight = ArrowRight;
   readonly AlertCircle = CircleAlert;
+  private store = inject(Store)
 
   registerForm: FormGroup;
-  selectedRole: 'SENDER' | 'COURIER' = 'SENDER';
-  isLoading = false;
+  selectedRole: UserRole = UserRole.SENDER;
+  isLoading$: Observable<boolean>;
+  error$: Observable<ApiError | null>;
+  UserRole = UserRole;
 
   constructor(private fb: FormBuilder) {
-    this.registerForm = this.fb.group({
-        role: ['SENDER', Validators.required],
-        name: ['', Validators.required],
+    this.registerForm = this.fb.nonNullable.group({
+        role: [this.selectedRole, Validators.required],
+        fullName: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         phone: ['', Validators.required],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]],
       }, { validators: passwordMatchValidator }
     );
+    this.isLoading$ = this.store.select(selectIsLoading);
+    this.error$ = this.store.select(selectError);
   }
 
-  setRole(role: 'SENDER' | 'COURIER') {
+  setRole(role: UserRole) {
     this.selectedRole = role;
     this.registerForm.get('role')?.setValue(role);
   }
@@ -57,12 +69,16 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      this.isLoading = true;
-      console.log('Registering as:', this.selectedRole, this.registerForm.value);
-      
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 2000);
+      const formData = this.registerForm.getRawValue();
+      const registerDto: RegisterDto = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        role: formData.role
+      }
+      console.log('Registering as:', registerDto);
+      this.store.dispatch(authActions.register({ registerDto }))
     }
   }
 }
