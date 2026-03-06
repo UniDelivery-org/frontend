@@ -81,8 +81,8 @@ import gsap from 'gsap';
         </div>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex items-center justify-center p-6 sm:p-12">
-          <div #formContent class="w-full max-w-md relative z-10">
+        <div class="flex-1 flex items-center justify-center p-3 sm:p-6">
+          <div #formContent class="w-full max-w-md relative z-10 rounded-2xl">
             <router-outlet></router-outlet>
           </div>
         </div>

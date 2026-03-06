@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ArrowRight, Car, Lock, LucideAngularModule, Mail, Package, Phone, User } from 'lucide-angular';
+import { AlertCircle, ArrowRight, Car, CircleAlert, Lock, LucideAngularModule, Mail, Package, Phone, User } from 'lucide-angular';
+import { passwordMatchValidator } from '../../../../core/validators/passwordMatch.validator';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,7 @@ export class RegisterComponent {
   readonly Package = Package;
   readonly Car = Car;
   readonly ArrowRight = ArrowRight;
+  readonly AlertCircle = CircleAlert;
 
   registerForm: FormGroup;
   selectedRole: 'SENDER' | 'COURIER' = 'SENDER';
@@ -25,12 +27,14 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      role: ['SENDER', Validators.required],
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+        role: ['SENDER', Validators.required],
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        phone: ['', Validators.required],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+      }, { validators: passwordMatchValidator }
+    );
   }
 
   setRole(role: 'SENDER' | 'COURIER') {
