@@ -19,8 +19,8 @@ const iconDefault = L.icon({
 });
 L.Marker.prototype.options.icon = iconDefault;
 import { Subscription } from 'rxjs';
-import { GeolocationService } from '../../../../core/services/geoloaction-service';
-import { PathService } from '../../../../core/services/path-service';
+import { GeolocationService } from '../../../../core/services/geoloaction.service';
+import { PathService } from '../../../../core/services/path.service';
 import 'leaflet-routing-machine';
 
 export interface InstructionStep {

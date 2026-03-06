@@ -5,7 +5,7 @@ import { LucideAngularModule, MapPin, Bike, Car, Truck, Wallet, Search, Map, Nav
 import { Map as MapComponent } from '../../../shared/pages/map/map';
 import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
-import { GeolocationService } from '../../../../core/services/geoloaction-service';
+import { GeolocationService } from '../../../../core/services/geoloaction.service';
 import { AnimatedTitleDirective } from '../../../../core/directives/animated-title.directive';
 
 @Component({
