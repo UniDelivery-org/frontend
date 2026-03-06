@@ -66,9 +66,9 @@
             placeholder="John Doe">
         </div>
         @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
-          <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
-            <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid name.
-          </div>
+        <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+          <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid name.
+        </div>
         }
       </div>
 
@@ -85,9 +85,9 @@
             placeholder="name@example.com">
         </div>
         @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
-          <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
-            <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid email.
-          </div>
+        <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+          <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid email.
+        </div>
         }
       </div>
 
@@ -104,9 +104,9 @@
             placeholder="+212 600 000 000">
         </div>
         @if (registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid) {
-          <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
-            <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid phone number.
-          </div>
+        <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+          <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid phone number.
+        </div>
         }
       </div>
 
@@ -123,16 +123,22 @@
             placeholder="••••••••">
         </div>
         @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
-          <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
-            <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid password.
-          </div>
+        <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+          <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid password.
+        </div>
         }
         <!-- Simple Strength Hint -->
         <div class="flex gap-1 mt-2 px-1">
-          <div class="h-1 flex-1 rounded-full bg-uni-400"></div>
-          <div class="h-1 flex-1 rounded-full bg-uni-500"></div>
-          <div class="h-1 flex-1 rounded-full bg-uni-600"></div>
-          <div class="h-1 flex-1 rounded-full bg-uni-800"></div>
+          <div class="h-1 flex-1 rounded-full transition-all duration-500"
+            [ngClass]="passwordStrength >= 1 ? (passwordStrength <= 1 ? 'bg-red-500' : (passwordStrength <= 2 ? 'bg-yellow-500' : 'bg-uni-400')) : 'bg-gray-700'">
+          </div>
+          <div class="h-1 flex-1 rounded-full transition-all duration-500"
+            [ngClass]="passwordStrength >= 2 ? (passwordStrength <= 2 ? 'bg-yellow-500' : 'bg-uni-500') : 'bg-gray-700'">
+          </div>
+          <div class="h-1 flex-1 rounded-full transition-all duration-500"
+            [ngClass]="passwordStrength >= 3 ? 'bg-uni-600' : 'bg-gray-700'"></div>
+          <div class="h-1 flex-1 rounded-full transition-all duration-500"
+            [ngClass]="passwordStrength >= 4 ? 'bg-uni-800' : 'bg-gray-700'"></div>
         </div>
       </div>
       <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Confirm Password</label>
@@ -146,9 +152,9 @@
           placeholder="••••••••">
       </div>
       @if (registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid) {
-        <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
-          <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Please enter a valid password.
-        </div>
+      <div class="text-red-400 text-xs flex items-center gap-1 mt-1 ml-1 animate-pulse">
+        <lucide-icon [img]="AlertCircle" [size]="12"></lucide-icon> Passwords must match.
+      </div>
       }
 
       <!-- SUBMIT BUTTON -->

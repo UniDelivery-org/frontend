@@ -32,7 +32,7 @@ export class RegisterComponent {
         email: ['', [Validators.required, Validators.email]],
         phone: ['', Validators.required],
         password: ['', [Validators.required, Validators.minLength(8)]],
-        confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required]],
       }, { validators: passwordMatchValidator }
     );
   }
@@ -40,6 +40,19 @@ export class RegisterComponent {
   setRole(role: 'SENDER' | 'COURIER') {
     this.selectedRole = role;
     this.registerForm.get('role')?.setValue(role);
+  }
+
+  get passwordStrength(): number {
+    const password = this.registerForm.get('password')?.value;
+    if (!password) return 0;
+
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    return score;
   }
 
   onSubmit() {
