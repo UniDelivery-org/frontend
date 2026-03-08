@@ -29,20 +29,9 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./layouts/admin-layout/admin-layout').then(m => m.AdminLayoutComponent),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', loadComponent: () => import('./features/admin/pages/admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent) },
-      { path: 'verifications', loadComponent: () => import('./features/admin/pages/verifications/verifications').then(m => m.VerificationsComponent) },
-      { path: 'users', loadComponent: () => import('./features/admin/pages/users/users').then(m => m.Users) },
-      { path: 'settings', loadComponent: () => import('./features/settings/pages/settings').then(m => m.SettingsComponent) },
-      { path: 'deliveries', loadComponent: () => import('./features/admin/pages/deliveries/deliveries').then(m => m.AdminDeliveriesComponent) }
-    ],
+    loadChildren: () => import('./core/routes/admin.routes').then(m => m.ADMIN_ROUTES),
     canMatch: [roleGuard],
     data: { role: Role.ADMIN }
-  },
-  {
-    path: 'map',
-    loadComponent: () => import('./features/shared/pages/map/map').then(m => m.Map)
   },
   {
     path: '',
