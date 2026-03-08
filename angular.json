@@ -60,6 +60,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 65487
+          },
           "configurations": {
             "production": {
               "buildTarget": "UniDelivery:build:production"
