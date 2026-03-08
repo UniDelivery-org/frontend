@@ -12,11 +12,11 @@ export class CookieService {
      * Sets a cookie with the given name, value, and expiration in days.
      * @param name The name of the cookie.
      * @param value The value to store.
-     * @param days Number of days until expiration.
+     * @param seconds Number of seconds until expiration.
      */
-    set(name: string, value: string, days: number): void {
+    set(name: string, value: string, seconds: number): void {
         const date = new Date();
-        date.setTime(date.getTime() + days * 24 * 3600 * 1000);
+        date.setTime(date.getTime() + seconds * 1000);
         let expires = 'expires=' + date.toUTCString();
         document.cookie = `${name}=${value}; ${expires}; path=/`;
     }

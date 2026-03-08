@@ -32,8 +32,8 @@ export class AuthService {
     public login(payload: LoginDto): Observable<Auth> {
         return this.http.post<Auth>(`${this.apiUrl}/${this.apiVersion}/users/login`, payload).pipe(
             map((response) => {
-                this.cookie.set('refreshToken', response.refreshToken, 5);
-                this.cookie.set('accessToken', response.accessToken, 1);
+                this.cookie.set('refreshToken', response.refreshToken, 30*60);
+                this.cookie.set('accessToken', response.accessToken, response.expiresIn);
                 const payload = this.jwtResolver.decodeToken(response.accessToken);
                 this.roleService.setRole(payload.realm_access.roles[0] as Role);
                 return response;
