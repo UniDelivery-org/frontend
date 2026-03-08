@@ -21,7 +21,7 @@
           <span class="block font-uni-black text-xl tracking-tight text-uni-white leading-none">UniDelivery<span
               class="text-uni-500">.</span></span>
           <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-            @if(currentRole() === 'sender') { SENDER PANEL } @else { COURIER PANEL }
+            @if(currentRole() === role.SENDER) { SENDER PANEL } @else { COURIER PANEL }
           </span>
         </div>
       </div>
@@ -31,38 +31,38 @@
     <nav class="flex-1 px-4 space-y-2 mt-8">
 
       <!-- SENDER NAVIGATION -->
-      @if (currentRole() === 'sender') {
-      <a routerLink="/sender/new-delivery" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      @if (currentRole() === role.SENDER) {
+      <a routerLink="/new-delivery" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 text-gray-300 mb-6 hover:text-uni-500 transition-all duration-300">
         <lucide-icon [img]="Plus" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">New Delivery</span>
       </a>
 
-      <a routerLink="/sender/dashboard" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/dashboard" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Box" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Dashboard</span>
       </a>
 
-      <a routerLink="/sender/wallet" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/wallet" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Wallet" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Wallet</span>
       </a>
 
-      <a routerLink="/sender/activity" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/activity" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Activity" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Activity</span>
       </a>
 
-      <a routerLink="/sender/profile" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/profile" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="User" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Profile</span>
       </a>
 
-      <a routerLink="/sender/settings" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/settings" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Settings" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Settings</span>
@@ -70,44 +70,44 @@
       }
 
       <!-- COURIER NAVIGATION -->
-      @if (currentRole() === 'courier') {
-      <a routerLink="/courier/dashboard" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      @if (currentRole() === role.COURIER) {
+      <a routerLink="/dashboard" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Car" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Dashboard</span>
       </a>
 
-      <a routerLink="/courier/wallet" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/wallet" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Wallet" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Wallet</span>
       </a>
 
-      <a routerLink="/courier/documents" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/documents" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="FileText" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Documents</span>
       </a>
 
-      <a routerLink="/courier/vehicles" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/vehicles" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Truck" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Vehicles</span>
       </a>
 
-      <a routerLink="/courier/activity" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/activity" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Activity" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Activity</span>
       </a>
 
-      <a routerLink="/courier/profile" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/profile" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="User" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Profile</span>
       </a>
 
-      <a routerLink="/courier/settings" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+      <a routerLink="/settings" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Settings" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
         <span class="font-bold text-sm tracking-wide">Settings</span>
@@ -153,18 +153,6 @@
               <lucide-icon [img]="Box" class="text-uni-500" [size]="16"></lucide-icon>
             </div>
           </div>
-        </div>
-
-        <!-- Role Toggler (Visible on Desktop) -->
-        <div class="hidden lg:flex items-center gap-1 bg-uni-white/5 p-1 rounded-full border border-uni-white/5">
-          <a routerLink="/sender" routerLinkActive="bg-uni-500 text-uni-950 shadow-[0_0_15px_rgba(101,214,84,0.3)]"
-            class="px-6 py-2 rounded-full text-xs font-bold text-gray-400 hover:text-uni-white transition-all duration-300 flex items-center gap-2">
-            <lucide-icon [img]="Package" [size]="14"></lucide-icon> Sender
-          </a>
-          <a routerLink="/courier" routerLinkActive="bg-uni-500 text-uni-950 shadow-[0_0_15px_rgba(101,214,84,0.3)]"
-            class="px-6 py-2 rounded-full text-xs font-bold text-gray-400 hover:text-uni-white transition-all duration-300 flex items-center gap-2">
-            <lucide-icon [img]="Car" [size]="14"></lucide-icon> Courier
-          </a>
         </div>
       </div>
 
@@ -281,7 +269,7 @@
     <div
       class="flex justify-between items-center bg-gray-900/90 backdrop-blur-xl border border-uni-white/10 px-2 py-2 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
 
-      <a routerLink="/sender/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
+      <a routerLink="/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
         class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
         <div class="relative">
           <lucide-icon [img]="Package" [size]="24"
@@ -292,7 +280,7 @@
         <span class="text-[10px] font-bold">Send</span>
       </a>
 
-      <a routerLink="/courier/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
+      <a routerLink="/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
         class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
         <div class="relative">
           <lucide-icon [img]="Car" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>

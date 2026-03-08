@@ -17,41 +17,21 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-2">
 
       <!-- ROLE SELECTION (Visual Cards) -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <!-- Sender Role -->
-        <button type="button" (click)="setRole(UserRole.SENDER)"
-          class="relative p-4 rounded-xl border-2 text-left transition-all duration-300 group/role overflow-hidden"
-          [ngClass]="selectedRole === 'SENDER' 
-            ? 'border-uni-500 bg-uni-500/10 shadow-[0_0_20px_rgba(101,214,84,0.2)]' 
-            : 'border-uni-white/10 bg-uni-white/5 hover:bg-uni-white/10 hover:border-uni-white/20'">
-          <div class="relative z-10 flex flex-col items-center justify-center gap-2">
-            <lucide-icon [img]="Package" [class]="selectedRole === 'SENDER' ? 'text-uni-500' : 'text-gray-400'"
-              [size]="28"></lucide-icon>
-            <span class="text-xs font-bold uppercase tracking-wider"
-              [class]="selectedRole === 'SENDER' ? 'text-white' : 'text-gray-400'">Sender</span>
-          </div>
-          <!-- Selection Indicator -->
-          @if (selectedRole === 'SENDER') {
-          <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-uni-500 shadow-[0_0_8px_#65d654]"></div>
-          }
+      <div class="hidden lg:grid grid-cols-2 relative w-fit mx-auto bg-uni-white/5 p-1 rounded-full border border-uni-white/5">
+        <div class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-uni-500 rounded-full shadow-[0_0_15px_rgba(101,214,84,0.3)] transition-transform duration-300 ease-in-out"
+            [class.translate-x-full]="selectedRole === 'COURIER'">
+        </div>
+
+        <button (click)="setRole(UserRole.SENDER)" 
+                [ngClass]="selectedRole === 'SENDER' ? 'text-uni-950' : 'text-gray-400 hover:text-uni-white'"
+                class="relative z-10 px-6 py-2 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center gap-2">
+          <lucide-icon [img]="Package" [size]="14"></lucide-icon> Sender
         </button>
 
-        <!-- Courier Role -->
-        <button type="button" (click)="setRole(UserRole.COURIER)"
-          class="relative p-4 rounded-xl border-2 text-left transition-all duration-300 group/role overflow-hidden"
-          [ngClass]="selectedRole === 'COURIER' 
-            ? 'border-uni-500 bg-uni-500/10 shadow-[0_0_20px_rgba(101,214,84,0.2)]' 
-            : 'border-uni-white/10 bg-uni-white/5 hover:bg-uni-white/10 hover:border-uni-white/20'">
-          <div class="relative z-10 flex flex-col items-center justify-center gap-2">
-            <lucide-icon [img]="Car" [class]="selectedRole === 'COURIER' ? 'text-uni-500' : 'text-gray-400'"
-              [size]="28"></lucide-icon>
-            <span class="text-xs font-bold uppercase tracking-wider"
-              [class]="selectedRole === 'COURIER' ? 'text-white' : 'text-gray-400'">Courier</span>
-          </div>
-          <!-- Selection Indicator -->
-          @if (selectedRole === 'COURIER') {
-          <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-uni-500 shadow-[0_0_8px_#65d654]"></div>
-          }
+        <button (click)="setRole(UserRole.COURIER)" 
+                [ngClass]="selectedRole === 'COURIER' ? 'text-uni-950' : 'text-gray-400 hover:text-uni-white'"
+                class="relative z-10 px-6 py-2 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center gap-2">
+          <lucide-icon [img]="Car" [size]="14"></lucide-icon> Courier
         </button>
       </div>
 

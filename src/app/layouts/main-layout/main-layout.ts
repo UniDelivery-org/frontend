@@ -1,9 +1,10 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Search, Menu, LogOut, Wallet, FileText, Settings, Truck, X, Check, Clock, Sun, Moon } from 'lucide-angular';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from '../../core/services/theme.service';
+import { Role } from '../../core/models/models';
 
 @Component({
   selector: 'app-main-layout',
@@ -13,9 +14,10 @@ import { ThemeService } from '../../core/services/theme.service';
 })
 export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
-  
+  private route = inject(ActivatedRoute);
+  role = Role;
   // State
-  currentRole = signal<'sender' | 'courier'>('sender');
+  currentRole = signal<Role>(Role.SENDER);
 
   // Icons
   readonly Box = Box;
@@ -82,6 +84,9 @@ export class MainLayoutComponent implements OnInit {
   ngOnInit() {
     // Initial check
     this.updateRoleFromUrl(this.router.url);
+    this.route.data.subscribe((data: any) => {
+      this.currentRole.set(data.role);
+    });
 
     // Subscribe to navigation events
     this.router.events.pipe(
@@ -93,9 +98,9 @@ export class MainLayoutComponent implements OnInit {
 
   private updateRoleFromUrl(url: string) {
     if (url.includes('/courier')) {
-      this.currentRole.set('courier');
+      this.currentRole.set(Role.COURIER);
     } else {
-      this.currentRole.set('sender');
+      this.currentRole.set(Role.SENDER);
     }
   }
 }
