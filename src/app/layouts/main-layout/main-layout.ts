@@ -5,6 +5,7 @@ import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Sea
 import { filter } from 'rxjs/operators';
 import { ThemeService } from '../../core/services/theme.service';
 import { Role } from '../../core/models/models';
+import { RoleService } from '../../core/services/role.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -15,6 +16,8 @@ import { Role } from '../../core/models/models';
 export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private roleService = inject(RoleService);
+  
   role = Role;
   // State
   currentRole = signal<Role>(Role.SENDER);
@@ -82,25 +85,21 @@ export class MainLayoutComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Initial check
-    this.updateRoleFromUrl(this.router.url);
+    // Set initial role from service
+    this.currentRole.set(this.roleService.getRole());
+
+    // Subscribe to route data for updates
     this.route.data.subscribe((data: any) => {
-      this.currentRole.set(data.role);
+      if (data.role) {
+        this.currentRole.set(data.role);
+      }
     });
 
-    // Subscribe to navigation events
+    // Subscribe to navigation events to refresh role from service
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.updateRoleFromUrl(event.urlAfterRedirects || event.url);
+    ).subscribe(() => {
+      this.currentRole.set(this.roleService.getRole());
     });
-  }
-
-  private updateRoleFromUrl(url: string) {
-    if (url.includes('/courier')) {
-      this.currentRole.set(Role.COURIER);
-    } else {
-      this.currentRole.set(Role.SENDER);
-    }
   }
 }

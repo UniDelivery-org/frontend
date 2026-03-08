@@ -37,7 +37,7 @@ export class AuthService {
                 const payload = this.jwtResolver.decodeToken(response.accessToken);
                 this.roleService.setRole(payload.realm_access.roles[0] as Role);
                 return response;
-            }),tap(()=> this.router.navigate(['/auth/profile'])),
+            }),tap(()=> this.router.navigate(['/'])),
         );
     }
     public logout(): Observable<void> {

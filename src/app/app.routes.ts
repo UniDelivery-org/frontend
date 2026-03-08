@@ -1,11 +1,8 @@
 import { Routes } from '@angular/router';
+import { roleGuard } from './core/guards/role.guard';
+import { Role } from './core/models/models';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'auth/login',
-    pathMatch: 'full'
-  },
   {
     path: 'auth',
     loadComponent: () => import('./layouts/auth-layout/auth-layout').then(m => m.AuthLayout),
@@ -16,36 +13,21 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'sender',
+    path: '',
     loadComponent: () => import('./layouts/main-layout/main-layout').then(m => m.MainLayoutComponent),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', loadComponent: () => import('./features/sender/pages/sender-dashboard/sender-dashboard').then(m => m.SenderDashboardComponent) },
-      { path: 'profile', loadComponent: () => import('./features/profile/pages/profile').then(m => m.ProfileComponent) },
-      { path: 'wallet', loadComponent: () => import('./features/wallet/pages/wallet').then(m => m.WalletComponent) },
-      { path: 'activity', loadComponent: () => import('./features/activity/pages/activity').then(m => m.ActivityComponent) },
-      { path: 'settings', loadComponent: () => import('./features/settings/pages/settings').then(m => m.SettingsComponent) },
-      { path: 'new-delivery', loadComponent: () => import('./features/sender/pages/new-delivery/new-delivery').then(m => m.NewDeliveryComponent) },
-      { path: 'delivery/:id', loadComponent: () => import('./features/shared/pages/delivery-details/delivery-details').then(m => m.DeliveryDetailsComponent) }
-    ]
+    loadChildren: () => import('./core/routes/sender.routes').then(m => m.SENDER_ROUTES),
+    canMatch: [roleGuard],
+    data: { role: Role.SENDER }
   },
   {
-    path: 'courier',
+    path: '',
     loadComponent: () => import('./layouts/main-layout/main-layout').then(m => m.MainLayoutComponent),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', loadComponent: () => import('./features/courier/pages/courier-dashboard/courier-dashboard').then(m => m.CourierDashboardComponent) },
-      { path: 'profile', loadComponent: () => import('./features/profile/pages/profile').then(m => m.ProfileComponent) },
-      { path: 'wallet', loadComponent: () => import('./features/wallet/pages/wallet').then(m => m.WalletComponent) },
-      { path: 'documents', loadComponent: () => import('./features/courier/pages/documents/documents').then(m => m.DocumentsComponent) },
-      { path: 'activity', loadComponent: () => import('./features/activity/pages/activity').then(m => m.ActivityComponent) },
-      { path: 'settings', loadComponent: () => import('./features/settings/pages/settings').then(m => m.SettingsComponent) },
-      { path: 'vehicles', loadComponent: () => import('./features/courier/pages/vehicles/vehicles').then(m => m.VehiclesComponent) },
-      { path: 'delivery/:id', loadComponent: () => import('./features/shared/pages/delivery-details/delivery-details').then(m => m.DeliveryDetailsComponent) }
-    ]
+    loadChildren: () => import('./core/routes/courier.routes').then(m => m.COURIER_ROUTES),
+    canMatch: [roleGuard],
+    data: { role: Role.COURIER }
   },
   {
-    path: 'admin',
+    path: '',
     loadComponent: () => import('./layouts/admin-layout/admin-layout').then(m => m.AdminLayoutComponent),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -54,11 +36,18 @@ export const routes: Routes = [
       { path: 'users', loadComponent: () => import('./features/admin/pages/users/users').then(m => m.Users) },
       { path: 'settings', loadComponent: () => import('./features/settings/pages/settings').then(m => m.SettingsComponent) },
       { path: 'deliveries', loadComponent: () => import('./features/admin/pages/deliveries/deliveries').then(m => m.AdminDeliveriesComponent) }
-    ]
+    ],
+    canMatch: [roleGuard],
+    data: { role: Role.ADMIN }
   },
   {
     path: 'map',
     loadComponent: () => import('./features/shared/pages/map/map').then(m => m.Map)
+  },
+  {
+    path: '',
+    redirectTo: 'auth/login',
+    pathMatch: 'full'
   },
   {
     path: '**',
