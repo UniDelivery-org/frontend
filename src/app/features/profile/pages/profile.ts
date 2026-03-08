@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Camera, User, Mail, Phone, BadgeCheck, Star, Edit2, Lock, LogOut } from 'lucide-angular';
 
 interface UserProfile {
-  name: string;
+  fullName: string;
   email: string;
   phone: string;
-  avatar: string;
+  avatar: string | null;
 }
 
 @Component({
@@ -32,11 +32,19 @@ export class ProfileComponent {
   isLoading = false;
 
   user: UserProfile = {
-    name: 'Achraf Sikal',
+    fullName: 'Achraf Sikal',
     email: 'achraf.sikal@example.com',
     phone: '+212 600 123 456',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Achraf'
+    avatar: null
   };
+
+  logout() {
+    console.log('Logging out...');
+    
+  }
+  getAvatar(user: UserProfile): string {
+    return user.avatar?user.avatar:'https://api.dicebear.com/7.x/avataaars/svg?seed='+user.fullName.substring(0, user.fullName.indexOf(' '));
+  }
 
   toggleEdit() {
     this.isEditing = !this.isEditing;

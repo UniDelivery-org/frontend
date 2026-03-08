@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-angular';
+import { LucideAngularModule, Mail, Lock, User, ArrowRight, CircleAlert } from 'lucide-angular';
 import { LoginDto } from '../../data-access/login.dto';
 import { Observable } from 'rxjs';
 import { ApiError } from '../../../../shared/models/api.error.model';
@@ -21,7 +21,7 @@ export class LoginComponent {
   readonly Lock = Lock;
   readonly User = User;
   readonly ArrowRight = ArrowRight;
-  readonly AlertCircle = AlertCircle;
+  readonly AlertCircle = CircleAlert;
 
   private store = inject(Store)
 
@@ -41,7 +41,6 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const loginDto: LoginDto = this.loginForm.getRawValue();
-      console.log(loginDto);
       this.store.dispatch(authActions.login({loginDto}))
     }
   }
