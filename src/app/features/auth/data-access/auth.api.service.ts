@@ -8,6 +8,9 @@ import { map, Observable, of, tap } from "rxjs";
 import { Profile } from "../../profile/profile";
 import { Auth } from "../auth";
 import { LoginDto } from "./login.dto";
+import { JwtResolverService } from "../../../core/services/jwtResolver.service";
+import { RoleService } from "../../../core/services/role.service";
+import { Role } from "../../../core/models/models";
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +21,8 @@ export class AuthService {
     private http = inject(HttpClient);
     private router = inject(Router);
     private cookie = inject(CookieService);
+    private jwtResolver = inject(JwtResolverService);
+    private roleService = inject(RoleService);
     
     public register(payload: RegisterDto): Observable<Profile> {
         return this.http
@@ -29,6 +34,8 @@ export class AuthService {
             map((response) => {
                 this.cookie.set('refreshToken', response.refreshToken, 5);
                 this.cookie.set('accessToken', response.accessToken, 1);
+                const payload = this.jwtResolver.decodeToken(response.accessToken);
+                this.roleService.setRole(payload.realm_access.roles[0] as Role);
                 return response;
             }),tap(()=> this.router.navigate(['/auth/profile'])),
         );
@@ -39,5 +46,6 @@ export class AuthService {
     private deleteCookies(): void {
         this.cookie.destroy('accessToken');
         this.cookie.destroy('refreshToken');
+        this.roleService.deleteRole();
     }
 }
