@@ -68,6 +68,7 @@
       </div>
 
       <!-- Submit Button -->
+      @let isLoading = isLoading$ | async;
       <button 
         type="submit" 
         [disabled]="loginForm.invalid || isLoading"
