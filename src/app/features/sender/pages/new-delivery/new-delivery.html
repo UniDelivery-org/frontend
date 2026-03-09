@@ -156,8 +156,7 @@
 
     <!-- Real Map Component -->
     <app-map #mapComponent class="absolute inset-0 w-full h-full" [class.cursor-crosshair]="selectingFor"
-      [showTracking]="false" [routePoints]="routePoints" [routingData]="routingData"
-      (mapClick)="onMapClick($event)"></app-map>
+      [showTracking]="false" [routePoints]="routePoints" (mapClick)="onMapClick($event)"></app-map>
 
     <!-- Floating Map Controls -->
     <div class="absolute bottom-8 right-8 flex flex-col gap-2 z-400 map-controls-container">

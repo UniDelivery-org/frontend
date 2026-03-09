@@ -1,7 +1,24 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, MapPin, Bike, Car, Truck, Wallet, Search, Map, Navigation } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  MapPin,
+  Bike,
+  Car,
+  Truck,
+  Wallet,
+  Search,
+  Map,
+  Navigation,
+} from 'lucide-angular';
 import { Map as MapComponent } from '../../../shared/pages/map/map';
 import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
@@ -12,7 +29,7 @@ import { AnimatedTitleDirective } from '../../../../core/directives/animated-tit
   selector: 'app-new-delivery',
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule, MapComponent, AnimatedTitleDirective],
-  templateUrl: './new-delivery.html'
+  templateUrl: './new-delivery.html',
 })
 export class NewDeliveryComponent implements OnDestroy {
   // Icons
@@ -37,27 +54,26 @@ export class NewDeliveryComponent implements OnDestroy {
   // Form Data
   pickupLocation = '';
   dropoffLocation = '';
-  
+
   // Exact Map Coordinates
   pickupLatLng: L.LatLng | null = null;
   dropoffLatLng: L.LatLng | null = null;
-  
+
   isPickupLoading = false;
   isDropoffLoading = false;
-  
+
   offerPrice: number | null = null;
   selectedVehicle = 'MOTO';
   isSearching = false;
 
   suggestedPrices = [30, 45, 60, 80];
-  
+
   routePoints: L.LatLng[] = [];
-  routingData: any = null;
   geocodeTimer: any;
 
   constructor(
     private geolocationService: GeolocationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   setPrice(price: number) {
@@ -66,9 +82,9 @@ export class NewDeliveryComponent implements OnDestroy {
 
   onLocationChange(type: 'pickup' | 'dropoff') {
     if (type === 'pickup') {
-       this.pickupLatLng = null; // Clear previous exact coordinate when searching new text
+      this.pickupLatLng = null; // Clear previous exact coordinate when searching new text
     } else {
-       this.dropoffLatLng = null;
+      this.dropoffLatLng = null;
     }
 
     clearTimeout(this.geocodeTimer);
@@ -80,7 +96,7 @@ export class NewDeliveryComponent implements OnDestroy {
   // Only used when the user manually TYPED into the text box
   geocodeInputsAndRoute() {
     let pending = 0;
-    
+
     if (this.pickupLocation && !this.pickupLatLng) {
       pending++;
       this.geocoder.geocode(this.pickupLocation, (res: any[]) => {
@@ -89,7 +105,7 @@ export class NewDeliveryComponent implements OnDestroy {
         this.checkDrawRoute(pending);
       });
     }
-    
+
     if (this.dropoffLocation && !this.dropoffLatLng) {
       pending++;
       this.geocoder.geocode(this.dropoffLocation, (res: any[]) => {
@@ -98,10 +114,10 @@ export class NewDeliveryComponent implements OnDestroy {
         this.checkDrawRoute(pending);
       });
     }
-    
+
     this.checkDrawRoute(pending);
   }
-  
+
   checkDrawRoute(pending: number) {
     if (pending === 0) {
       this.updateRoute();
@@ -112,40 +128,35 @@ export class NewDeliveryComponent implements OnDestroy {
     const points: L.LatLng[] = [];
     if (this.pickupLatLng) points.push(this.pickupLatLng);
     if (this.dropoffLatLng) points.push(this.dropoffLatLng);
-    
+
     this.routePoints = points;
-
-    if (this.pickupLatLng && this.dropoffLatLng) {
-      this.geolocationService.getRoute(this.pickupLatLng, this.dropoffLatLng).subscribe(data => {
-        console.log('OSRM Route Data:', data);
-        this.routingData = data;
-        this.cdr.detectChanges();
-      });
-    } else {
-      this.routingData = null;
-    }
-
     this.cdr.detectChanges();
   }
 
   private formatAddress(data: any): string {
     if (!data || !data.address) return data?.display_name || '';
-    
+
     const addr = data.address;
     const parts: string[] = [];
-    
+
     // 1. Street / Place name
-    const mainPlace = addr.road || addr.pedestrian || addr.suburb || addr.neighbourhood || addr.amenity || addr.building;
+    const mainPlace =
+      addr.road ||
+      addr.pedestrian ||
+      addr.suburb ||
+      addr.neighbourhood ||
+      addr.amenity ||
+      addr.building;
     if (mainPlace) parts.push(mainPlace);
-    
+
     // 2. City / Town
     const city = addr.city || addr.town || addr.village || addr.municipality;
     if (city) parts.push(city);
-    
+
     if (parts.length > 0) {
       return parts.join(', ');
     }
-    
+
     return data.display_name || '';
   }
 
@@ -177,11 +188,11 @@ export class NewDeliveryComponent implements OnDestroy {
 
     if (type === 'pickup') {
       this.pickupLatLng = latlng;
-      this.pickupLocation = "Loading address...";
+      this.pickupLocation = 'Loading address...';
       this.isPickupLoading = true;
     } else {
       this.dropoffLatLng = latlng;
-      this.dropoffLocation = "Loading address...";
+      this.dropoffLocation = 'Loading address...';
       this.isDropoffLoading = true;
     }
 
@@ -192,7 +203,7 @@ export class NewDeliveryComponent implements OnDestroy {
       next: (data) => {
         console.log('Reverse Geocode Native (Map Click):', data);
         let address = `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`;
-        
+
         if (data) {
           address = this.formatAddress(data);
         }
@@ -207,7 +218,7 @@ export class NewDeliveryComponent implements OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Geocoding failed:", err);
+        console.error('Geocoding failed:', err);
         // Fallback to coordinates
         if (type === 'pickup') {
           this.pickupLocation = `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`;
@@ -217,12 +228,12 @@ export class NewDeliveryComponent implements OnDestroy {
           this.isDropoffLoading = false;
         }
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
   useCurrentLocation() {
-    this.dropoffLocation = "Detecting location...";
+    this.dropoffLocation = 'Detecting location...';
     this.isDropoffLoading = true;
     this.cdr.detectChanges();
 
@@ -230,7 +241,7 @@ export class NewDeliveryComponent implements OnDestroy {
       next: (pos) => {
         const coords = L.latLng(pos.coords.latitude, pos.coords.longitude);
         this.dropoffLatLng = coords;
-        this.dropoffLocation = "Loading address..."; // Set placeholder while fetching address
+        this.dropoffLocation = 'Loading address...'; // Set placeholder while fetching address
         this.updateRoute();
 
         // Use GeolocationService to reverse geocode
@@ -238,33 +249,33 @@ export class NewDeliveryComponent implements OnDestroy {
           next: (data) => {
             console.log('Reverse Geocode Native (Current Location):', data);
             let address = `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
-            
+
             if (data) {
               address = this.formatAddress(data);
             }
-            
+
             this.dropoffLocation = address;
             this.isDropoffLoading = false;
             this.cdr.detectChanges();
           },
           error: (err) => {
-            console.error("Geocoding failed:", err);
+            console.error('Geocoding failed:', err);
             this.dropoffLocation = `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
             this.isDropoffLoading = false;
             this.cdr.detectChanges();
-          }
+          },
         });
-        
+
         if (this.locationSub) {
           this.locationSub.unsubscribe();
         }
       },
       error: (err) => {
-        console.error("Could not get location", err);
+        console.error('Could not get location', err);
         this.isDropoffLoading = false;
         this.dropoffLocation = '';
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -274,14 +285,14 @@ export class NewDeliveryComponent implements OnDestroy {
       pickup: this.pickupLocation,
       dropoff: this.dropoffLocation,
       vehicle: this.selectedVehicle,
-      price: this.offerPrice
+      price: this.offerPrice,
     });
 
     setTimeout(() => {
       this.isSearching = false;
     }, 3000);
   }
-  
+
   ngOnDestroy() {
     if (this.locationSub) {
       this.locationSub.unsubscribe();
