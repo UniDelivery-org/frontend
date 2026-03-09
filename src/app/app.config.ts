@@ -10,7 +10,7 @@ import * as AuthEffects from './features/auth/store/auth.effect';
 import * as ProfileEffects from './features/profile/store/profile.effect';
 import { authFeature } from './features/auth/store/auth.reducer';
 import { profileFeature } from './features/profile/store/profile.reducer';
-import { tokenInterceptor } from './core/interceptors/token.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([tokenInterceptor])
+      withInterceptors([authInterceptor])
     ),
     provideStore(),
     provideState(authFeature),

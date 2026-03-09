@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import { AuthHelper } from './core/helpers/auth.helper';
 import { Store } from '@ngrx/store';
 import { profileActions } from './features/profile/store/profile.actions';
+import { CookieService } from './core/services/cookie.service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,12 @@ export class App implements AfterViewInit, OnInit {
   protected readonly title = signal('UniDelivery');
   private store = inject(Store);
   private authHelper = inject(AuthHelper);
+  private cookie = inject(CookieService);
 
   ngOnInit(): void {
+    const refreshToken = this.cookie.get('refreshToken');
     const isAuth = this.authHelper.isAuthenticated();
-    if (isAuth) {
+    if (refreshToken) {
       this.store.dispatch(profileActions.loadProfile());
     }
   }
