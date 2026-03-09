@@ -35,7 +35,7 @@ export class AuthService {
                 this.cookie.set('refreshToken', response.refreshToken, 30*60);
                 this.cookie.set('accessToken', response.accessToken, response.expiresIn);
                 const payload = this.jwtResolver.decodeToken(response.accessToken);
-                this.roleService.setRole(payload.realm_access.roles[0] as Role);
+                this.roleService.setRole(payload.realm_access.roles[0] as Role, response.expiresIn);
                 return response;
             }),tap(()=> this.router.navigate(['/'])),
         );

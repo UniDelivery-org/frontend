@@ -10,8 +10,8 @@ export class RoleService {
     public getRole(): Role {
         return this.cookie.get('role') as Role;
     }
-    public setRole(role: Role): void {
-        this.cookie.set('role', role, 1);
+    public setRole(role: Role, expires: number): void {
+        this.cookie.set('role', role, expires);
     }
     public deleteRole(): void {
         this.cookie.destroy('role');
