@@ -7,6 +7,6 @@ import { CookieService } from "../services/cookie.service";
 export class AuthHelper{
     private cookie = inject(CookieService);
     public isAuthenticated(): boolean{
-        return !!this.cookie.get('accessToken');
+        return !!this.cookie.get('accessToken') || !!this.cookie.get('refreshToken');
     }
 }
