@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { authActions } from './auth.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { AuthService } from '../data-access/auth.api.service';
+import { profileActions } from '../../profile/store/profile.actions';
 
 
 export const loginEffect = createEffect(
@@ -45,4 +46,13 @@ export const logoutProfileEffect = createEffect(
       ),
     ),
   { functional: true },
+);
+
+export const loadProfileAfterLoginEffect = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(authActions.loginSuccess),
+      map(() => profileActions.loadProfile())
+    ),
+  { functional: true }
 );
