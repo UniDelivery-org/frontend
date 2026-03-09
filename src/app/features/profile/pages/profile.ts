@@ -1,22 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Camera, User, Mail, Phone, BadgeCheck, Star, Edit2, Lock, LogOut } from 'lucide-angular';
-
-interface UserProfile {
-  fullName: string;
-  email: string;
-  phone: string;
-  avatar: string | null;
-}
-
+import {
+  LucideAngularModule,
+  Camera,
+  User,
+  Mail,
+  Phone,
+  BadgeCheck,
+  Star,
+  Edit2,
+  Lock,
+  LogOut,
+} from 'lucide-angular';
+import { Observable } from 'rxjs';
+import { Profile } from '../profile';
+import { Store } from '@ngrx/store';
+import { selectIsLoading, selectProfile } from '../store/profile.reducer';
+import { AnimatedTitleDirective } from '../../../core/directives/animated-title.directive';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
-  templateUrl: './profile.html'
+  imports: [CommonModule, FormsModule, LucideAngularModule, AnimatedTitleDirective],
+  templateUrl: './profile.html',
 })
 export class ProfileComponent {
+  private store = inject(Store);
   // Icons
   readonly Camera = Camera;
   readonly User = User;
@@ -29,21 +38,21 @@ export class ProfileComponent {
   readonly LogOut = LogOut;
 
   isEditing = false;
-  isLoading = false;
-
-  user: UserProfile = {
-    fullName: 'Achraf Sikal',
-    email: 'achraf.sikal@example.com',
-    phone: '+212 600 123 456',
-    avatar: null
-  };
+  isLoading$: Observable<boolean>;
+  profile$: Observable<Profile | null>;
+  constructor() {
+    this.isLoading$ = this.store.select(selectIsLoading);
+    this.profile$ = this.store.select(selectProfile);
+  }
 
   logout() {
     console.log('Logging out...');
-    
   }
-  getAvatar(user: UserProfile): string {
-    return user.avatar?user.avatar:'https://api.dicebear.com/7.x/avataaars/svg?seed='+user.fullName.substring(0, user.fullName.indexOf(' '));
+  getAvatar(profile: Profile): string {
+    return profile.avatarUrl
+      ? profile.avatarUrl
+      : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' +
+          profile.fullName.substring(0, profile.fullName.indexOf(' '));
   }
 
   toggleEdit() {
@@ -51,12 +60,6 @@ export class ProfileComponent {
   }
 
   saveProfile() {
-    this.isLoading = true;
-    console.log('Saving profile...', this.user);
-    
-    setTimeout(() => {
-      this.isEditing = false;
-      this.isLoading = false;
-    }, 1000);
+
   }
 }

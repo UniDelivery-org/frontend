@@ -18,7 +18,7 @@
         <lucide-icon [img]="Camera" [size]="16"></lucide-icon>
       </button>
     </div>
-
+    @if(profile$ | async;as profile){
     <div class="px-8 pb-8">
 
       <!-- AVATAR SECTION (Overlapping Banner) -->
@@ -26,8 +26,7 @@
         <div class="relative group/avatar">
           <!-- Avatar Image -->
           <div class="w-32 h-32 rounded-full border-4 border-gray-900 shadow-xl overflow-hidden bg-gray-800">
-            <img [src]="getAvatar(user)"
-              alt="Profile" class="w-full h-full object-cover">
+            <img [src]="getAvatar(profile)" alt="Profile" class="w-full h-full object-cover">
           </div>
 
           <!-- Edit Avatar Button -->
@@ -39,10 +38,10 @@
 
         <div class="text-center mt-4">
           <h3 class="text-2xl font-uni-black text-uni-white flex items-center gap-2 justify-center">
-            {{user.fullName}}
+            {{profile.fullName}}
             <lucide-icon [img]="BadgeCheck" [size]="20" class="text-uni-500 fill-uni-500/20"></lucide-icon>
           </h3>
-          <p class="text-sm text-gray-500 font-medium">{{user.email}}</p>
+          <p class="text-sm text-gray-500 font-medium">{{profile.email}}</p>
         </div>
       </div>
 
@@ -60,7 +59,8 @@
         </div>
         <div class="bg-uni-white/5 rounded-2xl p-3 text-center border border-uni-white/5">
           <div class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Joined</div>
-          <div class="text-lg font-uni-black text-white">2024</div>
+          <div class="text-lg font-uni-black text-white" [title]="(profile.createdAt | date:'medium') || ''">{{
+            profile.createdAt | date }}</div>
         </div>
       </div>
 
@@ -76,7 +76,7 @@
               [ngClass]="{'text-uni-500': isEditing}">
               <lucide-icon [img]="User" [size]="18"></lucide-icon>
             </div>
-            <input type="text" [(ngModel)]="user.fullName" [disabled]="!isEditing"
+            <input type="text" [(ngModel)]="profile.fullName" [disabled]="!isEditing"
               class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-uni-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-uni-white/5 border-uni-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500"
               [ngClass]="!isEditing ? 'border-transparent bg-transparent pl-11' : ''">
             <!-- Edit Icon Indicator (Only visible when NOT editing) -->
@@ -96,7 +96,7 @@
               [ngClass]="{'text-uni-500': isEditing}">
               <lucide-icon [img]="Mail" [size]="18"></lucide-icon>
             </div>
-            <input type="email" [(ngModel)]="user.email" [disabled]="!isEditing"
+            <input type="email" [(ngModel)]="profile.email" [disabled]="!isEditing"
               class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-uni-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-uni-white/5 border-uni-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500">
             <div *ngIf="!isEditing"
               class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-600">
@@ -114,7 +114,7 @@
               [ngClass]="{'text-uni-500': isEditing}">
               <lucide-icon [img]="Phone" [size]="18"></lucide-icon>
             </div>
-            <input type="tel" [(ngModel)]="user.phone" [disabled]="!isEditing"
+            <input type="tel" [(ngModel)]="profile.phone" [disabled]="!isEditing"
               class="block w-full pl-11 pr-4 py-3.5 rounded-xl text-uni-white transition-all font-medium disabled:opacity-100 disabled:bg-transparent disabled:border-transparent disabled:pl-11 border bg-uni-white/5 border-uni-white/10 focus:outline-none focus:border-uni-500 focus:ring-1 focus:ring-uni-500">
             <div *ngIf="!isEditing"
               class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-600">
@@ -148,6 +148,7 @@
       </div>
 
     </div>
+    }
   </div>
 
   <!-- Footer Actions -->
