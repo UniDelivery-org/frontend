@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,6 +18,10 @@ import { Profile } from '../profile';
 import { Store } from '@ngrx/store';
 import { selectIsLoading, selectProfile } from '../store/profile.reducer';
 import { AnimatedTitleDirective } from '../../../core/directives/animated-title.directive';
+import { profileActions } from '../store/profile.actions';
+import { UpdateProfileRequestDTO } from '../data-access/update-profile.dto';
+import { Actions, ofType } from '@ngrx/effects';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -40,9 +44,21 @@ export class ProfileComponent {
   isEditing = false;
   isLoading$: Observable<boolean>;
   profile$: Observable<Profile | null>;
+  formValues: Partial<Profile> = {};
+
+  private actions$ = inject(Actions);
+  private destroyRef = inject(DestroyRef);
+
   constructor() {
     this.isLoading$ = this.store.select(selectIsLoading);
     this.profile$ = this.store.select(selectProfile);
+
+    // Close edit mode only when the update is successful
+    this.actions$
+      .pipe(ofType(profileActions.updateProfileSuccess), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.isEditing = false;
+      });
   }
 
   logout() {
@@ -55,11 +71,20 @@ export class ProfileComponent {
           profile.fullName.substring(0, profile.fullName.indexOf(' '));
   }
 
-  toggleEdit() {
+  toggleEdit(currentProfile?: Profile | null) {
     this.isEditing = !this.isEditing;
+    if (this.isEditing && currentProfile) {
+      this.formValues = { ...currentProfile };
+    }
   }
 
   saveProfile() {
-
+    if (this.formValues.fullName && this.formValues.phone) {
+      const updateProfileDto: UpdateProfileRequestDTO = {
+        fullName: this.formValues.fullName,
+        phone: this.formValues.phone,
+      };
+      this.store.dispatch(profileActions.updateProfile({ updateProfileDto }));
+    }
   }
 }

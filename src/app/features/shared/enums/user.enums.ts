@@ -5,6 +5,8 @@ export enum UserRole {
 }
 
 export enum VerificationStatus {
-    PENDING,
-    APPROVED, REJECTED, MISSING
+    PENDING='PENDING',
+    APPROVED='APPROVED',
+    REJECTED='REJECTED',
+    MISSING='MISSING'
 }
