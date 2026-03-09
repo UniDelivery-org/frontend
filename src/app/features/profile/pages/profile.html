@@ -26,14 +26,25 @@
         <div class="relative group/avatar">
           <!-- Avatar Image -->
           <div class="w-32 h-32 rounded-full border-4 border-gray-900 shadow-xl overflow-hidden bg-gray-800">
-            <img [src]="getAvatar(profile)" alt="Profile" class="w-full h-full object-cover">
+            <img [src]="formValues.avatarUrl ? formValues.avatarUrl : getAvatar(profile)" alt="Profile"
+              class="w-full h-full object-cover">
           </div>
 
           <!-- Edit Avatar Button -->
-          <button
-            class="absolute bottom-1 right-1 bg-uni-500 text-uni-950 p-2.5 rounded-full shadow-lg shadow-uni-500/40 hover:scale-110 hover:bg-uni-white transition-all duration-300 border-4 border-gray-900 cursor-pointer z-10">
+          <button (click)="fileInput.click()"
+            class="absolute bottom-1 bg-uni-500 text-uni-950 p-2.5 rounded-full shadow-lg shadow-uni-500/40 hover:scale-110 hover:bg-uni-white transition-all duration-300 border-4 border-gray-900 cursor-pointer z-10"
+            [ngClass]="hasAvatar(profile) ? 'right-6' : 'right-1'">
             <lucide-icon [img]="Camera" [size]="16"></lucide-icon>
           </button>
+
+          <!-- Delete Avatar Button -->
+          <button *ngIf="hasAvatar(profile)" (click)="deleteAvatar(profile)"
+            class="absolute bottom-1 -right-2 bg-red-500 text-uni-white p-2.5 rounded-full shadow-lg shadow-red-500/40 hover:scale-110 hover:bg-red-400 transition-all duration-300 border-4 border-gray-900 cursor-pointer z-10">
+            <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
+          </button>
+
+          <!-- Hidden File Input -->
+          <input type="file" #fileInput hidden accept="image/*" (change)="onAvatarSelected($event, profile)">
         </div>
 
         <div class="text-center mt-4">
@@ -124,7 +135,7 @@
             class="flex-1 py-4 rounded-xl border border-uni-white/10 bg-uni-white/5 font-bold text-gray-400 hover:bg-uni-white/10 hover:text-uni-white transition-colors">
             Cancel
           </button>
-          <button (click)="saveProfile()" [disabled]="isLoading$ | async"
+          <button (click)="saveProfile(profile)" [disabled]="isLoading$ | async"
             class="flex-1 py-4 rounded-xl bg-uni-500 text-uni-950 font-bold hover:bg-uni-400 shadow-lg shadow-uni-500/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
             @if(!(isLoading$ | async)){
             Save Changes

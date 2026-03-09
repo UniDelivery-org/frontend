@@ -12,6 +12,7 @@ import {
   Edit2,
   Lock,
   LogOut,
+  Trash2,
 } from 'lucide-angular';
 import { Observable } from 'rxjs';
 import { Profile } from '../profile';
@@ -40,11 +41,13 @@ export class ProfileComponent {
   readonly Edit2 = Edit2;
   readonly Lock = Lock;
   readonly LogOut = LogOut;
+  readonly Trash2 = Trash2;
 
   isEditing = false;
   isLoading$: Observable<boolean>;
   profile$: Observable<Profile | null>;
   formValues: Partial<Profile> = {};
+  selectedAvatarFile: File | null = null;
 
   private actions$ = inject(Actions);
   private destroyRef = inject(DestroyRef);
@@ -66,7 +69,7 @@ export class ProfileComponent {
   }
   getAvatar(profile: Profile): string {
     return profile.avatarUrl
-      ? profile.avatarUrl
+      ? 'http://localhost:8081' + profile.avatarUrl
       : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' +
           profile.fullName.substring(0, profile.fullName.indexOf(' '));
   }
@@ -75,15 +78,60 @@ export class ProfileComponent {
     this.isEditing = !this.isEditing;
     if (this.isEditing && currentProfile) {
       this.formValues = { ...currentProfile };
+    } else {
+      this.formValues = {};
+      this.selectedAvatarFile = null;
     }
   }
 
-  saveProfile() {
+  hasAvatar(profile: Profile | null): boolean {
+    if (this.isEditing) {
+      return !!this.formValues.avatarUrl;
+    }
+    return !!profile?.avatarUrl;
+  }
+
+  deleteAvatar(currentProfile: Profile) {
+    if (!this.isEditing) {
+      this.toggleEdit(currentProfile);
+    }
+    this.formValues.avatarUrl = undefined;
+    this.selectedAvatarFile = null;
+  }
+
+  onAvatarSelected(event: any, currentProfile: Profile) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedAvatarFile = file;
+      if (!this.isEditing) {
+        this.toggleEdit(currentProfile);
+      }
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.formValues.avatarUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  saveProfile(currentProfile: Profile) {
     if (this.formValues.fullName && this.formValues.phone) {
       const updateProfileDto: UpdateProfileRequestDTO = {
         fullName: this.formValues.fullName,
         phone: this.formValues.phone,
       };
+
+      if (this.selectedAvatarFile) {
+        updateProfileDto.avatar = this.selectedAvatarFile;
+      } else if (
+        this.isEditing &&
+        this.formValues.avatarUrl === undefined &&
+        currentProfile.avatarUrl
+      ) {
+        // Pass null to indicate deletion
+        updateProfileDto.avatar = null;
+      }
+
       this.store.dispatch(profileActions.updateProfile({ updateProfileDto }));
     }
   }
