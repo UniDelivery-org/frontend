@@ -17,6 +17,8 @@ import {
   Moon,
 } from 'lucide-angular';
 import { ThemeService } from '../../core/services/theme.service';
+import { authActions } from '../../features/auth/store/auth.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-admin-layout',
@@ -149,9 +151,10 @@ import { ThemeService } from '../../core/services/theme.service';
             </div>
           </div>
           <button
+            (click)="logout()"
             class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-uni-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-all font-bold text-xs uppercase tracking-wider border border-uni-white/5 hover:border-red-500/20"
           >
-            <lucide-icon [img]="LogOut" [size]="16"></lucide-icon> Logout Session
+            <lucide-icon [img]="LogOut" [size]="16"></lucide-icon> Logout
           </button>
         </div>
       </aside>
@@ -215,6 +218,7 @@ import { ThemeService } from '../../core/services/theme.service';
   `,
 })
 export class AdminLayoutComponent {
+  private store = inject(Store);
   // Icons
   readonly LayoutDashboard = LayoutDashboard;
   readonly Users = Users;
@@ -230,4 +234,7 @@ export class AdminLayoutComponent {
   readonly Moon = Moon;
 
   themeService = inject(ThemeService);
+  logout() {
+    this.store.dispatch(authActions.logoutProfile());
+  } 
 }

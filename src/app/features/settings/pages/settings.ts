@@ -1,6 +1,8 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Bell, Shield, Moon, Globe, LogOut, ChevronRight, User, Smartphone, Lock } from 'lucide-angular';
+import { authActions } from '../../auth/store/auth.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-settings',
@@ -9,6 +11,7 @@ import { LucideAngularModule, Bell, Shield, Moon, Globe, LogOut, ChevronRight, U
   templateUrl: './settings.html'
 })
 export class SettingsComponent implements AfterViewInit {
+  private store = inject(Store);
   // Icons
   readonly Bell = Bell;
   readonly Shield = Shield;
@@ -45,6 +48,6 @@ export class SettingsComponent implements AfterViewInit {
   }
 
   logout() {
-    console.log('Logging out...');
+    this.store.dispatch(authActions.logoutProfile());
   }
 }

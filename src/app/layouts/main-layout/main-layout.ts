@@ -6,6 +6,8 @@ import { filter } from 'rxjs/operators';
 import { ThemeService } from '../../core/services/theme.service';
 import { Role } from '../../core/models/models';
 import { RoleService } from '../../core/services/role.service';
+import { authActions } from '../../features/auth/store/auth.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-main-layout',
@@ -17,6 +19,7 @@ export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private roleService = inject(RoleService);
+  private store = inject(Store);
   
   role = Role;
   // State
@@ -73,6 +76,9 @@ export class MainLayoutComponent implements OnInit {
       type: 'payment'
     }
   ]);
+  logout() {
+    this.store.dispatch(authActions.logoutProfile());
+  }
 
   toggleNotifications() {
     this.showNotifications.update(v => !v);

@@ -118,7 +118,7 @@
 
     <!-- Logout (Bottom) -->
     <div class="p-4 border-t border-uni-white/5 bg-gray-900/50">
-      <button
+      <button (click)="logout()"
         class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-uni-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-all font-bold text-xs uppercase tracking-wider border border-uni-white/5 hover:border-red-500/20">
         <lucide-icon [img]="LogOut" [size]="16"></lucide-icon> Logout
       </button>

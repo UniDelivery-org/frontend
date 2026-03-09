@@ -23,6 +23,7 @@ import { profileActions } from '../store/profile.actions';
 import { UpdateProfileRequestDTO } from '../data-access/update-profile.dto';
 import { Actions, ofType } from '@ngrx/effects';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { authActions } from '../../auth/store/auth.actions';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -65,7 +66,7 @@ export class ProfileComponent {
   }
 
   logout() {
-    console.log('Logging out...');
+    this.store.dispatch(authActions.logoutProfile());
   }
   getAvatar(profile: Profile): string {
     return profile.avatarUrl
