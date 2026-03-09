@@ -1,16 +1,12 @@
 import { CanActivateFn, CanMatchFn, Router, UrlTree } from '@angular/router';
 import { inject } from '@angular/core';
-import { CookieService } from '../services/cookie.service';
+import { AuthHelper } from '../helpers/auth.helper';
 
 export const authGuard: CanMatchFn | CanActivateFn = (
   route: any,
   segmentsOrState: any,
 ): boolean | UrlTree => {
-  const cookieService = inject(CookieService);
+  const authHelper = inject(AuthHelper);
   const router = inject(Router);
-
-  if (cookieService.get('accessToken')) {
-    return true;
-  }
-  return router.parseUrl('/auth/login');
+  return authHelper.isAuthenticated() || router.parseUrl('/auth/login');
 };
