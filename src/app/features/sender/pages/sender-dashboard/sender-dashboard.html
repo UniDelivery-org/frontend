@@ -51,8 +51,22 @@
     </div>
 
     <!-- List -->
-    <div class="divide-y divide-uni-white/5">
-      <div *ngFor="let delivery of activeDeliveries" class="p-4 hover:bg-uni-white/5 transition-colors group">
+    <div class="divide-y divide-uni-white/5 relative min-h-[100px]">
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading"
+        class="absolute inset-0 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm z-10">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-uni-500"></div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && activeDeliveries.length === 0" class="p-8 text-center text-gray-400 text-sm">
+        You have no active deliveries right now.
+      </div>
+
+      <div *ngFor="let delivery of activeDeliveries"
+        class="p-4 hover:bg-uni-white/5 transition-colors group cursor-pointer"
+        [routerLink]="['/delivery', delivery.id]">
         <div class="flex items-center justify-between">
 
           <!-- Left: Icon & ID -->
@@ -63,23 +77,23 @@
             </div>
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <span class="text-uni-white font-bold">{{delivery.id}}</span>
+                <span class="text-uni-white font-bold text-xs uppercase">{{delivery.id.split('-')[0]}}...</span>
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border {{getStatusColor(delivery.status)}}">
-                  {{delivery.statusLabel}}
+                  {{formatLabel(delivery.status)}}
                 </span>
               </div>
               <div class="flex items-center gap-2 text-sm text-gray-500">
-                <span>{{delivery.pickup}}</span>
+                <span class="truncate max-w-[120px]">{{delivery.pickupAddress}}</span>
                 <lucide-icon [img]="ArrowRight" [size]="12"></lucide-icon>
-                <span>{{delivery.dropoff}}</span>
+                <span class="truncate max-w-[120px]">{{delivery.dropoffAddress}}</span>
               </div>
             </div>
           </div>
 
           <!-- Right: Price & Time -->
           <div class="text-right">
-            <div class="text-uni-white font-bold mb-1">{{delivery.price}} DH</div>
-            <div class="text-xs text-gray-500">{{delivery.time}}</div>
+            <div class="text-uni-white font-bold mb-1">{{delivery.agreedPrice}} DH</div>
+            <div class="text-xs text-gray-500">{{delivery.createdAt | date:'shortTime'}}</div>
           </div>
 
         </div>

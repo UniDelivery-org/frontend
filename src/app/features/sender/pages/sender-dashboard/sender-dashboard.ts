@@ -1,15 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Box, Clock, Home, MapPin, BadgeCheck, TrendingUp, ArrowRight } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Box,
+  Clock,
+  Home,
+  MapPin,
+  BadgeCheck,
+  TrendingUp,
+  ArrowRight,
+} from 'lucide-angular';
+import { Store } from '@ngrx/store';
+import { selectProfile } from '../../../profile/store/profile.reducer';
+import { senderDeliveryActions } from '../../store/sender-delivery.actions';
+import { selectSenderDeliveryState } from '../../store/sender-delivery.reducer';
+import { Subject, takeUntil, map, filter } from 'rxjs';
+import { DeliveryStatus } from '../../../../core/models/models';
 
 @Component({
   selector: 'app-sender-dashboard',
   standalone: true,
   imports: [CommonModule, LucideAngularModule, RouterLink],
-  templateUrl: './sender-dashboard.html'
+  templateUrl: './sender-dashboard.html',
 })
-export class SenderDashboardComponent {
+export class SenderDashboardComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private destroy$ = new Subject<void>();
+
   // Icons
   readonly Box = Box;
   readonly Clock = Clock;
@@ -19,54 +37,140 @@ export class SenderDashboardComponent {
   readonly ArrowRight = ArrowRight;
   readonly Home = Home;
 
-  // Mock Stats
+  // Real data state
+  statsData: any = null;
+  activeDeliveries: any[] = [];
+  isLoading = false;
+
+  // Presentation structure for stats
   stats = [
-    { label: 'Active Deliveries', value: '3', icon: Box, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-    { label: 'Total Spent', value: '450 DH', icon: TrendingUp, color: 'text-uni-500', bg: 'bg-uni-500/10', border: 'border-uni-500/20' },
-    { label: 'Completed', value: '12', icon: BadgeCheck, color: 'text-purple-500', bg: 'bg-purple-500/10', border: 'border-purple-500/20' }
-  ];
-
-  // Mock Active Deliveries
-  activeDeliveries = [
     {
-      id: 'DEL-8821',
-      pickup: 'Marjane Market, Gueliz',
-      dropoff: 'Residence Al Yassamine',
-      status: 'PICKED_UP', // PENDING, PICKED_UP, IN_TRANSIT, DELIVERED
-      statusLabel: 'Picked Up',
-      price: 45,
-      driver: 'Ahmed B.',
-      time: '15 mins ago'
+      key: 'active',
+      label: 'Active Deliveries',
+      value: '0',
+      icon: Box,
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/20',
     },
     {
-      id: 'DEL-9932',
-      pickup: 'Zara Store, Carré Eden',
-      dropoff: 'Villa 45, Targa',
-      status: 'PENDING',
-      statusLabel: 'Finding Driver',
-      price: 30,
-      driver: null,
-      time: '2 mins ago'
+      key: 'spent',
+      label: 'Total Spent',
+      value: '0 DH',
+      icon: TrendingUp,
+      color: 'text-uni-500',
+      bg: 'bg-uni-500/10',
+      border: 'border-uni-500/20',
     },
     {
-      id: 'DEL-7721',
-      pickup: 'Pharmacy Atlas',
-      dropoff: 'Hotel Mamounia Staff Entrance',
-      status: 'IN_TRANSIT',
-      statusLabel: 'On the way',
-      price: 60,
-      driver: 'Karim S.',
-      time: '25 mins ago'
-    }
+      key: 'completed',
+      label: 'Completed',
+      value: '0',
+      icon: BadgeCheck,
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20',
+    },
   ];
 
-  getStatusColor(status: string): string {
+  ngOnInit() {
+    // 1. Get Logged In User
+    this.store
+      .select(selectProfile)
+      .pipe(
+        takeUntil(this.destroy$),
+        filter((profile) => !!profile),
+      )
+      .subscribe((profile) => {
+        // 2. Dispatch data load using their ID
+        if (profile) {
+          this.store.dispatch(senderDeliveryActions.loadSenderStats({ customerId: profile.id }));
+          // Request page 0, size 5 for the dashboard preview
+          this.store.dispatch(
+            senderDeliveryActions.loadActiveDeliveries({
+              customerId: profile.id,
+              page: 0,
+              size: 5,
+            }),
+          );
+        }
+      });
+
+    // 3. Listen to State changes
+    this.store
+      .select(selectSenderDeliveryState)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.isLoading = state.isLoading;
+
+        // Map API Stats Data
+        if (state.stats) {
+          this.statsData = state.stats;
+          this.updateStatsDisplay();
+        }
+
+        // Map Active Deliveries List
+        if (state.deliveries && state.deliveries.content) {
+          this.activeDeliveries = state.deliveries.content;
+        }
+      });
+  }
+
+  updateStatsDisplay() {
+    if (!this.statsData) return;
+
+    this.stats = [
+      {
+        key: 'active',
+        label: 'Active Deliveries',
+        value: `${this.statsData.activeDeliveries || 0}`,
+        icon: Box,
+        color: 'text-blue-500',
+        bg: 'bg-blue-500/10',
+        border: 'border-blue-500/20',
+      },
+      {
+        key: 'spent',
+        label: 'Total Spent',
+        value: `${this.statsData.totalSpent || 0} DH`,
+        icon: TrendingUp,
+        color: 'text-uni-500',
+        bg: 'bg-uni-500/10',
+        border: 'border-uni-500/20',
+      },
+      {
+        key: 'completed',
+        label: 'Completed',
+        value: `${this.statsData.completedDeliveries || 0}`,
+        icon: BadgeCheck,
+        color: 'text-purple-500',
+        bg: 'bg-purple-500/10',
+        border: 'border-purple-500/20',
+      },
+    ];
+  }
+
+  getStatusColor(status: string | DeliveryStatus): string {
     switch (status) {
-      case 'PENDING': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20';
-      case 'PICKED_UP': return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
-      case 'IN_TRANSIT': return 'text-purple-500 bg-purple-500/10 border-purple-500/20';
-      case 'DELIVERED': return 'text-uni-500 bg-uni-500/10 border-uni-500/20';
-      default: return 'text-gray-500 bg-gray-500/10 border-gray-500/20';
+      case 'PENDING':
+        return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20';
+      case 'PICKED_UP':
+        return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
+      case 'IN_TRANSIT':
+        return 'text-purple-500 bg-purple-500/10 border-purple-500/20';
+      case 'DELIVERED':
+        return 'text-uni-500 bg-uni-500/10 border-uni-500/20';
+      default:
+        return 'text-gray-500 bg-gray-500/10 border-gray-500/20';
     }
+  }
+
+  formatLabel(status: string | DeliveryStatus): string {
+    return status?.toString().replace('_', ' ') || 'Unknown';
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
