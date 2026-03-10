@@ -8,8 +8,10 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import * as AuthEffects from './features/auth/store/auth.effect';
 import * as ProfileEffects from './features/profile/store/profile.effect';
+import * as SenderDeliveryEffects from './features/sender/store/sender-delivery.effects';
 import { authFeature } from './features/auth/store/auth.reducer';
 import { profileFeature } from './features/profile/store/profile.reducer';
+import { senderDeliveryFeature } from './features/sender/store/sender-delivery.reducer';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -23,7 +25,8 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState(authFeature),
     provideState(profileFeature),
+    provideState(senderDeliveryFeature),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects(AuthEffects, ProfileEffects)
+    provideEffects(AuthEffects, ProfileEffects, SenderDeliveryEffects)
 ]
 };
