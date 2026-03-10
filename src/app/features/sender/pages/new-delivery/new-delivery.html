@@ -7,10 +7,14 @@
     class="w-full md:w-[480px] h-full bg-gray-900/95 backdrop-blur-xl border-r border-uni-white/5 relative z-20 shadow-[20px_0_50px_rgba(0,0,0,0.5)] flex flex-col">
 
     <!-- Header -->
-    <div class="p-6 border-b border-uni-white/5">
+    <div class="p-6 border-b border-uni-white/5 flex items-center justify-between">
       <h2 class="text-xl font-uni-black text-uni-white tracking-tight flex items-center gap-2">
         <lucide-icon [img]="MapPin" class="text-uni-500"></lucide-icon> New Delivery
       </h2>
+      <a routerLink="/dashboard"
+        class="text-gray-400 hover:text-uni-white transition-colors p-2 hover:bg-uni-white/5 rounded-xl cursor-pointer">
+        <lucide-icon [img]="X" [size]="20"></lucide-icon>
+      </a>
     </div>
 
     <!-- Scrollable Form -->

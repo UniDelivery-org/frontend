@@ -19,7 +19,9 @@ import {
   Search,
   Map,
   Navigation,
+  X,
 } from 'lucide-angular';
+import { RouterLink } from '@angular/router';
 import { Map as MapComponent } from '../../../shared/pages/map/map';
 import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
@@ -28,11 +30,20 @@ import { AnimatedTitleDirective } from '../../../../core/directives/animated-tit
 import { Store } from '@ngrx/store';
 import { selectProfile } from '../../../profile/store/profile.reducer';
 import { take } from 'rxjs/operators';
+import { senderDeliveryActions } from '../../../sender/store/sender-delivery.actions';
+import { DeliveryRequestDTO } from '../../data-access/delivery.dto';
 
 @Component({
   selector: 'app-new-delivery',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, MapComponent, AnimatedTitleDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LucideAngularModule,
+    MapComponent,
+    AnimatedTitleDirective,
+    RouterLink,
+  ],
   templateUrl: './new-delivery.html',
 })
 export class NewDeliveryComponent implements OnDestroy {
@@ -46,6 +57,7 @@ export class NewDeliveryComponent implements OnDestroy {
   readonly Search = Search;
   readonly Map = Map;
   readonly Navigation = Navigation;
+  readonly X = X;
 
   @ViewChild('bookingPanel') bookingPanel!: ElementRef;
   @ViewChild(MapComponent) mapComponent!: MapComponent;
@@ -293,7 +305,7 @@ export class NewDeliveryComponent implements OnDestroy {
       .select(selectProfile)
       .pipe(take(1))
       .subscribe((profile) => {
-        const requestDTO = {
+        const requestDTO: DeliveryRequestDTO = {
           senderId: profile?.id || '',
           pickupAddress: this.pickupLocation,
           pickupLat: this.pickupLatLng ? this.pickupLatLng.lat : 0,
@@ -301,18 +313,23 @@ export class NewDeliveryComponent implements OnDestroy {
           dropoffAddress: this.dropoffLocation,
           dropoffLat: this.dropoffLatLng ? this.dropoffLatLng.lat : 0,
           dropoffLon: this.dropoffLatLng ? this.dropoffLatLng.lng : 0,
-          vehicleTypeRequired: this.selectedVehicle,
-          weightKg: this.weightKg,
+          vehicleTypeRequired: this.selectedVehicle as any,
+          weightKg: this.weightKg || 1,
           note: this.note,
           receiverName: this.receiverName,
           receiverPhone: this.receiverPhone,
           agreedPrice: this.offerPrice || 0,
-          paymentMethod: this.paymentMethod,
-          payerType: this.payerType,
+          paymentMethod: this.paymentMethod as any,
+          payerType: this.payerType as any,
         };
 
-        console.log('Searching for:', requestDTO);
+        console.log('Dispatching action with payload:', requestDTO);
+        this.store.dispatch(senderDeliveryActions.createDelivery({ deliveryRequest: requestDTO }));
 
+        // Simulate searching UI spinner before redirect (can be refactored into success effect later)
+        setTimeout(() => {
+          this.isSearching = false;
+        }, 3000);
       });
   }
 
