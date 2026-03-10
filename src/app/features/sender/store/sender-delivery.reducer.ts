@@ -135,3 +135,11 @@ export const senderDeliveryFeature = createFeature({
         })),
     ),
 })
+
+export const {
+  name: senderDeliveryFeatureKey,
+  reducer: senderDeliveryReducer,
+  selectSenderDeliveryState,
+  selectIsLoading,
+  selectError,
+} = senderDeliveryFeature;
