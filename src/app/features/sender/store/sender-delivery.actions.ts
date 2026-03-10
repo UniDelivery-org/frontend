@@ -33,12 +33,12 @@ export const senderDeliveryActions = createActionGroup({
 
     // Customer Deliveries Page
     'Load Customer Deliveries': props<{ customerId: string; page?: number; size?: number }>(),
-    'Load Customer Deliveries Success': props<{ pageData: Page<DeliveryResponseDTO> }>(),
+    'Load Customer Deliveries Success': props<{ deliveries: Page<DeliveryResponseDTO> }>(),
     'Load Customer Deliveries Failure': props<{ error: ApiError }>(),
 
     // Active Deliveries Page
     'Load Active Deliveries': props<{ customerId: string; page?: number; size?: number }>(),
-    'Load Active Deliveries Success': props<{ pageData: Page<DeliveryResponseDTO> }>(),
+    'Load Active Deliveries Success': props<{ deliveries: Page<DeliveryResponseDTO> }>(),
     'Load Active Deliveries Failure': props<{ error: ApiError }>(),
 
     // Customer History
@@ -48,7 +48,7 @@ export const senderDeliveryActions = createActionGroup({
       page?: number;
       size?: number;
     }>(),
-    'Load Delivery History Success': props<{ pageData: Page<DeliveryResponseDTO> }>(),
+    'Load Delivery History Success': props<{ deliveries: Page<DeliveryResponseDTO> }>(),
     'Load Delivery History Failure': props<{ error: ApiError }>(),
 
     // Sender Stats
