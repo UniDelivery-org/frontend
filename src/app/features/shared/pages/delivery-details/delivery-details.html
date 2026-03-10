@@ -1,0 +1,222 @@
+<div class="space-y-6 relative min-h-[50vh] animate-fade-in pb-8">
+    <!-- Loading State -->
+    <div *ngIf="isLoading"
+        class="absolute inset-0 flex items-center justify-center bg-[#0a0a0a]/80 backdrop-blur-sm z-50 rounded-2xl">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-uni-500"></div>
+    </div>
+
+    <ng-container *ngIf="delivery">
+
+        <!-- Header Actions -->
+        <div class="flex items-center justify-between">
+            <a routerLink="/dashboard"
+                class="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-uni-white transition-colors bg-uni-white/5 hover:bg-uni-white/10 px-4 py-2 rounded-xl">
+                <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon> Back to Dashboard
+            </a>
+
+            <!-- Top Right Status Pill -->
+            <div class="px-4 py-1.5 rounded-full text-xs font-bold border flex items-center gap-2 shadow-lg" [ngClass]="{
+          'text-yellow-500 bg-yellow-500/10 border-yellow-500/20 shadow-yellow-500/5':
+            delivery.status === 'CREATED' || delivery.status === 'MATCHED',
+          'text-blue-500 bg-blue-500/10 border-blue-500/20 shadow-blue-500/5': delivery.status === 'ACCEPTED',
+          'text-purple-500 bg-purple-500/10 border-purple-500/20 shadow-purple-500/5':
+            delivery.status === 'PICKED',
+          'text-uni-500 bg-uni-500/10 border-uni-500/20 shadow-uni-500/5': delivery.status === 'DELIVERED',
+          'text-red-500 bg-red-500/10 border-red-500/20 shadow-red-500/5': delivery.status === 'CANCELLED',
+        }">
+                <div class="w-1.5 h-1.5 rounded-full animate-pulse bg-current"></div>
+                {{ delivery.status.replace('_', ' ') }}
+            </div>
+        </div>
+
+        <!-- Title Area & Meta -->
+        <div class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-uni-black text-uni-white tracking-tight leading-tight">Delivery <span
+                    class="text-uni-500">Details</span></h1>
+            <div class="flex flex-wrap items-center gap-4 mt-3 text-sm">
+                <span class="text-gray-400 font-mono bg-gray-900/50 border border-uni-white/5 px-3 py-1 rounded-lg">
+                    ID: <span class="text-uni-white">{{ delivery.id.split('-')[0] }}</span><span class="opacity-40">{{
+                        delivery.id.split('-').slice(1).join('-') }}</span>
+                </span>
+                <span class="text-gray-500 flex items-center gap-1.5">
+                    <lucide-icon [img]="Clock" [size]="14"></lucide-icon> {{ delivery.createdAt | date: 'medium' }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Main Dynamic Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- LEFT COLUMN: Maps & Route Timeline (Spans 8 cols) -->
+            <div class="lg:col-span-8 space-y-6 flex flex-col">
+
+                <!-- Large Map View -->
+                <div
+                    class="bg-gray-900/60 backdrop-blur-xl border border-uni-white/10 rounded-4xl h-[400px] overflow-hidden relative z-0 shadow-2xl group shrink-0">
+                    <!-- Gradient Overlay to blend map into dark theme nicely -->
+                    <div
+                        class="absolute inset-0 bg-linear-to-t from-gray-950 via-transparent to-transparent z-10 pointer-events-none opacity-80">
+                    </div>
+
+                    <app-map [routePoints]="routePoints" [showTracking]="false"
+                        class="absolute inset-0 w-full h-full"></app-map>
+
+                    <div class="absolute bottom-6 left-6 z-20">
+                        <div
+                            class="bg-gray-900/90 backdrop-blur-md border border-uni-white/10 px-4 py-2 rounded-xl flex items-center gap-3">
+                            <lucide-icon [img]="Route" [size]="18" class="text-uni-500"></lucide-icon>
+                            <span class="text-uni-white font-bold text-sm">{{ delivery.distanceKm || 'Est.' }} km
+                                route</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vertical Route Timeline -->
+                <div class="bg-gray-900/40 backdrop-blur-xl border border-uni-white/5 rounded-3xl p-8 grow">
+                    <h3 class="font-bold text-uni-white mb-8 uppercase text-xs tracking-widest flex items-center gap-2">
+                        <lucide-icon [img]="MapPin" [size]="16" class="text-uni-500"></lucide-icon> Route Plan
+                    </h3>
+
+                    <div class="relative ml-4 pl-8 border-l-2 border-dashed border-gray-700/50 space-y-10">
+
+                        <!-- Pickup Node -->
+                        <div class="relative">
+                            <div
+                                class="absolute -left-[45px] top-0 w-10 h-10 rounded-full bg-uni-white/5 border border-uni-white/10 flex items-center justify-center -translate-x-1/2">
+                                <div class="w-2.5 h-2.5 bg-uni-500 rounded-full shadow-[0_0_10px_rgba(101,214,84,0.5)]">
+                                </div>
+                            </div>
+                            <div>
+                                <span
+                                    class="text-[10px] font-bold text-uni-500 uppercase tracking-widest block mb-1">Pickup
+                                    From</span>
+                                <p class="text-lg font-bold text-uni-white">{{ delivery.pickupAddress }}</p>
+                                <div class="mt-2 text-sm text-gray-500">Contact Sender: <span class="text-gray-300">{{
+                                        delivery.senderId }}</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Dropoff Node -->
+                        <div class="relative">
+                            <div
+                                class="absolute -left-[45px] top-0 w-10 h-10 rounded-full bg-uni-white/5 border border-uni-white/10 flex items-center justify-center -translate-x-1/2">
+                                <lucide-icon [img]="MapPin" [size]="16" class="text-gray-400"></lucide-icon>
+                            </div>
+                            <div>
+                                <span
+                                    class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1">Deliver
+                                    To</span>
+                                <p class="text-lg font-bold text-uni-white">{{ delivery.dropoffAddress }}</p>
+                                <div class="mt-2 text-sm text-gray-500"
+                                    *ngIf="delivery.receiverName || delivery.receiverPhone">
+                                    Receiver: <span class="text-gray-300 font-medium">{{ delivery.receiverName || 'N/A'
+                                        }}</span>
+                                    <span class="mx-2 text-gray-700">•</span>
+                                    <span class="text-gray-300 font-medium">{{ delivery.receiverPhone || 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Package & Financials (Spans 4 cols) -->
+            <div class="lg:col-span-4 space-y-6">
+
+                <!-- Action Main Button (if applicable contextually, though this is details view) -->
+                <button
+                    class="w-full bg-uni-500/10 hover:bg-uni-500/20 text-uni-500 border border-uni-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
+                    <lucide-icon [img]="FileText" [size]="18"
+                        class="group-hover:-translate-y-0.5 transition-transform"></lucide-icon> Download Receipt
+                </button>
+
+                <!-- Package Specifications -->
+                <div
+                    class="bg-gray-900/40 backdrop-blur-xl border border-uni-white/5 rounded-3xl p-6 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-white/5 rotate-12 pointer-events-none">
+                        <lucide-icon [img]="Package" [size]="100"></lucide-icon>
+                    </div>
+
+                    <h3
+                        class="font-bold text-uni-white mb-6 uppercase text-xs tracking-widest relative z-10 flex items-center gap-2">
+                        <lucide-icon [img]="Package" [size]="16" class="text-gray-400"></lucide-icon> Package Specs
+                    </h3>
+
+                    <div class="space-y-4 relative z-10">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                            <span class="text-sm text-gray-400">Total Weight</span>
+                            <span class="font-uni-black text-xl text-uni-white">{{ delivery.weightKg }} <span
+                                    class="text-sm text-uni-500 tracking-normal font-sans">KG</span></span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                            <span class="text-sm text-gray-400">Vehicle Req.</span>
+                            <span class="font-bold text-sm text-uni-white bg-white/5 px-3 py-1 rounded-lg">{{
+                                delivery.vehicleTypeRequired }}</span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="delivery.note" class="mt-4 relative z-10">
+                        <span
+                            class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1.5">Handling
+                            Notes</span>
+                        <p
+                            class="text-sm text-yellow-500 bg-yellow-500/5 border border-yellow-500/10 p-3 rounded-xl italic">
+                            "{{ delivery.note }}"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Financial Breakdown -->
+                <div
+                    class="bg-linear-to-b from-gray-900/80 to-gray-900/40 backdrop-blur-xl border border-uni-white/10 rounded-3xl p-6 relative overflow-hidden">
+                    <div class="w-full h-1 bg-linear-to-r from-uni-500 to-transparent absolute top-0 left-0"></div>
+
+                    <h3 class="font-bold text-uni-white mb-6 uppercase text-xs tracking-widest flex items-center gap-2">
+                        <lucide-icon [img]="Banknote" [size]="16" class="text-uni-500"></lucide-icon> Payment Summary
+                    </h3>
+
+                    <div class="mb-6">
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 mt-4">Agreed
+                            Total</div>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-5xl font-uni-black text-uni-white">{{ delivery.agreedPrice }}</span>
+                            <span class="text-xl font-bold text-uni-500">DH</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-6 border-t border-uni-white/5">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">Payment Method</span>
+                            <span class="font-bold text-uni-white bg-white/10 px-2 py-0.5 rounded">{{
+                                delivery.paymentMethod.replace('_', ' ') }}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">Responsible Payer</span>
+                            <span class="font-bold text-uni-white bg-white/10 px-2 py-0.5 rounded">{{ delivery.payerType
+                                }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- Edge Case: Not Found -->
+    <div *ngIf="!isLoading && !delivery"
+        class="flex flex-col items-center justify-center p-16 bg-gray-900/50 backdrop-blur-xl border border-uni-white/5 rounded-3xl text-center shadow-lg">
+        <div
+            class="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center mb-6 border border-red-500/20">
+            <lucide-icon [img]="Package" [size]="40" class="text-red-500/50"></lucide-icon>
+        </div>
+        <h2 class="text-2xl font-uni-black text-uni-white mb-2">Delivery Not Found</h2>
+        <p class="text-gray-400 max-w-sm mb-6">We couldn't locate this delivery record. It may have been deleted or the
+            ID is incorrect.</p>
+        <a routerLink="/dashboard"
+            class="px-6 py-3 bg-uni-white/10 hover:bg-uni-white/20 text-uni-white font-bold rounded-xl transition-colors">
+            Return to Dashboard
+        </a>
+    </div>
+</div>
