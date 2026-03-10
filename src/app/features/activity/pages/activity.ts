@@ -1,14 +1,32 @@
-import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Package, Clock, MapPin, ChevronRight, CheckCircle, XCircle } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Package,
+  Clock,
+  MapPin,
+  ChevronRight,
+  CheckCircle,
+  XCircle,
+} from 'lucide-angular';
+import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectProfile } from '../../profile/store/profile.reducer';
+import { senderDeliveryActions } from '../../sender/store/sender-delivery.actions';
+import { selectSenderDeliveryState } from '../../sender/store/sender-delivery.reducer';
+import { Subject, takeUntil, filter } from 'rxjs';
+import { DeliveryResponseDTO } from '../../sender/data-access/delivery.dto';
+import { AppState } from '../../../shared/models/app.state';
 
 @Component({
   selector: 'app-activity',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
-  templateUrl: './activity.html'
+  imports: [CommonModule, LucideAngularModule, RouterLink],
+  templateUrl: './activity.html',
 })
-export class ActivityComponent implements AfterViewInit {
+export class ActivityComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   // Icons
   readonly Package = Package;
   readonly Clock = Clock;
@@ -17,18 +35,75 @@ export class ActivityComponent implements AfterViewInit {
   readonly CheckCircle = CheckCircle;
   readonly XCircle = XCircle;
 
-  @ViewChildren('activityItem') activityItems!: QueryList<ElementRef>;
+  activities: DeliveryResponseDTO[] = [];
+  isLoading = false;
 
-  constructor() {}
+  currentPage = 0;
+  pageSize = 10;
+  totalPages = 0;
+  totalElements = 0;
 
-  ngAfterViewInit() {
-    // this.animService.staggerFadeIn(this.activityItems.map(c => c.nativeElement), 0.1);
+  customerId = '';
+
+  constructor(private store: Store) {}
+
+  ngOnInit() {
+    // 1. Get User Profile ID
+    this.store
+      .select(selectProfile)
+      .pipe(
+        takeUntil(this.destroy$),
+        filter((profile) => !!profile),
+      )
+      .subscribe((profile: any) => {
+        if (profile) {
+          this.customerId = profile.id;
+          this.loadHistory();
+        }
+      });
+
+    // 2. Listen to History State
+    this.store
+      .select(selectSenderDeliveryState)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state: any) => {
+        this.isLoading = state.isLoading;
+
+        if (state.deliveries) {
+          this.activities = state.deliveries.content;
+          this.currentPage = state.deliveries.number;
+          this.totalPages = state.deliveries.totalPages;
+          this.totalElements = state.deliveries.totalElements;
+        }
+      });
   }
 
-  activities = [
-    { id: '#ORD-7829', title: 'Delivery to Casablanca', date: 'Today, 2:30 PM', price: '45 DH', status: 'COMPLETED' },
-    { id: '#ORD-7810', title: 'Package from Rabbit', date: 'Yesterday, 10:15 AM', price: '30 DH', status: 'COMPLETED' },
-    { id: '#ORD-7755', title: 'Document to TechPark', date: 'Jan 28, 4:00 PM', price: '60 DH', status: 'CANCELLED' },
-    { id: '#ORD-7701', title: 'Groceries Delivery', date: 'Jan 25, 11:00 AM', price: '25 DH', status: 'COMPLETED' },
-  ];
+  loadHistory() {
+    this.store.dispatch(
+      senderDeliveryActions.loadDeliveryHistory({
+        customerId: this.customerId,
+        page: this.currentPage,
+        size: this.pageSize,
+      }),
+    );
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadHistory();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadHistory();
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
