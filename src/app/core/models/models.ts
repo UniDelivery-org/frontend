@@ -28,8 +28,13 @@ export enum PaymentType {
     PREPAID = 'PREPAID',
     CASH_ON_DELIVERY = 'CASH_ON_DELIVERY'
 }
+export enum PaymentMethod {
+    CASH_ON_DELIVERY = 'CASH_ON_DELIVERY',
+    WALLET = 'WALLET',
+    ONLINE_CARD = 'ONLINE_CARD'
+}
 
-export enum Payer {
+export enum PayerType {
     SENDER = 'SENDER',
     RECEIVER = 'RECEIVER'
 }
@@ -43,7 +48,7 @@ export enum TransactionType {
 export enum VehicleType {
     MOTO = 'MOTO',
     CAR = 'CAR',
-    PICKUP = 'PICKUP',
+    VAN = 'VAN',
     TRUCK = 'TRUCK'
 }
 
@@ -110,22 +115,37 @@ export interface VehicleDocument {
 }
 
 export interface Delivery {
-    id: string; // UUID
-    pickupGps: { lat: number, lng: number };
-    dropoffGps: { lat: number, lng: number };
-    price: number;
-    weight: number;
-    size: string;
-    itemDescription: string;
-    receiverPhone: string;
-    status: DeliveryStatus;
-    paymentType: PaymentType;
-    payer: Payer;
-    requiredVehicle: VehicleType;
-    createdAt: Date;
-    courierId?: string;
-    senderId: string;
-    trackingHistory?: TrackingLog[];
+  id: string;
+
+  senderId: string;
+  courierId?: string;
+
+  pickupAddress: string;
+  pickupLat: number;
+  pickupLon: number;
+
+  dropoffAddress: string;
+  dropoffLat: number;
+  dropoffLon: number;
+
+  status: DeliveryStatus;
+  vehicleTypeRequired: VehicleType;
+
+  weightKg: number;
+  distanceKm: number;
+
+  note?: string;
+
+  receiverName: string;
+  receiverPhone: string;
+
+  agreedPrice: number;
+  paymentMethod: PaymentMethod;
+  payerType: PayerType;
+
+  completedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface TrackingLog {
