@@ -16,16 +16,16 @@ export class SenderDeliveryApiService {
   private http = inject(HttpClient);
 
   getDelivery(id: string): Observable<DeliveryResponseDTO> {
-    return this.http.get<DeliveryResponseDTO>(`${this.apiUrl}/deliveries/${id}`);
+    return this.http.get<DeliveryResponseDTO>(`${this.apiUrl}/delivery/${id}`);
   }
   createDelivery(deliveryRequest: DeliveryRequestDTO): Observable<DeliveryResponseDTO> {
-    return this.http.post<DeliveryResponseDTO>(`${this.apiUrl}/deliveries`, deliveryRequest);
+    return this.http.post<DeliveryResponseDTO>(`${this.apiUrl}/delivery/customer`, deliveryRequest);
   }
   updateDelivery(id: string, deliveryRequest: DeliveryRequestDTO): Observable<DeliveryResponseDTO> {
-    return this.http.put<DeliveryResponseDTO>(`${this.apiUrl}/deliveries/${id}`, deliveryRequest);
+    return this.http.put<DeliveryResponseDTO>(`${this.apiUrl}/delivery/customer/${id}`, deliveryRequest);
   }
   deleteDelivery(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/deliveries/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delivery/customer/${id}`);
   }
   getCustomerDeliveries(
     customerId: string,
@@ -36,7 +36,7 @@ export class SenderDeliveryApiService {
     if (page !== undefined) params.page = page;
     if (size !== undefined) params.size = size;
     return this.http.get<Page<DeliveryResponseDTO>>(
-      `${this.apiUrl}/deliveries/customer/${customerId}`,
+      `${this.apiUrl}/delivery/customer/${customerId}`,
       { params },
     );
   }
@@ -49,7 +49,7 @@ export class SenderDeliveryApiService {
     if (page !== undefined) params.page = page;
     if (size !== undefined) params.size = size;
     return this.http.get<Page<DeliveryResponseDTO>>(
-      `${this.apiUrl}/deliveries/customer/${customerId}/active`,
+      `${this.apiUrl}/delivery/customer/${customerId}/active`,
       { params },
     );
   }
@@ -64,11 +64,11 @@ export class SenderDeliveryApiService {
     if (page !== undefined) params.page = page;
     if (size !== undefined) params.size = size;
     return this.http.get<Page<DeliveryResponseDTO>>(
-      `${this.apiUrl}/deliveries/customer/${customerId}/history`,
+      `${this.apiUrl}/delivery/customer/${customerId}/history`,
       { params },
     );
   }
   getSenderStats(customerId: string): Observable<SenderStatsDTO> {
-    return this.http.get<SenderStatsDTO>(`${this.apiUrl}/deliveries/customer/${customerId}/stats`);
+    return this.http.get<SenderStatsDTO>(`${this.apiUrl}/delivery/customer/${customerId}/stats`);
   }
 }
