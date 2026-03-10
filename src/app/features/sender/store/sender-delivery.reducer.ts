@@ -6,6 +6,7 @@ import { DeliveryResponseDTO } from "../data-access/delivery.dto";
 const initialState: SenderDeliveryState = {
   delivery: null,
   deliveries: null,
+  stats: null,
   isLoading: false,
   error: null,
 };
@@ -140,6 +141,7 @@ export const {
   name: senderDeliveryFeatureKey,
   reducer: senderDeliveryReducer,
   selectSenderDeliveryState,
+  selectStats,
   selectIsLoading,
   selectError,
 } = senderDeliveryFeature;
