@@ -100,6 +100,49 @@
         </div>
       </div>
 
+      <!-- 2.5 PACKAGE & RECEIVER DETAILS -->
+      <div>
+        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 block mt-2">Package
+          Details</label>
+
+        <div class="mb-3">
+          <input type="number" [(ngModel)]="weightKg" placeholder="Weight (Kg)"
+            class="w-full bg-uni-white/5 border border-uni-white/10 rounded-xl px-4 py-3 text-uni-white text-sm focus:border-uni-500 focus:outline-none placeholder-gray-600">
+        </div>
+
+        <div class="mb-3">
+          <input type="text" [(ngModel)]="note" placeholder="Notes (e.g. Fragile item, handle with care)"
+            class="w-full bg-uni-white/5 border border-uni-white/10 rounded-xl px-4 py-3 text-uni-white text-sm focus:border-uni-500 focus:outline-none placeholder-gray-600">
+        </div>
+
+        <label
+          class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 mt-4 flex items-center justify-between">
+          <span>Receiver Details</span>
+          <span class="text-[9px] text-gray-600 normal-case font-medium">(Leave empty if you are the receiver)</span>
+        </label>
+        <div class="grid grid-cols-2 gap-4 mb-3">
+          <input type="text" [(ngModel)]="receiverName" placeholder="Receiver Name"
+            class="w-full bg-uni-white/5 border border-uni-white/10 rounded-xl px-4 py-3 text-uni-white text-sm focus:border-uni-500 focus:outline-none placeholder-gray-600">
+          <input type="tel" [(ngModel)]="receiverPhone" placeholder="Phone"
+            class="w-full bg-uni-white/5 border border-uni-white/10 rounded-xl px-4 py-3 text-uni-white text-sm focus:border-uni-500 focus:outline-none placeholder-gray-600">
+        </div>
+
+        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 block mt-4">Payment
+          Method</label>
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <button (click)="paymentMethod = 'ONLINE_CARD'"
+            class="p-3 rounded-xl border text-xs font-bold transition-all text-center"
+            [ngClass]="paymentMethod === 'ONLINE_CARD' ? 'bg-uni-500/10 border-uni-500 text-uni-500' : 'bg-uni-white/5 border-transparent text-gray-500 hover:bg-uni-white/10'">
+            Online Card
+          </button>
+          <button (click)="paymentMethod = 'CASH'"
+            class="p-3 rounded-xl border text-xs font-bold transition-all text-center"
+            [ngClass]="paymentMethod === 'CASH' ? 'bg-uni-500/10 border-uni-500 text-uni-500' : 'bg-uni-white/5 border-transparent text-gray-500 hover:bg-uni-white/10'">
+            Cash
+          </button>
+        </div>
+      </div>
+
       <!-- 3. PRICE OFFER -->
       <div class="bg-gray-800/50 rounded-2xl p-4 border border-uni-white/5">
         <div class="flex justify-between items-center mb-4">
@@ -110,7 +153,7 @@
         <div class="relative mb-4">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-sm">MAD</span>
           <input type="number" [(ngModel)]="offerPrice"
-            class="w-full bg-gray-900 border border-uni-white/10 rounded-xl py-3 pl-14 pr-4 text-2xl font-uni-black text-uni-white focus:outline-none focus:border-uni-500 transition-colors placeholder-gray-700"
+            class="w-full bg-gray-900 border border-uni-white/10 rounded-xl py-3 pl-14 pr-4 text-2xl font-uni-black text-uni-white focus:outline-none focus:border-uni-500 transition-colors placeholder-gray-700 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             placeholder="0.00">
         </div>
 
