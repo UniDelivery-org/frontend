@@ -39,12 +39,13 @@ export class AuthService {
   }
   public refreshToken(): Observable<Auth> {
     const TOKEN = this.cookie.get('refreshToken');
-    return this.http.post<Auth>(`${this.apiUrl}/${this.apiVersion}/users/refresh`, { refreshToken: TOKEN }).pipe(
-      map((response) => {
-        return this.handleAuthResponse(response);
-      }),
-      tap(() => this.router.navigate(['/'])),
-    );
+    return this.http
+      .post<Auth>(`${this.apiUrl}/${this.apiVersion}/users/refresh`, { refreshToken: TOKEN })
+      .pipe(
+        map((response) => {
+          return this.handleAuthResponse(response);
+        }),
+      );
   }
   public logout(): Observable<void> {
     return of(this.deleteCookies()).pipe(tap(() => this.router.navigate(['/auth/login'])));
@@ -58,7 +59,7 @@ export class AuthService {
     this.cookie.set('refreshToken', response.refreshToken, 30 * 60);
     this.cookie.set('accessToken', response.accessToken, response.expiresIn);
     const payload = this.jwtResolver.decodeToken(response.accessToken);
-    this.roleService.setRole(payload.realm_access.roles[0] as Role, response.expiresIn);
+    this.roleService.setRole(payload.realm_access.roles[0] as Role, 30 * 60);
     return response;
   }
 }
