@@ -2,12 +2,21 @@
   class="flex h-screen bg-uni-950 text-uni-white font-sans overflow-hidden selection:bg-uni-500 selection:text-uni-950">
 
   <!-- ===========================
-       SIDEBAR (Desktop)
+       SIDEBAR & MOBILE OVERLAY
        =========================== -->
-  <aside class="w-72 bg-gray-900 border-r border-uni-white/5 flex flex-col z-20 hidden lg:flex relative">
 
-    <!-- Logo Area -->
-    <div class="p-8 pb-4">
+  <!-- Mobile Backdrop Overlay -->
+  @if (isMobileMenuOpen()) {
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" (click)="closeMobileMenu()"></div>
+  }
+
+  <!-- Sidebar (Desktop & Mobile Slide-in) -->
+  <aside
+    class="w-72 bg-gray-900 border-r border-uni-white/5 flex flex-col z-100 fixed lg:static inset-y-0 left-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+    [class.-translate-x-full]="!isMobileMenuOpen()" [class.translate-x-0]="isMobileMenuOpen()">
+
+    <!-- Logo Area w/ Close Button (Mobile) -->
+    <div class="p-8 pb-4 flex justify-between items-center">
       <div class="flex items-center gap-3">
         <div
           class="relative w-10 h-10 flex items-center justify-center bg-uni-500/10 rounded-xl border border-uni-500/20">
@@ -25,6 +34,12 @@
           </span>
         </div>
       </div>
+
+      <!-- Close Button (Mobile Only) -->
+      <button class="lg:hidden p-2 text-gray-400 hover:text-white bg-uni-white/5 rounded-lg"
+        (click)="closeMobileMenu()">
+        <lucide-icon [img]="X" [size]="20"></lucide-icon>
+      </button>
     </div>
 
     <!-- Navigation -->
@@ -144,7 +159,9 @@
       <div class="flex items-center gap-4">
         <!-- Mobile Toggle -->
         <div class="lg:hidden flex items-center gap-3">
-          <button class="p-2 text-gray-400 hover:text-white">
+          <button
+            class="p-2.5 text-gray-400 hover:text-white bg-uni-white/5 hover:bg-uni-white/10 rounded-xl transition-colors"
+            (click)="toggleMobileMenu()">
             <lucide-icon [img]="Menu" [size]="24"></lucide-icon>
           </button>
           <div class="flex items-center gap-2">
@@ -264,59 +281,60 @@
 
   </div>
 
-  <!-- Mobile Floating Dock (Keep existing Logic but ensure z-index is high) -->
-  <div class="fixed bottom-6 left-4 right-4 z-50 lg:hidden">
+  <!-- Mobile Floating Dock -->
+  <div class="fixed bottom-6 left-4 right-4 z-50 lg:hidden safe-area-pb pb-8">
+    <!-- Added pb-8 for general spacing if no safe area -->
     <div
-      class="flex justify-between items-center bg-gray-900/90 backdrop-blur-xl border border-uni-white/10 px-2 py-2 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+      class="flex justify-between items-center bg-gray-900/95 backdrop-blur-2xl border border-uni-white/10 px-2 py-3 rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
 
       <a routerLink="/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
-        class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        class="group flex flex-col items-center gap-1.5 p-2 rounded-2xl w-[60px] text-gray-500 transition-all focus:outline-none">
         <div class="relative">
-          <lucide-icon [img]="Package" [size]="24"
+          <lucide-icon [img]="Package" [size]="22"
             class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
           <span
-            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+            class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
         </div>
-        <span class="text-[10px] font-bold">Send</span>
+        <span class="text-[10px] font-bold tracking-wide">Send</span>
       </a>
-
-      <a routerLink="/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
-        class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
-        <div class="relative">
-          <lucide-icon [img]="Car" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
-          <span
-            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
-        </div>
-        <span class="text-[10px] font-bold">Drive</span>
-      </a>
-
-      <!-- FAB -->
-      <div class="relative -top-8 mx-2">
-        <button
-          class="w-16 h-16 bg-uni-500 rounded-full flex items-center justify-center text-uni-950 shadow-[0_0_20px_rgba(101,214,84,0.4)] hover:scale-110 active:scale-95 transition-all border-[6px] border-uni-950">
-          <lucide-icon [img]="Plus" [size]="32" strokeWidth="3"></lucide-icon>
-        </button>
-      </div>
 
       <a routerLink="/activity" routerLinkActive="text-uni-500 bg-uni-white/5"
-        class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        class="group flex flex-col items-center gap-1.5 p-2 rounded-2xl w-[60px] text-gray-500 transition-all focus:outline-none">
         <div class="relative">
-          <lucide-icon [img]="Activity" [size]="24"
+          <lucide-icon [img]="Activity" [size]="22"
             class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
           <span
-            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+            class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
         </div>
-        <span class="text-[10px] font-bold">Activity</span>
+        <span class="text-[10px] font-bold tracking-wide">Activity</span>
+      </a>
+
+      <!-- FAB (Always centered & prominent) -->
+      <div class="relative -top-10 mx-1 z-10 shrink-0">
+        <a routerLink="/new-delivery"
+          class="w-16 h-16 bg-uni-500 rounded-full flex items-center justify-center text-uni-950 shadow-[0_0_30px_rgba(101,214,84,0.5)] hover:scale-105 active:scale-95 transition-all border-[6px] border-[#0F1319] focus:outline-none focus:ring-4 focus:ring-uni-500/50">
+          <lucide-icon [img]="Plus" [size]="32" strokeWidth="3"></lucide-icon>
+        </a>
+      </div>
+
+      <a routerLink="/wallet" routerLinkActive="text-uni-500 bg-uni-white/5"
+        class="group flex flex-col items-center gap-1.5 p-2 rounded-2xl w-[60px] text-gray-500 transition-all focus:outline-none">
+        <div class="relative">
+          <lucide-icon [img]="Wallet" [size]="22" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
+          <span
+            class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+        </div>
+        <span class="text-[10px] font-bold tracking-wide">Wallet</span>
       </a>
 
       <a routerLink="/profile" routerLinkActive="text-uni-500 bg-uni-white/5"
-        class="group flex flex-col items-center gap-1 p-3 rounded-2xl flex-1 text-gray-500 transition-all">
+        class="group flex flex-col items-center gap-1.5 p-2 rounded-2xl w-[60px] text-gray-500 transition-all focus:outline-none">
         <div class="relative">
-          <lucide-icon [img]="User" [size]="24" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
+          <lucide-icon [img]="User" [size]="22" class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
           <span
-            class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
+            class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
         </div>
-        <span class="text-[10px] font-bold">Profile</span>
+        <span class="text-[10px] font-bold tracking-wide">Profile</span>
       </a>
 
     </div>

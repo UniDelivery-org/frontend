@@ -1,7 +1,35 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+  Router,
+  NavigationEnd,
+  ActivatedRoute,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Box, Package, Car, Activity, User, Bell, Plus, Search, Menu, LogOut, Wallet, FileText, Settings, Truck, X, Check, Clock, Sun, Moon } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Box,
+  Package,
+  Car,
+  Activity,
+  User,
+  Bell,
+  Plus,
+  Search,
+  Menu,
+  LogOut,
+  Wallet,
+  FileText,
+  Settings,
+  Truck,
+  X,
+  Check,
+  Clock,
+  Sun,
+  Moon,
+} from 'lucide-angular';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from '../../core/services/theme.service';
 import { Role } from '../../core/models/models';
@@ -13,14 +41,14 @@ import { Store } from '@ngrx/store';
   selector: 'app-main-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, LucideAngularModule],
-  templateUrl: './main-layout.html'
+  templateUrl: './main-layout.html',
 })
 export class MainLayoutComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private roleService = inject(RoleService);
   private store = inject(Store);
-  
+
   role = Role;
   // State
   currentRole = signal<Role>(Role.SENDER);
@@ -48,6 +76,17 @@ export class MainLayoutComponent implements OnInit {
 
   themeService = inject(ThemeService);
 
+  // Mobile Menu State
+  isMobileMenuOpen = signal(false);
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update((v) => !v);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+  }
+
   // Notifications
   showNotifications = signal(false);
   notifications = signal([
@@ -57,7 +96,7 @@ export class MainLayoutComponent implements OnInit {
       message: 'Ahmed B. accepted your delivery request for #DEL-8821.',
       time: '2 mins ago',
       read: false,
-      type: 'success'
+      type: 'success',
     },
     {
       id: 2,
@@ -65,7 +104,7 @@ export class MainLayoutComponent implements OnInit {
       message: 'Your package to Residence Al Yassamine has been delivered.',
       time: '1 hour ago',
       read: true,
-      type: 'info'
+      type: 'info',
     },
     {
       id: 3,
@@ -73,21 +112,19 @@ export class MainLayoutComponent implements OnInit {
       message: 'You have successfully topped up your wallet with 500 DH.',
       time: '3 hours ago',
       read: true,
-      type: 'payment'
-    }
+      type: 'payment',
+    },
   ]);
   logout() {
     this.store.dispatch(authActions.logoutProfile());
   }
 
   toggleNotifications() {
-    this.showNotifications.update(v => !v);
+    this.showNotifications.update((v) => !v);
   }
 
   markAsRead(id: number) {
-    this.notifications.update(list => 
-      list.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+    this.notifications.update((list) => list.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
   ngOnInit() {
@@ -102,10 +139,13 @@ export class MainLayoutComponent implements OnInit {
     });
 
     // Subscribe to navigation events to refresh role from service
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.currentRole.set(this.roleService.getRole());
+    });
+
+    // Close mobile menu on navigation
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.closeMobileMenu();
     });
   }
 }
