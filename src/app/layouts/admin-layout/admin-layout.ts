@@ -19,6 +19,7 @@ import {
 import { ThemeService } from '../../core/services/theme.service';
 import { authActions } from '../../features/auth/store/auth.actions';
 import { Store } from '@ngrx/store';
+import { selectProfile } from '../../features/profile/store/profile.reducer';
 
 @Component({
   selector: 'app-admin-layout',
@@ -141,13 +142,17 @@ import { Store } from '@ngrx/store';
           <div class="flex items-center gap-3 mb-4 px-2">
             <div class="w-10 h-10 rounded-full bg-linear-to-tr from-uni-500 to-gray-700 p-[2px]">
               <img
-                src="https://ui-avatars.com/api/?name=Admin+User&background=0a1f08&color=65d654"
+                [src]="getAvatar()"
                 class="rounded-full w-full h-full border-2 border-gray-900"
               />
             </div>
             <div>
-              <div class="text-sm font-bold text-white">Super Admin</div>
-              <div class="text-[10px] text-gray-500">admin&#64;unidelivery.ma</div>
+              <div class="text-sm font-bold text-white">
+                {{ profile()?.fullName || 'Loading...' }}
+              </div>
+              <div class="text-[10px] text-gray-500">
+                {{ profile()?.email || 'admin@unidelivery.ma' }}
+              </div>
             </div>
           </div>
           <button
@@ -219,6 +224,20 @@ import { Store } from '@ngrx/store';
 })
 export class AdminLayoutComponent {
   private store = inject(Store);
+  profile = this.store.selectSignal(selectProfile);
+
+  getAvatar(): string {
+    const prof = this.profile();
+    if (!prof) return 'https://ui-avatars.com/api/?name=Admin&background=0a1f08&color=65d654';
+    if (prof.avatarUrl) {
+      return 'http://localhost:8081' + prof.avatarUrl;
+    }
+    const namePart = prof.fullName.includes(' ')
+      ? prof.fullName.substring(0, prof.fullName.indexOf(' '))
+      : prof.fullName;
+    return 'https://ui-avatars.com/api/?name=' + namePart + '&background=0a1f08&color=65d654';
+  }
+
   // Icons
   readonly LayoutDashboard = LayoutDashboard;
   readonly Users = Users;
@@ -236,5 +255,5 @@ export class AdminLayoutComponent {
   themeService = inject(ThemeService);
   logout() {
     this.store.dispatch(authActions.logoutProfile());
-  } 
+  }
 }

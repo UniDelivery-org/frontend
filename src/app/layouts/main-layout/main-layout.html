@@ -267,11 +267,14 @@
         <!-- User Profile -->
         <div class="flex items-center gap-3 pl-2 cursor-pointer group">
           <div class="text-right hidden sm:block">
-            <div class="text-xs font-bold text-uni-white group-hover:text-uni-500 transition-colors">Achraf Sikal</div>
-            <div class="text-[10px] text-uni-500 font-bold uppercase tracking-wider">Verified</div>
+            <div class="text-xs font-bold text-uni-white group-hover:text-uni-500 transition-colors">{{
+              profile()?.fullName
+              || 'Loading...' }}</div>
+            <div class="text-[10px] text-uni-500 font-bold uppercase tracking-wider">{{ profile()?.role || 'User' }}
+            </div>
           </div>
           <div class="relative w-9 h-9 rounded-full p-[2px] bg-linear-to-br from-uni-500 to-gray-800">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Achraf" alt="User"
+            <img [src]="getAvatar()" alt="User Avatar"
               class="w-full h-full rounded-full border-2 border-uni-950 object-cover bg-gray-800">
           </div>
         </div>

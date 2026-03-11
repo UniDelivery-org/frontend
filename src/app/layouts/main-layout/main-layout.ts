@@ -36,6 +36,7 @@ import { Role } from '../../core/models/models';
 import { RoleService } from '../../core/services/role.service';
 import { authActions } from '../../features/auth/store/auth.actions';
 import { Store } from '@ngrx/store';
+import { selectProfile } from '../../features/profile/store/profile.reducer';
 
 @Component({
   selector: 'app-main-layout',
@@ -52,8 +53,19 @@ export class MainLayoutComponent implements OnInit {
   role = Role;
   // State
   currentRole = signal<Role>(Role.SENDER);
+  profile = this.store.selectSignal(selectProfile);
 
-  // Icons
+  getAvatar(): string {
+    const prof = this.profile();
+    if (!prof) return 'https://api.dicebear.com/7.x/avataaars/svg?seed=User';
+    if (prof.avatarUrl) {
+      return 'http://localhost:8081' + prof.avatarUrl;
+    }
+    const namePart = prof.fullName.includes(' ')
+      ? prof.fullName.substring(0, prof.fullName.indexOf(' '))
+      : prof.fullName;
+    return 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + namePart;
+  }
   readonly Box = Box;
   readonly Package = Package;
   readonly Car = Car;
