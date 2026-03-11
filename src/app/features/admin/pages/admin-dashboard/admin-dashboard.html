@@ -16,35 +16,97 @@
   <!-- STATS GRID -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 
-    <div #statCard *ngFor="let stat of stats; let i = index"
-      class="relative bg-gray-900 rounded-3xl p-6 border border-uni-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
+    <!-- Loading State -->
+    @if (isLoading() && !stats()) {
+    <div
+      class="col-span-full p-16 flex flex-col items-center justify-center text-center bg-gray-900 border border-uni-white/5 rounded-3xl h-[160px]">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-uni-500 mb-3"></div>
+      <p class="text-uni-500 font-bold uppercase tracking-widest text-xs">Loading Dashboard...</p>
+    </div>
+    }
 
-      <!-- Hover Gradient -->
+    @if (stats()) {
+    <!-- System Total Senders -->
+    <div
+      class="relative bg-gray-900 rounded-3xl p-6 border border-uni-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
       <div
         class="absolute inset-0 bg-linear-to-br from-uni-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       </div>
-
       <div class="relative z-10 flex justify-between items-start mb-4">
         <div
           class="p-3 rounded-2xl bg-uni-white/5 border border-uni-white/5 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 group-hover:border-uni-500/20 transition-all duration-300">
-          <!-- FIXED SYNTAX: Dynamic Component -->
-          <lucide-icon [img]="stat.icon" [size]="24"></lucide-icon>
+          <lucide-icon [img]="Users" [size]="24"></lucide-icon>
         </div>
-
-        <!-- Trend Badge -->
-        <span class="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border" [ngClass]="stat.change.startsWith('+') 
-            ? 'bg-uni-500/10 text-uni-500 border-uni-500/20' 
-            : 'bg-red-500/10 text-red-500 border-red-500/20'">
-          <lucide-icon [img]="ArrowUpRight" [size]="12" [class.rotate-180]="!stat.change.startsWith('+')"></lucide-icon>
-          {{ stat.change }}
+        <span
+          class="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border bg-uni-500/10 text-uni-500 border-uni-500/20">
+          <lucide-icon [img]="ArrowUpRight" [size]="12"></lucide-icon> Active
         </span>
       </div>
-
       <div class="relative z-10">
-        <h3 class="text-3xl font-uni-black text-uni-white tracking-tight mb-1">{{ stat.value }}</h3>
-        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">{{ stat.title }}</p>
+        <h3 class="text-3xl font-uni-black text-uni-white tracking-tight mb-1">{{ stats()?.totalSenders }}</h3>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Senders</p>
       </div>
     </div>
+
+    <!-- System Total Couriers -->
+    <div
+      class="relative bg-gray-900 rounded-3xl p-6 border border-uni-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-linear-to-br from-uni-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+      </div>
+      <div class="relative z-10 flex justify-between items-start mb-4">
+        <div
+          class="p-3 rounded-2xl bg-uni-white/5 border border-uni-white/5 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 group-hover:border-uni-500/20 transition-all duration-300">
+          <lucide-icon [img]="Bike" [size]="24"></lucide-icon>
+        </div>
+      </div>
+      <div class="relative z-10">
+        <h3 class="text-3xl font-uni-black text-uni-white tracking-tight mb-1">{{ stats()?.totalCouriers }}</h3>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Fleet Drivers</p>
+      </div>
+    </div>
+
+    <!-- System Deliveries -->
+    <div
+      class="relative bg-gray-900 rounded-3xl p-6 border border-uni-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-linear-to-br from-uni-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+      </div>
+      <div class="relative z-10 flex justify-between items-start mb-4">
+        <div
+          class="p-3 rounded-2xl bg-uni-white/5 border border-uni-white/5 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 group-hover:border-uni-500/20 transition-all duration-300">
+          <lucide-icon [img]="Package" [size]="24"></lucide-icon>
+        </div>
+        <span
+          class="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border bg-blue-500/10 text-blue-500 border-blue-500/20">
+          {{ stats()?.activeDeliveries }} In-Transit
+        </span>
+      </div>
+      <div class="relative z-10">
+        <h3 class="text-3xl font-uni-black text-uni-white tracking-tight mb-1">{{ stats()?.totalDeliveries }}</h3>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Platform Deliveries</p>
+      </div>
+    </div>
+
+    <!-- Platform Revenue -->
+    <div
+      class="relative bg-gray-900 rounded-3xl p-6 border border-uni-white/5 group hover:border-uni-500/30 transition-all duration-500 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-linear-to-br from-uni-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+      </div>
+      <div class="relative z-10 flex justify-between items-start mb-4">
+        <div
+          class="p-3 rounded-2xl bg-uni-white/5 border border-uni-white/5 text-gray-400 group-hover:text-uni-500 group-hover:bg-uni-500/10 group-hover:border-uni-500/20 transition-all duration-300">
+          <lucide-icon [img]="Wallet" [size]="24"></lucide-icon>
+        </div>
+      </div>
+      <div class="relative z-10">
+        <h3 class="text-3xl font-uni-black text-uni-white tracking-tight mb-1">{{ stats()?.platformRevenue }} <span
+            class="text-lg">MAD</span></h3>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Gross Revenue</p>
+      </div>
+    </div>
+    }
 
   </div>
 

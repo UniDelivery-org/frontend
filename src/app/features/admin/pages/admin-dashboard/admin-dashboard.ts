@@ -1,16 +1,34 @@
-import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Users, Bike, FileText, Wallet, ArrowUpRight, CheckCircle, XCircle, Clock, MoreHorizontal, Download } from 'lucide-angular';
+import { Store } from '@ngrx/store';
+import { adminDeliveryActions } from '../../store/admin-delivery.actions';
+import { selectStats, selectIsLoading } from '../../store/admin-delivery.reducer';
+import {
+  LucideAngularModule,
+  Users,
+  Bike,
+  FileText,
+  Wallet,
+  ArrowUpRight,
+  CheckCircle,
+  XCircle,
+  Clock,
+  MoreHorizontal,
+  Download,
+  Activity,
+  Package,
+} from 'lucide-angular';
 import { VerificationStatus, IdentityType } from '../../../../core/models/models';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
   imports: [CommonModule, RouterLink, LucideAngularModule],
-  templateUrl: './admin-dashboard.html'
+  templateUrl: './admin-dashboard.html',
 })
-export class AdminDashboardComponent implements AfterViewInit {
+export class AdminDashboardComponent implements OnInit {
+  private store = inject(Store);
   // Icons
   readonly Users = Users;
   readonly Bike = Bike;
@@ -22,31 +40,49 @@ export class AdminDashboardComponent implements AfterViewInit {
   readonly XCircle = XCircle;
   readonly Clock = Clock;
   readonly Download = Download;
+  readonly Activity = Activity;
+  readonly Package = Package;
 
   // Expose Enum
   readonly VerificationStatus = VerificationStatus;
 
-  @ViewChildren('statCard') statCards!: QueryList<ElementRef>;
-  @ViewChildren('tableRow') tableRows!: QueryList<ElementRef>;
+  // NgRx State
+  stats = this.store.selectSignal(selectStats);
+  isLoading = this.store.selectSignal(selectIsLoading);
 
-  constructor() {}
-
-  ngAfterViewInit() {
+  ngOnInit() {
+    this.store.dispatch(adminDeliveryActions.loadAdminStats());
   }
-
-  // Stats Data
-  stats = [
-    { title: 'Total Users', value: '12,345', change: '+12%', icon: Users },
-    { title: 'Active Couriers', value: '432', change: '+5%', icon: Bike },
-    { title: 'Pending Docs', value: '18', change: '-2', icon: FileText },
-    { title: 'Today Earnings', value: '45k DH', change: '+18%', icon: Wallet },
-  ];
 
   // Mock Verifications
   recentVerifs = [
-    { id: '#DOC-1023', user: 'Karim B.', type: IdentityType.CIN, status: VerificationStatus.PENDING, date: '2 min ago' },
-    { id: '#DOC-1022', user: 'Sara K.', type: 'Vehicle', status: VerificationStatus.APPROVED, date: '15 min ago' },
-    { id: '#DOC-1021', user: 'Ahmed R.', type: IdentityType.DRIVERS_LICENSE, status: VerificationStatus.REJECTED, date: '1 hr ago' },
-    { id: '#DOC-1020', user: 'Lina M.', type: IdentityType.PASSPORT, status: VerificationStatus.APPROVED, date: '2 hrs ago' },
+    {
+      id: '#DOC-1023',
+      user: 'Karim B.',
+      type: IdentityType.CIN,
+      status: VerificationStatus.PENDING,
+      date: '2 min ago',
+    },
+    {
+      id: '#DOC-1022',
+      user: 'Sara K.',
+      type: 'Vehicle',
+      status: VerificationStatus.APPROVED,
+      date: '15 min ago',
+    },
+    {
+      id: '#DOC-1021',
+      user: 'Ahmed R.',
+      type: IdentityType.DRIVERS_LICENSE,
+      status: VerificationStatus.REJECTED,
+      date: '1 hr ago',
+    },
+    {
+      id: '#DOC-1020',
+      user: 'Lina M.',
+      type: IdentityType.PASSPORT,
+      status: VerificationStatus.APPROVED,
+      date: '2 hrs ago',
+    },
   ];
 }
