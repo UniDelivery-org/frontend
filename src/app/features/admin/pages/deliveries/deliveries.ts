@@ -1,25 +1,54 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { adminDeliveryActions } from '../../store/admin-delivery.actions';
+import { selectAllDeliveries, selectIsLoading } from '../../store/admin-delivery.reducer';
+import {
+  LucideAngularModule,
+  Search,
+  Funnel,
+  EllipsisVertical,
+  MapPin,
+  Truck,
+  Box,
+  Ban,
+  CheckCircle,
+  Package,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-admin-deliveries',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div class="space-y-6">
-       <div class="flex justify-between items-center">
-         <div>
-            <h1 class="text-2xl font-uni-black text-uni-white tracking-tight">All Deliveries</h1>
-            <p class="text-gray-400 mt-1">Monitor and manage platform deliveries.</p>
-         </div>
-       </div>
-
-       <div class="bg-gray-900 border border-uni-white/5 rounded-2xl overflow-hidden">
-          <div class="p-8 text-center">
-             <p class="text-gray-500 font-bold">Delivery list will appear here.</p>
-          </div>
-       </div>
-    </div>
-  `
+  imports: [CommonModule, LucideAngularModule],
+  templateUrl: './deliveries.html',
 })
-export class AdminDeliveriesComponent {}
+export class AdminDeliveriesComponent implements OnInit {
+  private store = inject(Store);
+
+  // Icons
+  readonly Search = Search;
+  readonly Filter = Funnel;
+  readonly MoreVertical = EllipsisVertical;
+  readonly MapPin = MapPin;
+  readonly Truck = Truck;
+  readonly Box = Box;
+  readonly Ban = Ban;
+  readonly CheckCircle = CheckCircle;
+  readonly Package = Package;
+
+  // State
+  deliveriesPage = this.store.selectSignal(selectAllDeliveries);
+  isLoading = this.store.selectSignal(selectIsLoading);
+
+  ngOnInit() {
+    this.store.dispatch(adminDeliveryActions.loadAllDeliveries({ page: 0, size: 20 }));
+  }
+
+  forceCancel(deliveryId: string) {
+    if (confirm('Are you sure you want to force-cancel this delivery?')) {
+      this.store.dispatch(
+        adminDeliveryActions.cancelDelivery({ deliveryId, reason: 'Admin Force Cancel' }),
+      );
+    }
+  }
+}
