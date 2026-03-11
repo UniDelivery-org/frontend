@@ -15,11 +15,13 @@ import {
   Truck,
   Sun,
   Moon,
+  X,
 } from 'lucide-angular';
 import { ThemeService } from '../../core/services/theme.service';
 import { authActions } from '../../features/auth/store/auth.actions';
 import { Store } from '@ngrx/store';
 import { selectProfile } from '../../features/profile/store/profile.reducer';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-admin-layout',
@@ -29,14 +31,22 @@ import { selectProfile } from '../../features/profile/store/profile.reducer';
     <div
       class="flex h-screen bg-uni-950 text-uni-white font-sans overflow-hidden selection:bg-uni-500 selection:text-uni-950"
     >
-      <!-- ===========================
-           SIDEBAR (Desktop)
-           =========================== -->
+      <!-- Mobile Backdrop Overlay -->
+      @if (isMobileMenuOpen()) {
+        <div
+          class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          (click)="closeMobileMenu()"
+        ></div>
+      }
+
+      <!-- SIDEBAR (Desktop & Mobile Slide-in) -->
       <aside
-        class="w-72 bg-gray-900 border-r border-uni-white/5 flex flex-col z-20 hidden lg:flex relative"
+        class="w-72 bg-gray-900 border-r border-uni-white/5 flex flex-col z-50 fixed lg:static inset-y-0 left-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+        [class.-translate-x-full]="!isMobileMenuOpen()"
+        [class.translate-x-0]="isMobileMenuOpen()"
       >
-        <!-- Logo Area -->
-        <div class="p-8 pb-4">
+        <!-- Logo Area w/ Close Button (Mobile) -->
+        <div class="p-8 pb-4 flex justify-between items-center">
           <div class="flex items-center gap-3">
             <div
               class="relative w-10 h-10 flex items-center justify-center bg-uni-500/10 rounded-xl border border-uni-500/20"
@@ -58,6 +68,14 @@ import { selectProfile } from '../../features/profile/store/profile.reducer';
               >
             </div>
           </div>
+
+          <!-- Close Button (Mobile Only) -->
+          <button
+            class="lg:hidden p-2 text-gray-400 hover:text-white bg-uni-white/5 rounded-lg"
+            (click)="closeMobileMenu()"
+          >
+            <lucide-icon [img]="X" [size]="20"></lucide-icon>
+          </button>
         </div>
 
         <!-- Navigation -->
@@ -179,7 +197,7 @@ import { selectProfile } from '../../features/profile/store/profile.reducer';
         >
           <!-- Mobile Toggle -->
           <div class="lg:hidden flex items-center gap-3">
-            <button class="p-2 text-gray-400 hover:text-white">
+            <button class="p-2 text-gray-400 hover:text-white" (click)="toggleMobileMenu()">
               <lucide-icon [img]="Menu" [size]="24"></lucide-icon>
             </button>
             <span class="font-uni-black text-lg">UniAdmin</span>
@@ -226,6 +244,17 @@ export class AdminLayoutComponent {
   private store = inject(Store);
   profile = this.store.selectSignal(selectProfile);
 
+  // Mobile Menu State
+  isMobileMenuOpen = signal(false);
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update((v) => !v);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+  }
+
   getAvatar(): string {
     const prof = this.profile();
     if (!prof) return 'https://ui-avatars.com/api/?name=Admin&background=0a1f08&color=65d654';
@@ -251,6 +280,7 @@ export class AdminLayoutComponent {
   readonly Truck = Truck;
   readonly Sun = Sun;
   readonly Moon = Moon;
+  readonly X = X;
 
   themeService = inject(ThemeService);
   logout() {
