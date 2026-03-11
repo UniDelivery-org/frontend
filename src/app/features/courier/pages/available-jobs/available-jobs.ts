@@ -8,6 +8,12 @@ import {
   Power,
   Activity,
   Filter,
+  Map as MapIcon,
+  X,
+  Truck,
+  Scale,
+  Bike,
+  Car,
 } from 'lucide-angular';
 import { Store } from '@ngrx/store';
 import { selectProfile } from '../../../profile/store/profile.reducer';
@@ -16,11 +22,14 @@ import { courierDeliveryActions } from '../../store/courier-delivery.actions';
 import { selectCourierDeliveryState } from '../../store/courier-delivery.reducer';
 import { Subject, takeUntil, filter } from 'rxjs';
 import { DeliveryResponseDTO } from '../../../sender/data-access/delivery.dto';
+import { CourierDeliveryState } from '../../store/courier-delivery.state';
+import * as L from 'leaflet';
+import { Map } from '../../../shared/pages/map/map';
 
 @Component({
   selector: 'app-available-jobs',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, Map],
   templateUrl: './available-jobs.html',
 })
 export class AvailableJobsComponent implements OnInit, OnDestroy {
@@ -43,6 +52,17 @@ export class AvailableJobsComponent implements OnInit, OnDestroy {
   jobs: DeliveryResponseDTO[] = [];
   searchRadius = 50; // Dynamic search radius in km
   isDraggingRadius = false;
+
+  // Map Modal State
+  selectedJobForMap: DeliveryResponseDTO | null = null;
+  mapRoutePoints: L.LatLng[] = [];
+
+  readonly MapIcon = MapIcon;
+  readonly X = X;
+  readonly Truck = Truck;
+  readonly Scale = Scale;
+  readonly Bike = Bike;
+  readonly Car = Car;
 
   ngOnInit() {
     this.store
@@ -169,6 +189,20 @@ export class AvailableJobsComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       courierDeliveryActions.acceptDelivery({ deliveryId, driverId: this.driverId }),
     );
+  }
+
+  // --- Map Modal Logic ---
+  openMap(job: DeliveryResponseDTO) {
+    this.selectedJobForMap = job;
+    this.mapRoutePoints = [
+      L.latLng(job.pickupLat, job.pickupLon),
+      L.latLng(job.dropoffLat, job.dropoffLon),
+    ];
+  }
+
+  closeMap() {
+    this.selectedJobForMap = null;
+    this.mapRoutePoints = [];
   }
 
   ngOnDestroy() {
