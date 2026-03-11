@@ -30,6 +30,8 @@ export class ProfileService {
       formData.append('currentLat', payload.currentLat.toString());
     if (payload.currentLon !== undefined)
       formData.append('currentLon', payload.currentLon.toString());
+    if(payload.isOnline!== undefined)
+      formData.append('isOnline', payload.isOnline.toString());
 
     return this.http.put<Profile>(`${this.apiUrl}/${this.apiVersion}/users/update`, formData);
   }

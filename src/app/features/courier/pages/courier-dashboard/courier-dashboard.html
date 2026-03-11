@@ -1,144 +1,141 @@
-<div class="h-full flex flex-col max-w-lg mx-auto w-full">
-  
-  <!-- ===========================
-       HEADER: STATUS & EARNINGS
-       =========================== -->
-  <div class="relative z-10 mb-6">
-    <!-- Background Card -->
-    <div class="bg-gray-900 rounded-3xl p-6 border border-uni-white/5 shadow-2xl relative overflow-hidden group">
-      
-      <!-- Ambient Glow (Changes color based on status) -->
-      <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-[60px] transition-colors duration-500"
-           [ngClass]="isOnline ? 'bg-uni-500/20' : 'bg-red-500/10'"></div>
+<div class="space-y-8 animate-fade-in pb-8">
 
-      <div class="relative z-10 flex justify-between items-center">
-        <!-- Earnings -->
-        <div>
-          <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Today's Earnings</h2>
-          <div class="flex items-baseline gap-1">
-            <span class="text-4xl font-uni-black text-uni-white tracking-tight">120.00</span>
-            <span class="text-sm font-bold text-uni-500">DH</span>
-          </div>
-          <div class="flex items-center gap-2 mt-2">
-            <div class="px-2 py-0.5 rounded bg-uni-white/5 border border-uni-white/5 text-[10px] font-bold text-gray-400">
-              4 Trips
-            </div>
-            <div class="px-2 py-0.5 rounded bg-uni-white/5 border border-uni-white/5 text-[10px] font-bold text-gray-400">
-              2.5 hrs
-            </div>
-          </div>
-        </div>
-
-        <!-- Toggle Button (Big Pill) -->
-        <button 
-          (click)="toggleStatus()"
-          class="relative pl-4 pr-5 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-3 border shadow-lg overflow-hidden active:scale-95"
-          [ngClass]="isOnline 
-            ? 'bg-uni-950 border-uni-500 text-uni-500 shadow-uni-500/20' 
-            : 'bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-750'">
-          
-          <!-- Indicator Light -->
-          <span class="relative flex h-3 w-3">
-            <span *ngIf="isOnline" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-uni-500 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3" [ngClass]="isOnline ? 'bg-uni-500' : 'bg-gray-500'"></span>
-          </span>
-          
-          <span class="text-xs font-uni-black tracking-wider uppercase">
-            {{ isOnline ? 'Online' : 'Offline' }}
-          </span>
-        </button>
-      </div>
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+    <div>
+      <h1 class="text-3xl font-uni-black text-uni-white tracking-tight mb-2">Driver Dashboard</h1>
+      <p class="text-gray-400 font-medium tracking-wide">Ready for your next route? Let's check the map.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <a routerLink="/activity"
+        class="px-6 py-3 bg-uni-white/10 hover:bg-uni-white/20 border border-uni-white/10 text-uni-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 group">
+        <lucide-icon [img]="Car" [size]="20" class="group-hover:translate-x-1 transition-transform"></lucide-icon>
+        Assignments
+      </a>
+      <a routerLink="/available-jobs"
+        class="px-6 py-3 bg-uni-500 hover:bg-uni-400 text-uni-950 shadow-[0_0_20px_rgba(101,214,84,0.3)] font-bold rounded-xl transition-all flex items-center justify-center gap-2 group">
+        <lucide-icon [img]="Activity" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
+        Find Jobs
+      </a>
     </div>
   </div>
 
-  <!-- ===========================
-       JOB FEED CONTAINER
-       =========================== -->
-  <div class="flex-1 overflow-y-auto pb-32 relative min-h-[400px]">
-    
-    <!-- STATE: OFFLINE (Radar Animation) -->
-    <div *ngIf="!isOnline" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 animate-fade-in">
-      <div class="relative w-32 h-32 mb-8 flex items-center justify-center">
-        <!-- Static Rings -->
-        <div class="absolute inset-0 border-2 border-gray-800 rounded-full"></div>
-        <div class="absolute inset-4 border border-gray-800 rounded-full opacity-50"></div>
-        <!-- Icon -->
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center text-gray-500 z-10">
-          <lucide-icon [img]="Power" [size]="32"></lucide-icon>
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div *ngFor="let stat of stats"
+      class="bg-gray-900/50 backdrop-blur-xl border border-uni-white/5 p-6 rounded-3xl relative overflow-hidden group hover:border-uni-white/10 transition-all shadow-lg hover:shadow-xl">
+      <div class="flex justify-between items-start mb-6">
+        <div
+          class="w-14 h-14 rounded-2xl flex items-center justify-center {{stat.bg}} {{stat.color}} border {{stat.border}} relative z-10">
+          <lucide-icon [img]="stat.icon" [size]="28" strokeWidth="2.5"></lucide-icon>
+        </div>
+        <span
+          class="text-xs font-bold text-gray-500 uppercase tracking-widest bg-uni-white/5 px-3 py-1.5 rounded-xl border border-uni-white/5 relative z-10">{{stat.label}}</span>
+      </div>
+      <div class="relative z-10">
+        <div class="text-4xl font-uni-black text-uni-white mb-2">{{stat.value}}</div>
+        <div class="text-sm text-gray-400 font-medium flex items-center gap-1.5">
+          <lucide-icon [img]="TrendingUp" [size]="14"></lucide-icon> Updated live
         </div>
       </div>
-      <h3 class="text-xl font-bold text-uni-white mb-2">You are Offline</h3>
-      <p class="text-sm text-gray-500 max-w-[200px]">Go online to start receiving delivery requests in your area.</p>
+      <!-- Background Decor Splash -->
+      <lucide-icon [img]="stat.icon"
+        class="absolute -right-6 -bottom-6 text-uni-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rotate-12"
+        [size]="140"></lucide-icon>
+    </div>
+  </div>
+
+  <!-- Full Width Layout for Active Job -->
+  <div class="pt-4">
+    <h2 class="text-2xl font-uni-black text-uni-white flex items-center gap-3 mb-6">
+      <lucide-icon [img]="Navigation" class="text-uni-500" [size]="24"></lucide-icon>
+      Current Assignment
+    </h2>
+
+    <!-- Loading State for Active Delivery -->
+    <div *ngIf="isLoading"
+      class="h-64 bg-gray-900/50 border border-uni-white/5 rounded-4xl flex items-center justify-center relative overflow-hidden">
+      <div
+        class="absolute inset-0 bg-linear-to-r from-transparent via-uni-white/5 to-transparent -translate-x-full animate-[shimmer_2s_infinite]">
+      </div>
+      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-uni-500"></div>
     </div>
 
-    <!-- STATE: ONLINE (Job Feed) -->
-    <div *ngIf="isOnline" class="space-y-5 px-1">
-      
-      <!-- Job Card -->
-      <div #jobCard *ngFor="let req of requests" class="bg-gray-900 rounded-3xl p-5 border border-uni-white/5 relative shadow-xl overflow-hidden group">
-        
-        <!-- Header: User & Distance -->
-        <div class="flex justify-between items-start mb-5 relative z-10">
-          <div class="flex items-center gap-3">
-             <div class="w-12 h-12 rounded-2xl bg-gray-800 flex items-center justify-center font-bold text-xl text-uni-white border border-uni-white/5">
-               {{req.passenger.charAt(0)}}
-             </div>
-             <div>
-               <h3 class="font-bold text-uni-white text-lg leading-tight">{{req.passenger}}</h3>
-               <div class="flex items-center gap-1 text-xs font-medium text-gray-400 mt-1">
-                 <lucide-icon [img]="Navigation" [size]="12"></lucide-icon> {{req.distance}} away
-               </div>
-             </div>
-          </div>
-          <!-- Price Badge -->
-          <div class="bg-uni-500/10 border border-uni-500/20 px-3 py-1.5 rounded-lg">
-             <span class="block text-xl font-uni-black text-uni-500 leading-none">{{req.price}} <span class="text-[10px] font-bold">DH</span></span>
-          </div>
-        </div>
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !activeDelivery"
+      class="h-64 bg-gray-900/50 backdrop-blur-xl border border-uni-white/5 rounded-4xl flex flex-col items-center justify-center p-8 text-center relative overflow-hidden border-dashed">
+      <lucide-icon [img]="CheckCircle2" [size]="64" class="text-gray-600 mb-6"></lucide-icon>
+      <h3 class="text-xl font-bold text-uni-white mb-2">No Active Delivery</h3>
+      <p class="text-gray-500 max-w-md">You're completely caught up! Head over to the Available Jobs board to pick up a
+        new opportunity and start earning.</p>
+      <a routerLink="/available-jobs"
+        class="mt-8 px-6 py-3 bg-uni-white/5 hover:bg-uni-500/20 text-uni-500 border border-uni-white/10 hover:border-uni-500/30 font-bold rounded-xl transition-all">
+        Browse Jobs
+      </a>
+    </div>
 
-        <!-- Route Visual -->
-        <div class="relative pl-4 space-y-6 mb-6 z-10">
-           <!-- Connecting Line -->
-           <div class="absolute left-[21px] top-3 bottom-4 w-0.5 border-l-2 border-dashed border-gray-700"></div>
-
-           <!-- Pickup -->
-           <div class="relative flex items-start gap-4">
-             <div class="w-2.5 h-2.5 mt-1.5 rounded-full bg-uni-500 shadow-[0_0_10px_#65d654] z-10 shrink-0"></div>
-             <div>
-               <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Pickup</p>
-               <p class="text-sm font-bold text-gray-200 leading-tight">{{req.pickup}}</p>
-             </div>
-           </div>
-           
-           <!-- Dropoff -->
-           <div class="relative flex items-start gap-4">
-             <div class="w-2.5 h-2.5 mt-1.5 bg-uni-white z-10 shrink-0 rotate-45"></div>
-             <div>
-               <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Dropoff</p>
-               <p class="text-sm font-bold text-gray-200 leading-tight">{{req.dropoff}}</p>
-             </div>
-           </div>
-        </div>
-
-        <!-- Footer: Actions -->
-        <div class="grid grid-cols-[1fr_2fr] gap-3 relative z-10">
-           <button class="py-4 rounded-xl border border-uni-white/10 font-bold text-gray-400 hover:bg-uni-white/5 hover:text-uni-white transition-colors text-sm">
-             Decline
-           </button>
-           <button (click)="acceptRequest(req.id)" class="py-4 rounded-xl bg-uni-500 font-uni-black text-uni-950 hover:bg-uni-400 shadow-[0_0_20px_rgba(101,214,84,0.3)] transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2">
-             Accept Job <lucide-icon [img]="ArrowRight" [size]="18"></lucide-icon>
-           </button>
-        </div>
-
+    <!-- Active Delivery Card -->
+    <div *ngIf="!isLoading && activeDelivery"
+      class="bg-gradient-to-br from-gray-900/90 to-gray-950 backdrop-blur-2xl border border-uni-500/30 rounded-4xl p-8 relative overflow-hidden shadow-[0_0_50px_rgba(101,214,84,0.1)] group max-w-4xl">
+      <div
+        class="absolute top-0 right-0 w-96 h-96 bg-uni-500/10 rounded-full filter blur-[100px] -translate-y-1/2 translate-x-1/3 z-0">
       </div>
 
-      <!-- Loading/Searching State (Bottom of feed) -->
-      <div class="flex justify-center py-4">
-        <div class="flex items-center gap-2 text-xs font-bold text-uni-500/50 uppercase tracking-widest animate-pulse">
-           Searching Area...
+      <div class="relative z-10 flex flex-col md:flex-row gap-8">
+        <!-- Left Side Details -->
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-8">
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Tracking ID</span>
+              <div class="font-mono text-xl font-bold text-uni-white">#{{activeDelivery.id.split('-')[0]}}</div>
+            </div>
+            <div
+              class="px-5 py-2 rounded-full text-xs font-bold border flex items-center gap-2 bg-blue-500/10 text-blue-500 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+              <div class="w-2 h-2 rounded-full bg-current animate-pulse"></div>
+              {{formatLabel(activeDelivery.status)}}
+            </div>
+          </div>
+
+          <!-- Routes -->
+          <div class="bg-black/20 border border-uni-white/5 rounded-3xl p-6 mb-8">
+            <div class="relative ml-2 pl-8 border-l-2 border-dashed border-gray-700/50 space-y-8">
+              <!-- Pickup -->
+              <div class="relative">
+                <div
+                  class="absolute -left-[42px] top-0.5 w-4 h-4 rounded-full bg-uni-500 shadow-[0_0_10px_rgba(101,214,84,0.6)]">
+                </div>
+                <span class="text-xs font-bold text-uni-500 uppercase tracking-widest block mb-1">Pickup</span>
+                <p class="text-base font-medium text-uni-white">{{activeDelivery.pickupAddress}}</p>
+              </div>
+              <!-- Dropoff -->
+              <div class="relative">
+                <div
+                  class="absolute -left-[42px] top-0.5 w-4 h-4 rounded-full border-[3px] border-gray-500 bg-gray-900">
+                </div>
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1">Dropoff</span>
+                <p class="text-base font-medium text-uni-white">{{activeDelivery.dropoffAddress}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side Actions & Price -->
+        <div
+          class="md:w-64 flex flex-col justify-between border-t md:border-t-0 md:border-l border-uni-white/5 pt-6 md:pt-0 md:pl-8">
+          <div>
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Payout Amount</span>
+            <div class="text-5xl font-uni-black text-uni-white mb-2">{{activeDelivery.agreedPrice}} <span
+                class="text-xl text-uni-500">DH</span></div>
+          </div>
+
+          <div class="space-y-3 mt-8">
+            <a [routerLink]="['/delivery', activeDelivery.id]"
+              class="w-full px-6 py-4 bg-uni-white/10 hover:bg-uni-white/20 border border-uni-white/10 text-uni-white font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2">
+              View Map & Details <lucide-icon [img]="ArrowRight" [size]="18"></lucide-icon>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>

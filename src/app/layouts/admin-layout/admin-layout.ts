@@ -15,10 +15,13 @@ import {
   Truck,
   Sun,
   Moon,
+  X,
 } from 'lucide-angular';
 import { ThemeService } from '../../core/services/theme.service';
 import { authActions } from '../../features/auth/store/auth.actions';
 import { Store } from '@ngrx/store';
+import { selectProfile } from '../../features/profile/store/profile.reducer';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-admin-layout',
@@ -28,14 +31,22 @@ import { Store } from '@ngrx/store';
     <div
       class="flex h-screen bg-uni-950 text-uni-white font-sans overflow-hidden selection:bg-uni-500 selection:text-uni-950"
     >
-      <!-- ===========================
-           SIDEBAR (Desktop)
-           =========================== -->
+      <!-- Mobile Backdrop Overlay -->
+      @if (isMobileMenuOpen()) {
+        <div
+          class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          (click)="closeMobileMenu()"
+        ></div>
+      }
+
+      <!-- SIDEBAR (Desktop & Mobile Slide-in) -->
       <aside
-        class="w-72 bg-gray-900 border-r border-uni-white/5 flex flex-col z-20 hidden lg:flex relative"
+        class="w-72 bg-gray-900 border-r border-uni-white/5 flex flex-col z-50 fixed lg:static inset-y-0 left-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+        [class.-translate-x-full]="!isMobileMenuOpen()"
+        [class.translate-x-0]="isMobileMenuOpen()"
       >
-        <!-- Logo Area -->
-        <div class="p-8 pb-4">
+        <!-- Logo Area w/ Close Button (Mobile) -->
+        <div class="p-8 pb-4 flex justify-between items-center">
           <div class="flex items-center gap-3">
             <div
               class="relative w-10 h-10 flex items-center justify-center bg-uni-500/10 rounded-xl border border-uni-500/20"
@@ -57,6 +68,14 @@ import { Store } from '@ngrx/store';
               >
             </div>
           </div>
+
+          <!-- Close Button (Mobile Only) -->
+          <button
+            class="lg:hidden p-2 text-gray-400 hover:text-white bg-uni-white/5 rounded-lg"
+            (click)="closeMobileMenu()"
+          >
+            <lucide-icon [img]="X" [size]="20"></lucide-icon>
+          </button>
         </div>
 
         <!-- Navigation -->
@@ -141,13 +160,17 @@ import { Store } from '@ngrx/store';
           <div class="flex items-center gap-3 mb-4 px-2">
             <div class="w-10 h-10 rounded-full bg-linear-to-tr from-uni-500 to-gray-700 p-[2px]">
               <img
-                src="https://ui-avatars.com/api/?name=Admin+User&background=0a1f08&color=65d654"
+                [src]="getAvatar()"
                 class="rounded-full w-full h-full border-2 border-gray-900"
               />
             </div>
             <div>
-              <div class="text-sm font-bold text-white">Super Admin</div>
-              <div class="text-[10px] text-gray-500">admin&#64;unidelivery.ma</div>
+              <div class="text-sm font-bold text-white">
+                {{ profile()?.fullName || 'Loading...' }}
+              </div>
+              <div class="text-[10px] text-gray-500">
+                {{ profile()?.email || 'admin@unidelivery.ma' }}
+              </div>
             </div>
           </div>
           <button
@@ -174,7 +197,7 @@ import { Store } from '@ngrx/store';
         >
           <!-- Mobile Toggle -->
           <div class="lg:hidden flex items-center gap-3">
-            <button class="p-2 text-gray-400 hover:text-white">
+            <button class="p-2 text-gray-400 hover:text-white" (click)="toggleMobileMenu()">
               <lucide-icon [img]="Menu" [size]="24"></lucide-icon>
             </button>
             <span class="font-uni-black text-lg">UniAdmin</span>
@@ -196,6 +219,15 @@ import { Store } from '@ngrx/store';
 
           <!-- Right Actions -->
           <div class="flex items-center gap-4">
+            <!-- Theme Toggle -->
+            <button
+              (click)="themeService.toggle()"
+              class="relative p-2.5 rounded-full text-gray-400 hover:text-uni-white hover:bg-uni-white/5 transition-colors"
+            >
+              <lucide-icon [img]="themeService.isDark() ? Sun : Moon" [size]="20"></lucide-icon>
+            </button>
+
+            <!-- Notifications -->
             <button
               class="relative p-2.5 rounded-full text-gray-400 hover:text-uni-white hover:bg-uni-white/5 transition-colors"
             >
@@ -219,6 +251,31 @@ import { Store } from '@ngrx/store';
 })
 export class AdminLayoutComponent {
   private store = inject(Store);
+  profile = this.store.selectSignal(selectProfile);
+
+  // Mobile Menu State
+  isMobileMenuOpen = signal(false);
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update((v) => !v);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+  }
+
+  getAvatar(): string {
+    const prof = this.profile();
+    if (!prof) return 'https://ui-avatars.com/api/?name=Admin&background=0a1f08&color=65d654';
+    if (prof.avatarUrl) {
+      return 'http://localhost:8081' + prof.avatarUrl;
+    }
+    const namePart = prof.fullName.includes(' ')
+      ? prof.fullName.substring(0, prof.fullName.indexOf(' '))
+      : prof.fullName;
+    return 'https://ui-avatars.com/api/?name=' + namePart + '&background=0a1f08&color=65d654';
+  }
+
   // Icons
   readonly LayoutDashboard = LayoutDashboard;
   readonly Users = Users;
@@ -232,9 +289,10 @@ export class AdminLayoutComponent {
   readonly Truck = Truck;
   readonly Sun = Sun;
   readonly Moon = Moon;
+  readonly X = X;
 
   themeService = inject(ThemeService);
   logout() {
     this.store.dispatch(authActions.logoutProfile());
-  } 
+  }
 }

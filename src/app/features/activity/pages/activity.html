@@ -1,5 +1,5 @@
 <div class="max-w-2xl mx-auto w-full space-y-6">
-  
+
   <!-- HEADER -->
   <div>
     <h1 class="text-3xl font-uni-black text-uni-white tracking-tight">Activity</h1>
@@ -7,35 +7,70 @@
   </div>
 
   <!-- LIST -->
-  <div class="space-y-4">
-    
-    <div #activityItem *ngFor="let item of activities" 
-         class="bg-gray-900 border border-uni-white/5 rounded-2xl p-5 flex items-center justify-between group hover:border-uni-500/30 transition-all hover:bg-uni-white/5 cursor-pointer">
-      
+  <div class="space-y-4 relative min-h-[150px]">
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading"
+      class="absolute inset-0 flex items-center justify-center bg-[#0a0a0a]/80 backdrop-blur-sm z-10 rounded-2xl">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-uni-500"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && activities.length === 0"
+      class="p-8 text-center text-gray-400 bg-gray-900 border border-uni-white/5 rounded-2xl">
+      You have no delivery history yet.
+    </div>
+
+    <div *ngFor="let item of activities"
+      class="bg-gray-900 border border-uni-white/5 rounded-2xl p-5 flex items-center justify-between group hover:border-uni-500/30 transition-all hover:bg-uni-white/5 cursor-pointer"
+      [routerLink]="['/delivery', item.id]">
+
       <div class="flex items-center gap-4">
         <!-- Icon/Status -->
         <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-gray-800"
-          [ngClass]="item.status === 'COMPLETED' ? 'text-uni-500 bg-uni-500/10' : 'text-red-500 bg-red-500/10'">
-          <lucide-icon [img]="item.status === 'COMPLETED' ? Package : XCircle" [size]="24"></lucide-icon>
+          [ngClass]="item.status === 'DELIVERED' ? 'text-uni-500 bg-uni-500/10' : 'text-red-500 bg-red-500/10'">
+          <lucide-icon [img]="item.status === 'DELIVERED' ? Package : XCircle" [size]="24"></lucide-icon>
         </div>
 
         <!-- Info -->
         <div>
-          <h3 class="font-bold text-uni-white group-hover:text-uni-500 transition-colors">{{ item.title }}</h3>
-          <div class="flex items-center gap-2 text-xs text-gray-500">
-            <span>{{ item.id }}</span>
-            <span class="w-1 h-1 rounded-full bg-gray-700"></span>
-            <span>{{ item.date }}</span>
+          <h3 class="font-bold text-uni-white group-hover:text-uni-500 transition-colors">
+            To {{ item.dropoffAddress.split(',')[0] }}
+          </h3>
+          <div class="flex flex-col gap-1 mt-1 text-xs text-gray-500">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded border border-gray-700 font-bold bg-gray-800">
+                {{ item.status.replace('_', ' ') }}
+              </span>
+              <span class="px-2 py-0.5 rounded border border-gray-700 font-bold bg-gray-800">
+                {{ item.vehicleTypeRequired }}
+              </span>
+            </div>
+            <span>{{ item.createdAt | date:'medium' }}</span>
           </div>
         </div>
       </div>
 
       <!-- Price & Arrow -->
       <div class="flex items-center gap-4">
-        <span class="text-lg font-uni-black text-white">{{ item.price }}</span>
-        <lucide-icon [img]="ChevronRight" [size]="20" class="text-gray-600 group-hover:text-uni-white transition-colors"></lucide-icon>
+        <span class="text-lg font-uni-black text-white">{{ item.agreedPrice }} DH</span>
+        <lucide-icon [img]="ChevronRight" [size]="20"
+          class="text-gray-600 group-hover:text-uni-white transition-colors"></lucide-icon>
       </div>
 
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-4 pt-4">
+      <button (click)="prevPage()" [disabled]="currentPage === 0 || isLoading"
+        class="text-sm px-4 py-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 transition-colors">
+        Previous
+      </button>
+      <span class="text-sm text-gray-400">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1 || isLoading"
+        class="text-sm px-4 py-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 transition-colors">
+        Next
+      </button>
     </div>
 
   </div>
