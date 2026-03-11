@@ -4,4 +4,5 @@ export interface UpdateProfileRequestDTO {
   avatar?: File | null;
   currentLat?: number;
   currentLon?: number;
+  isOnline?: boolean;
 }
