@@ -92,6 +92,12 @@
         <span class="font-bold text-sm tracking-wide">Dashboard</span>
       </a>
 
+      <a routerLink="/available-jobs" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+        class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
+        <lucide-icon [img]="Search" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
+        <span class="font-bold text-sm tracking-wide">Available Jobs</span>
+      </a>
+
       <a routerLink="/wallet" routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
         class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300">
         <lucide-icon [img]="Wallet" [size]="20" class="group-hover:scale-110 transition-transform"></lucide-icon>
@@ -285,17 +291,17 @@
   <div class="fixed bottom-6 left-4 right-4 z-50 lg:hidden safe-area-pb pb-8">
     <!-- Added pb-8 for general spacing if no safe area -->
     <div
-      class="flex justify-between items-center bg-gray-900/95 backdrop-blur-2xl border border-uni-white/10 px-2 py-3 rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
+      class="flex justify-between items-center bg-gray-900/95 backdrop-blur-2xl border border-uni-white/10 px-2 py-3 rounded-4xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
 
       <a routerLink="/dashboard" routerLinkActive="text-uni-500 bg-uni-white/5"
         class="group flex flex-col items-center gap-1.5 p-2 rounded-2xl w-[60px] text-gray-500 transition-all focus:outline-none">
         <div class="relative">
-          <lucide-icon [img]="Package" [size]="22"
+          <lucide-icon [img]="currentRole() === role.SENDER ? Box : Car" [size]="22"
             class="group-hover:-translate-y-1 transition-transform"></lucide-icon>
           <span
             class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-uni-500 rounded-full opacity-0 group-[.text-uni-500]:opacity-100 transition-opacity"></span>
         </div>
-        <span class="text-[10px] font-bold tracking-wide">Send</span>
+        <span class="text-[10px] font-bold tracking-wide">Home</span>
       </a>
 
       <a routerLink="/activity" routerLinkActive="text-uni-500 bg-uni-white/5"
@@ -311,10 +317,17 @@
 
       <!-- FAB (Always centered & prominent) -->
       <div class="relative -top-10 mx-1 z-10 shrink-0">
+        @if (currentRole() === role.SENDER) {
         <a routerLink="/new-delivery"
           class="w-16 h-16 bg-uni-500 rounded-full flex items-center justify-center text-uni-950 shadow-[0_0_30px_rgba(101,214,84,0.5)] hover:scale-105 active:scale-95 transition-all border-[6px] border-[#0F1319] focus:outline-none focus:ring-4 focus:ring-uni-500/50">
           <lucide-icon [img]="Plus" [size]="32" strokeWidth="3"></lucide-icon>
         </a>
+        } @else {
+        <a routerLink="/available-jobs"
+          class="w-16 h-16 bg-uni-500 rounded-full flex items-center justify-center text-uni-950 shadow-[0_0_30px_rgba(101,214,84,0.5)] hover:scale-105 active:scale-95 transition-all border-[6px] border-[#0F1319] focus:outline-none focus:ring-4 focus:ring-uni-500/50">
+          <lucide-icon [img]="Search" [size]="28" strokeWidth="3"></lucide-icon>
+        </a>
+        }
       </div>
 
       <a routerLink="/wallet" routerLinkActive="text-uni-500 bg-uni-white/5"
