@@ -219,6 +219,15 @@ import { signal } from '@angular/core';
 
           <!-- Right Actions -->
           <div class="flex items-center gap-4">
+            <!-- Theme Toggle -->
+            <button
+              (click)="themeService.toggle()"
+              class="relative p-2.5 rounded-full text-gray-400 hover:text-uni-white hover:bg-uni-white/5 transition-colors"
+            >
+              <lucide-icon [img]="themeService.isDark() ? Sun : Moon" [size]="20"></lucide-icon>
+            </button>
+
+            <!-- Notifications -->
             <button
               class="relative p-2.5 rounded-full text-gray-400 hover:text-uni-white hover:bg-uni-white/5 transition-colors"
             >
