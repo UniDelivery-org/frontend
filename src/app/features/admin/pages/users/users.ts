@@ -1,15 +1,35 @@
-import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Search, Shield, User as UserIcon, Mail, Ban, Trash2, Bike, Package, CircleAlert, CircleCheckBig, CircleX, EllipsisVertical, Funnel } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Search,
+  Shield,
+  User as UserIcon,
+  Mail,
+  Ban,
+  Trash2,
+  Bike,
+  Package,
+  CircleAlert,
+  CircleCheckBig,
+  CircleX,
+  EllipsisVertical,
+  Funnel,
+} from 'lucide-angular';
 import { User, Role } from '../../../../core/models/models';
+import { Store } from '@ngrx/store';
+import { adminUserActions } from '../../store/admin-users.actions';
+import { selectUsersPage, selectIsLoading } from '../../store/admin-users.reducer';
 
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
-  templateUrl: './users.html'
+  templateUrl: './users.html',
 })
-export class Users implements AfterViewInit {
+export class Users implements OnInit {
+  private store = inject(Store);
+
   // Icons
   readonly Search = Search;
   readonly Filter = Funnel;
@@ -24,78 +44,52 @@ export class Users implements AfterViewInit {
   readonly Trash2 = Trash2;
   readonly Bike = Bike;
   readonly Package = Package;
+  readonly Role = Role;
 
-  @ViewChildren('tableRow') tableRows!: QueryList<ElementRef>;
+  usersPage = this.store.selectSignal(selectUsersPage);
+  isLoading = this.store.selectSignal(selectIsLoading);
+  currentPage = 0;
+  searchQuery = '';
+  selectedRole: Role | undefined = undefined;
 
-  constructor() {}
-
-  ngAfterViewInit() {
+  ngOnInit() {
+    this.loadUsers();
   }
 
-  users: User[] = [
-    { 
-      id: '1', 
-      name: 'Ahmed T.', 
-      role: Role.SENDER, 
-      email: 'ahmed@mail.com', 
-      isBlocked: false,
-      phone: '+212600000001',
-      rating: 4.8,
-      city: 'Casablanca'
-    },
-    { 
-      id: '2', 
-      name: 'Karim B.', 
-      role: Role.COURIER, 
-      email: 'karim@mail.com',
-      isBlocked: false,
-      phone: '+212600000002',
-      rating: 4.5,
-      city: 'Rabat'
-    },
-    { 
-      id: '3', 
-      name: 'Fatima Z.', 
-      role: Role.SENDER, 
-      email: 'fatima@mail.com', 
-      isBlocked: true,
-      phone: '+212600000003',
-      rating: 3.9,
-      city: 'Marrakech'
-    },
-    { 
-      id: '4', 
-      name: 'Youssef R.', 
-      role: Role.COURIER, 
-      email: 'youssef@mail.com', 
-      isBlocked: false,
-      phone: '+212600000004',
-      rating: 4.2,
-      city: 'Tangier'
-    },
-    { 
-      id: '5', 
-      name: 'Omar K.', 
-      role: Role.SENDER, 
-      email: 'omar@mail.com', 
-      isBlocked: false,
-      phone: '+212600000005',
-      rating: 5.0,
-      city: 'Agadir'
-    },
-    { 
-      id: '6', 
-      name: 'Salma D.', 
-      role: Role.COURIER, 
-      email: 'salma@mail.com', 
-      isBlocked: false,
-      phone: '+212600000006',
-      rating: 4.7,
-      city: 'Fes'
-    },
-  ];
+  loadUsers() {
+    this.store.dispatch(
+      adminUserActions.loadAllUsers({
+        page: this.currentPage,
+        size: 10,
+        search: this.searchQuery || undefined,
+        role: this.selectedRole,
+      }),
+    );
+  }
 
-  toggleBlock(user: User) {
-    user.isBlocked = !user.isBlocked;
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadUsers();
+  }
+
+  onSearch(event: Event) {
+    const query = (event.target as HTMLInputElement).value;
+    this.searchQuery = query;
+    this.currentPage = 0; // Reset to first page on search
+    this.loadUsers();
+  }
+
+  onFilter(role: Role | 'ALL') {
+    this.selectedRole = role === 'ALL' ? undefined : role;
+    this.currentPage = 0; // Reset to first page on filter
+    this.loadUsers();
+  }
+
+  toggleBlock(userId: string, isBlocked: boolean) {
+    if (isBlocked) {
+      this.store.dispatch(adminUserActions.unblockUser({ userId }));
+    } else {
+      this.store.dispatch(adminUserActions.blockUser({ userId, reason: 'Admin Manual Block' }));
+    }
   }
 }
