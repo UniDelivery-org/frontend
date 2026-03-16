@@ -70,7 +70,7 @@ export class ProfileComponent {
   }
   getAvatar(profile: Profile): string {
     return profile.avatarUrl
-      ? 'http://localhost:8081' + profile.avatarUrl
+      ? profile.avatarUrl
       : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' +
           profile.fullName.substring(0, profile.fullName.indexOf(' '));
   }

@@ -13,7 +13,12 @@ export class ProfileService {
   private readonly apiUrl = environment.apiUrl;
   private readonly apiVersion = environment.apiVersion;
   public load(): Observable<Profile> {
-    return this.http.get<Profile>(`${this.apiUrl}/${this.apiVersion}/users/profile`);
+    return this.http.get<Profile>(`${this.apiUrl}/${this.apiVersion}/users/profile`).pipe(
+      map((profile) => ({
+        ...profile,
+        avatarUrl: profile.avatarUrl ? 'http://localhost:8081' + profile.avatarUrl : null,
+      })),
+    );
   }
   public update(payload: UpdateProfileRequestDTO): Observable<Profile> {
     const formData = new FormData();

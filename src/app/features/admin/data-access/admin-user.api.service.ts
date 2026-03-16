@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Page } from '../../../shared/models/api.page.model';
 import { environment } from '../../../../environments/environment';
 import { Role } from '../../../core/models/models';
@@ -31,7 +31,15 @@ export class AdminUserApiService {
       params = params.set('role', role);
     }
 
-    return this.http.get<Page<Profile>>(this.apiUrl, { params });
+    return this.http.get<Page<Profile>>(this.apiUrl, { params }).pipe(
+      map((page) => ({
+        ...page,
+        content: page.content.map((profile) => ({
+          ...profile,
+          avatarUrl: profile.avatarUrl ? 'http://localhost:8081' + profile.avatarUrl : null,
+        })),
+      })),
+    );
   }
 
   blockUser(userId: string, reason?: string): Observable<Profile> {

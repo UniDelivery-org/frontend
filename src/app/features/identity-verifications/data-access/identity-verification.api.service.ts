@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Page } from '../../../shared/models/api.page.model';
-import { 
-  IdentityDocsFilter, 
-  IdentityDocumentResponseDTO, 
-  IdUploadDTO, 
-  VerificationDTO 
+import {
+  IdentityDocsFilter,
+  IdentityDocumentResponseDTO,
+  IdUploadDTO,
+  VerificationDTO,
 } from '../data-access/identity-verification.dto';
 
 @Injectable({
@@ -23,7 +23,15 @@ export class IdentityVerificationApiService {
    */
   getAllDocuments(filter: IdentityDocsFilter): Observable<Page<IdentityDocumentResponseDTO>> {
     const params = this.buildHttpParams(filter);
-    return this.http.get<Page<IdentityDocumentResponseDTO>>(this.apiUrl, { params });
+    return this.http.get<Page<IdentityDocumentResponseDTO>>(this.apiUrl, { params }).pipe(
+      map((page) => ({
+        ...page,
+        content: page.content.map((doc) => ({
+          ...doc,
+          fileUrl: `http://localhost:8084${doc.fileUrl}`,
+        })),
+      })),
+    );
   }
 
   /**
@@ -32,7 +40,9 @@ export class IdentityVerificationApiService {
    */
   getMyDocuments(filter: IdentityDocsFilter): Observable<Page<IdentityDocumentResponseDTO>> {
     const params = this.buildHttpParams(filter);
-    return this.http.get<Page<IdentityDocumentResponseDTO>>(`${this.apiUrl}/my-documents`, { params });
+    return this.http.get<Page<IdentityDocumentResponseDTO>>(`${this.apiUrl}/my-documents`, {
+      params,
+    });
   }
 
   /**
@@ -60,8 +70,14 @@ export class IdentityVerificationApiService {
    * @param documentId The ID of the document to verify.
    * @param request The verification status and optional rejection reason.
    */
-  verifyDocument(documentId: string, request: VerificationDTO): Observable<IdentityDocumentResponseDTO> {
-    return this.http.put<IdentityDocumentResponseDTO>(`${this.apiUrl}/${documentId}/verifiy`, request);
+  verifyDocument(
+    documentId: string,
+    request: VerificationDTO,
+  ): Observable<IdentityDocumentResponseDTO> {
+    return this.http.put<IdentityDocumentResponseDTO>(
+      `${this.apiUrl}/${documentId}/verifiy`,
+      request,
+    );
   }
 
   /**
