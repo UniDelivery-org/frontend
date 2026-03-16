@@ -17,7 +17,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 
     <!-- Loading State -->
-    @if (isLoading() && !stats()) {
+    @if (isLoadingStats() && !stats()) {
     <div
       class="col-span-full p-16 flex flex-col items-center justify-center text-center bg-gray-900 border border-uni-white/5 rounded-3xl h-[160px]">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-uni-500 mb-3"></div>
@@ -117,7 +117,7 @@
     <div class="p-6 border-b border-uni-white/5 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm">
       <h2 class="text-lg font-bold text-uni-white flex items-center gap-2">
         Recent Verifications
-        <span class="px-2 py-0.5 rounded-full bg-uni-white/5 text-xs text-gray-400 font-medium">12 New</span>
+        <span *ngIf="totalVerifs() > 0" class="px-2 py-0.5 rounded-full bg-uni-white/5 text-xs text-gray-400 font-medium">{{ totalVerifs() }} Total</span>
       </h2>
       <a routerLink="/verifications"
         class="text-xs font-bold text-uni-500 hover:text-uni-white transition-colors uppercase tracking-widest">
@@ -125,13 +125,32 @@
       </a>
     </div>
 
+    <!-- Loading State -->
+    @if (isVerifsLoading()) {
+    <div class="p-16 flex flex-col items-center justify-center text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-uni-500 mb-4"></div>
+      <p class="text-uni-500 font-bold uppercase tracking-widest text-sm">Loading Verifications...</p>
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isVerifsLoading() && (!verifications() || verifications().length === 0)) {
+    <div class="p-16 flex flex-col items-center justify-center text-center">
+      <lucide-icon [img]="FileText" [size]="48" class="text-gray-700 mx-auto mb-4"></lucide-icon>
+      <p class="text-lg font-bold text-gray-300">No verifications found</p>
+      <p class="text-sm text-gray-500 mt-2 max-w-sm">There are no pending or recent verification requests.</p>
+    </div>
+    }
+
     <!-- Table Content -->
+    @if (!isVerifsLoading() && verifications().length > 0) {
     <div class="overflow-x-auto">
       <table class="w-full text-left">
         <thead>
           <tr
             class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-uni-white/5 bg-gray-900/50">
-            <th class="px-6 py-4">User</th>
+            <th class="px-6 py-4">ID</th>
+            <th class="px-6 py-4">Owner ID</th>
             <th class="px-6 py-4">Document Type</th>
             <th class="px-6 py-4">Date</th>
             <th class="px-6 py-4">Status</th>
@@ -140,47 +159,53 @@
         </thead>
         <tbody class="divide-y divide-uni-white/5 text-sm">
 
-          <tr #tableRow *ngFor="let item of recentVerifs" class="group hover:bg-uni-white/5 transition-colors">
+          <tr #tableRow *ngFor="let doc of verifications()" class="group hover:bg-uni-white/5 transition-colors">
             <!-- ID -->
-            <td class="px-6 py-4 text-gray-400 font-medium">{{ item.id }}</td>
-            <!-- User -->
+            <td class="px-6 py-4 text-gray-400 font-medium font-mono text-xs">#{{ doc.id.substring(0, 8) }}</td>
+            
+            <!-- Owner -->
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
                 <div
-                  class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-white">
-                  {{ item.user.charAt(0) }}
+                  class="w-8 h-8 rounded-full bg-linear-to-tr from-gray-700 to-gray-800 flex items-center justify-center text-xs font-bold text-white">
+                  <lucide-icon [img]="Users" [size]="14"></lucide-icon>
                 </div>
-                <div class="font-bold text-white">{{ item.user }}</div>
+                <div class="font-bold text-white text-xs">{{ doc.ownerId.substring(0, 13) }}...</div>
               </div>
             </td>
 
             <!-- Type -->
-            <td class="px-6 py-4 text-gray-400 font-medium">{{ item.type }}</td>
+            <td class="px-6 py-4 text-gray-400 font-medium">
+              <span class="flex items-center gap-2">
+                <lucide-icon [img]="FileText" [size]="14" class="text-uni-500"></lucide-icon>
+                {{ doc.type }}
+              </span>
+            </td>
 
             <!-- Date -->
-            <td class="px-6 py-4 text-gray-500 font-medium text-xs">{{ item.date }}</td>
+            <td class="px-6 py-4 text-gray-500 font-medium text-xs">{{ doc.createdAt | date:'short' }}</td>
 
             <!-- Status -->
             <td class="px-6 py-4">
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border" [ngClass]="{
-                  'bg-yellow-500/10 text-yellow-500 border-yellow-500/20': item.status === VerificationStatus.PENDING,
-                  'bg-uni-500/10 text-uni-500 border-uni-500/20': item.status === VerificationStatus.APPROVED,
-                  'bg-red-500/10 text-red-500 border-red-500/20': item.status === VerificationStatus.REJECTED
+                  'bg-yellow-500/10 text-yellow-500 border-yellow-500/20': doc.verificationStatus === VerificationStatus.PENDING,
+                  'bg-uni-500/10 text-uni-500 border-uni-500/20': doc.verificationStatus === VerificationStatus.APPROVED,
+                  'bg-red-500/10 text-red-500 border-red-500/20': doc.verificationStatus === VerificationStatus.REJECTED
                 }">
-                <lucide-icon [img]="Clock" [size]="12" *ngIf="item.status === VerificationStatus.PENDING"></lucide-icon>
+                <lucide-icon [img]="Clock" [size]="12" *ngIf="doc.verificationStatus === VerificationStatus.PENDING"></lucide-icon>
                 <lucide-icon [img]="CheckCircle" [size]="12"
-                  *ngIf="item.status === VerificationStatus.APPROVED"></lucide-icon>
+                  *ngIf="doc.verificationStatus === VerificationStatus.APPROVED"></lucide-icon>
                 <lucide-icon [img]="XCircle" [size]="12"
-                  *ngIf="item.status === VerificationStatus.REJECTED"></lucide-icon>
-                {{ item.status }}
+                  *ngIf="doc.verificationStatus === VerificationStatus.REJECTED"></lucide-icon>
+                {{ doc.verificationStatus }}
               </span>
             </td>
 
             <!-- Action -->
-            <td class="px-6 py-4 text-right">
-              <button class="text-gray-500 hover:text-uni-white p-2 hover:bg-uni-white/5 rounded-lg transition-all">
-                <lucide-icon [img]="MoreHorizontal" [size]="18"></lucide-icon>
-              </button>
+            <td class="px-6 py-4 text-right text-uni-500 ">
+                <a routerLink="/verifications" class="flex gap-1 justify-end items-center font-bold text-xs uppercase cursor-pointer hover:text-uni-white transition-colors">
+                    Review <lucide-icon [img]="ArrowUpRight" [size]="14"></lucide-icon>
+                </a>
             </td>
           </tr>
 
@@ -188,5 +213,18 @@
       </table>
     </div>
 
+    <!-- Pagination -->
+    <div
+      class="p-4 border-t border-uni-white/5 bg-gray-900/50 flex justify-between items-center text-xs text-gray-500 font-bold uppercase tracking-wider rounded-b-3xl">
+      <span>Showing {{ verifications().length }} of {{ totalVerifs() }} Verifications</span>
+      <div class="flex gap-2">
+        <button [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)"
+          class="px-3 py-1.5 rounded-lg bg-uni-white/5 hover:bg-uni-white/10 transition-colors disabled:opacity-50">Prev</button>
+        <button [disabled]="(currentPage + 1) * pageSize >= totalVerifs()" (click)="onPageChange(currentPage + 1)"
+          class="px-3 py-1.5 rounded-lg bg-uni-white/5 hover:bg-uni-white/10 transition-colors disabled:opacity-50">Next</button>
+      </div>
+    </div>
+    }
+
   </div>
-</div>
+</div>

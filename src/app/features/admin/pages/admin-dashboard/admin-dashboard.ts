@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { adminDeliveryActions } from '../../store/admin-delivery.actions';
-import { selectStats, selectIsLoading } from '../../store/admin-delivery.reducer';
+import { selectStats, selectIsLoading as selectIsStatsLoading } from '../../store/admin-delivery.reducer';
 import {
   LucideAngularModule,
   Users,
@@ -20,6 +20,12 @@ import {
   Package,
 } from 'lucide-angular';
 import { VerificationStatus, IdentityType } from '../../../../core/models/models';
+import { identityVerificationActions } from '../../../identity-verifications/store/identity-verification.actions';
+import {
+  selectDocuments,
+  selectIsLoading as selectIsVerifsLoading,
+  selectTotalElements,
+} from '../../../identity-verifications/store/identity-verification.reducer';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -45,44 +51,38 @@ export class AdminDashboardComponent implements OnInit {
 
   // Expose Enum
   readonly VerificationStatus = VerificationStatus;
+  readonly IdentityType = IdentityType;
 
-  // NgRx State
+  // NgRx State - Stats
   stats = this.store.selectSignal(selectStats);
-  isLoading = this.store.selectSignal(selectIsLoading);
+  isLoadingStats = this.store.selectSignal(selectIsStatsLoading);
+
+  // NgRx State - Verifications
+  verifications = this.store.selectSignal(selectDocuments);
+  isVerifsLoading = this.store.selectSignal(selectIsVerifsLoading);
+  totalVerifs = this.store.selectSignal(selectTotalElements);
+
+  currentPage = 0;
+  pageSize = 5;
 
   ngOnInit() {
     this.store.dispatch(adminDeliveryActions.loadAdminStats());
+    this.loadVerifications();
   }
 
-  // Mock Verifications
-  recentVerifs = [
-    {
-      id: '#DOC-1023',
-      user: 'Karim B.',
-      type: IdentityType.CIN,
-      status: VerificationStatus.PENDING,
-      date: '2 min ago',
-    },
-    {
-      id: '#DOC-1022',
-      user: 'Sara K.',
-      type: 'Vehicle',
-      status: VerificationStatus.APPROVED,
-      date: '15 min ago',
-    },
-    {
-      id: '#DOC-1021',
-      user: 'Ahmed R.',
-      type: IdentityType.DRIVERS_LICENSE,
-      status: VerificationStatus.REJECTED,
-      date: '1 hr ago',
-    },
-    {
-      id: '#DOC-1020',
-      user: 'Lina M.',
-      type: IdentityType.PASSPORT,
-      status: VerificationStatus.APPROVED,
-      date: '2 hrs ago',
-    },
-  ];
+  loadVerifications() {
+    this.store.dispatch(
+      identityVerificationActions.loadAllDocuments({
+        filter: {
+          page: this.currentPage,
+          size: this.pageSize,
+        },
+      }),
+    );
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadVerifications();
+  }
 }
