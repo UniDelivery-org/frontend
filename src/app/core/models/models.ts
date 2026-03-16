@@ -12,6 +12,12 @@ export enum VerificationStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
+  MISSING = 'MISSING'
+}
+export enum IdentityType {
+  CIN = 'CIN',
+  PASSPORT = 'PASSPORT',
+  DRIVERS_LICENSE = 'DRIVERS_LICENSE'
 }
 
 export enum DeliveryStatus {
@@ -49,12 +55,6 @@ export enum VehicleType {
   CAR = 'CAR',
   VAN = 'VAN',
   TRUCK = 'TRUCK',
-}
-
-export enum IdentityType {
-  CIN = 'CIN',
-  PASSPORT = 'PASSPORT',
-  DRIVERS_LICENSE = 'DRIVERS_LICENSE',
 }
 
 export enum VehicleDocumentType {
