@@ -16,6 +16,7 @@ import * as ProfileEffects from './features/profile/store/profile.effect';
 import * as SenderDeliveryEffects from './features/sender/store/sender-delivery.effects';
 import * as CourierDeliveryEffects from './features/courier/store/courier-delivery.effects';
 import * as AdminDeliveryEffects from './features/admin/store/admin-delivery.effects';
+import * as IdentityVerificationEffects from './features/identity-verifications/store/identity-verification.effects';
 import { AdminUserEffects } from './features/admin/store/admin-users.effects';
 import { authFeature } from './features/auth/store/auth.reducer';
 import { profileFeature } from './features/profile/store/profile.reducer';
@@ -24,6 +25,7 @@ import { courierDeliveryFeature } from './features/courier/store/courier-deliver
 import { adminDeliveryFeature } from './features/admin/store/admin-delivery.reducer';
 import { adminUsersFeature } from './features/admin/store/admin-users.reducer';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { identityVerificationFeature } from './features/identity-verifications/store/identity-verification.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,6 +40,7 @@ export const appConfig: ApplicationConfig = {
     provideState(courierDeliveryFeature),
     provideState(adminDeliveryFeature),
     provideState(adminUsersFeature),
+    provideState(identityVerificationFeature),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects(
       AuthEffects,
@@ -46,6 +49,7 @@ export const appConfig: ApplicationConfig = {
       CourierDeliveryEffects,
       AdminDeliveryEffects,
       AdminUserEffects,
+      IdentityVerificationEffects,
     ),
   ],
 };
