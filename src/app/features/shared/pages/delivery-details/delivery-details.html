@@ -58,7 +58,7 @@
                         class="absolute inset-0 bg-linear-to-t from-gray-950 via-transparent to-transparent z-10 pointer-events-none opacity-80">
                     </div>
 
-                    <app-map [routePoints]="routePoints" [showTracking]="false"
+                    <app-map [routePoints]="routePoints" [trackingPoints]="trackingPoints" [showTracking]="false"
                         class="absolute inset-0 w-full h-full"></app-map>
 
                     <div class="absolute bottom-6 left-6 z-20">
@@ -125,7 +125,34 @@
             <!-- RIGHT COLUMN: Package & Financials (Spans 4 cols) -->
             <div class="lg:col-span-4 space-y-6">
 
-                <!-- Action Main Button (if applicable contextually, though this is details view) -->
+                <!-- Courier Actions -->
+                <div *ngIf="userRole === Role.COURIER && delivery && delivery.courierId === currentUserId"
+                    class="space-y-3">
+                    <!-- Pickup Action -->
+                    <button *ngIf="delivery.status === Status.MATCHED" (click)="updateStatus(Status.PICKED_UP)"
+                        class="w-full bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-500 border border-indigo-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
+                        <lucide-icon [img]="MapPin" [size]="20" class="group-hover:bounce"></lucide-icon>
+                        CONFIRM PICKUP
+                    </button>
+
+                    <!-- Start Transit Action -->
+                    <button *ngIf="delivery.status === Status.PICKED_UP" (click)="updateStatus(Status.IN_TRANSIT)"
+                        class="w-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-500 border border-purple-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
+                        <lucide-icon [img]="Play" [size]="20"
+                            class="group-hover:translate-x-1 transition-transform"></lucide-icon>
+                        START DELIVERY
+                    </button>
+
+                    <!-- Finish/Deliver Action -->
+                    <button *ngIf="delivery.status === Status.IN_TRANSIT" (click)="updateStatus(Status.DELIVERED)"
+                        class="w-full bg-uni-500/10 hover:bg-uni-500/20 text-uni-500 border border-uni-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
+                        <lucide-icon [img]="CheckCircle" [size]="20"
+                            class="group-hover:scale-110 transition-transform"></lucide-icon>
+                        MARK AS DELIVERED
+                    </button>
+                </div>
+
+                <!-- Action Main Button (Shared) -->
                 <button
                     class="w-full bg-uni-500/10 hover:bg-uni-500/20 text-uni-500 border border-uni-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
                     <lucide-icon [img]="FileText" [size]="18"

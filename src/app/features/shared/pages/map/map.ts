@@ -65,6 +65,7 @@ export class Map implements OnInit, OnDestroy, OnChanges {
 
   @Input() showTracking: boolean = true;
   @Input() routePoints: L.LatLng[] = [];
+  @Input() trackingPoints: L.LatLng[] = [];
   @Output() mapClick = new EventEmitter<L.LatLng>();
 
   instructionSteps: InstructionStep[] = [];
@@ -75,6 +76,7 @@ export class Map implements OnInit, OnDestroy, OnChanges {
   map!: L.Map;
   circle!: L.CircleMarker;
   pathLine!: L.Polyline;
+  trackingHistoryLine!: L.Polyline;
   watchSub!: Subscription;
   routingControl: any;
 
@@ -109,6 +111,9 @@ export class Map implements OnInit, OnDestroy, OnChanges {
     if (changes['routePoints'] && this.routePoints && this.routePoints.length >= 1 && this.map) {
       this.drawRoute();
     }
+    if (changes['trackingPoints'] && this.trackingPoints && this.map) {
+      this.drawTrackingPath();
+    }
   }
 
   private createCustomMarker(type: 'pickup' | 'dropoff' | 'live', latlng: L.LatLng): L.Marker {
@@ -126,10 +131,22 @@ export class Map implements OnInit, OnDestroy, OnChanges {
           ? 'uni-pulse-dropoff'
           : 'uni-pulse-live';
 
+    let markerContent = `<div class="uni-marker-pin ${colorClass}">${label}</div>`;
+
+    if (type === 'live') {
+      markerContent = `
+        <div class="uni-marker-live-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>
+          </svg>
+        </div>
+      `;
+    }
+
     const html = `
       <div class="uni-marker-container">
         <div class="uni-marker-pulse ${pulseClass}"></div>
-        <div class="uni-marker-pin ${colorClass}">${label}</div>
+        ${markerContent}
       </div>
     `;
 
@@ -137,8 +154,8 @@ export class Map implements OnInit, OnDestroy, OnChanges {
       icon: L.divIcon({
         className: 'uni-custom-div-icon',
         html: html,
-        iconSize: [18, 18],
-        iconAnchor: [9, 9],
+        iconSize: type === 'live' ? [32, 32] : [18, 18],
+        iconAnchor: type === 'live' ? [16, 16] : [9, 9],
       }),
       interactive: true,
       zIndexOffset: 1000,
@@ -198,6 +215,35 @@ export class Map implements OnInit, OnDestroy, OnChanges {
           })
           .addTo(this.map);
       }
+    }
+  }
+
+  drawTrackingPath() {
+    if (this.trackingHistoryLine) {
+      this.map.removeLayer(this.trackingHistoryLine);
+    }
+
+    if (this.trackingPoints.length > 0) {
+      this.trackingHistoryLine = L.polyline(this.trackingPoints, {
+        color: '#3B82F6', // Blue for tracking history
+        weight: 5,
+        opacity: 0.8,
+        dashArray: '10, 10',
+        lineCap: 'round',
+        lineJoin: 'round',
+      }).addTo(this.map);
+
+      // Add a live marker for the latest tracking point
+      const latest = this.trackingPoints[this.trackingPoints.length - 1];
+      this.map.eachLayer((layer) => {
+        if (layer instanceof L.Marker && layer.options.icon) {
+          const iconOptions = layer.options.icon.options as any;
+          if (iconOptions.html && iconOptions.html.includes('uni-marker-live')) {
+            this.map.removeLayer(layer);
+          }
+        }
+      });
+      this.createCustomMarker('live', latest).addTo(this.map);
     }
   }
 
