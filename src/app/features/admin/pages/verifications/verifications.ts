@@ -1,25 +1,55 @@
-import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Search, Filter, CheckCircle, XCircle, Eye, FileText, ChevronRight, Check, X, SlidersHorizontal, ArrowUpRight } from 'lucide-angular';
-import { VerificationStatus, IdentityType, VehicleDocumentType } from '../../../../core/models/models';
-
-interface VerificationRequest {
-  id: number;
-  user: string;
-  type: string;
-  url: string;
-  status: VerificationStatus;
-  date: string;
-}
-
+import {
+  LucideAngularModule,
+  Search,
+  Filter,
+  CheckCircle,
+  XCircle,
+  Eye,
+  FileText,
+  ChevronRight,
+  Check,
+  X,
+  SlidersHorizontal,
+  ArrowUpRight,
+} from 'lucide-angular';
+import { VerificationStatus, IdentityType } from '../../../../core/models/models';
+import { Store } from '@ngrx/store';
+import { identityVerificationActions } from '../../../identity-verifications/store/identity-verification.actions';
+import {
+  selectDocuments,
+  selectIsLoading,
+  selectTotalElements,
+} from '../../../identity-verifications/store/identity-verification.reducer';
+import { IdentityDocsFilter } from '../../../identity-verifications/data-access/identity-verification.dto';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { adminUserActions } from '../../store/admin-users.actions';
+import { selectUsersPage } from '../../store/admin-users.reducer';
 @Component({
   selector: 'app-verifications',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
-  templateUrl: './verifications.html'
+  imports: [CommonModule, LucideAngularModule, ReactiveFormsModule],
+  templateUrl: './verifications.html',
 })
-export class VerificationsComponent implements AfterViewInit {
-  // Icons
+export class VerificationsComponent implements OnInit, AfterViewInit {
+  private store = inject(Store);
+  private fb = inject(FormBuilder);
+
   readonly Search = Search;
   readonly Filter = Filter;
   readonly CheckCircle = CheckCircle;
@@ -34,27 +64,137 @@ export class VerificationsComponent implements AfterViewInit {
 
   @ViewChildren('docCard') docCards!: QueryList<ElementRef>;
 
-  // Expose Enum to Template
   readonly VerificationStatus = VerificationStatus;
+  readonly IdentityType = IdentityType;
+  statusOptions = Object.values(VerificationStatus);
+  typeOptions = Object.values(IdentityType);
+
+  filterForm!: FormGroup;
+
+  currentPage = 0;
+  pageSize = 10;
+
+  isRejectModalOpen = false;
+  documentToRejectId: string | null = null;
+  rejectionReasonCtrl = new FormControl('', [Validators.required, Validators.minLength(5)]);
+
+  isInspectModalOpen = false;
+  inspectedDoc: any | null = null;
+
+  docs$ = this.store.select(selectDocuments);
+  isLoading$ = this.store.select(selectIsLoading);
+  totalElements$ = this.store.select(selectTotalElements);
+  users = this.store.selectSignal(selectUsersPage);
 
   constructor() {}
 
-  ngAfterViewInit() {
+  ngOnInit() {
+    this.initFilterForm();
+    this.loadDocuments();
+    this.store.dispatch(adminUserActions.loadAllUsers({}));
   }
 
-  docs: VerificationRequest[] = [
-    { id: 1, user: 'Karim Benz', type: IdentityType.CIN, url: 'https://placehold.co/600x400/1e293b/cbd5e1?text=CIN+Front', status: VerificationStatus.PENDING, date: '2 mins ago' },
-    { id: 2, user: 'Karim Benz', type: IdentityType.DRIVERS_LICENSE, url: 'https://placehold.co/600x400/1e293b/cbd5e1?text=Permis', status: VerificationStatus.PENDING, date: '5 mins ago' },
-    { id: 3, user: 'Sara Smith', type: VehicleDocumentType.CARTE_GRISE, url: 'https://placehold.co/600x400/1e293b/cbd5e1?text=Carte+Grise', status: VerificationStatus.PENDING, date: '15 mins ago' },
-    { id: 4, user: 'John Doe', type: IdentityType.PASSPORT, url: 'https://placehold.co/600x400/1e293b/cbd5e1?text=Passport', status: VerificationStatus.APPROVED, date: '1 hour ago' },
-    { id: 5, user: 'Lina K.', type: 'CIN Back', url: 'https://placehold.co/600x400/1e293b/cbd5e1?text=CIN+Back', status: VerificationStatus.REJECTED, date: '2 hours ago' },
-  ];
+  ngAfterViewInit() {}
 
-  approve(id: number) {
-    console.log(`Document #${id} approved`);
+  initFilterForm() {
+    this.filterForm = this.fb.group({
+      ownerId: [''],
+      type: [''],
+      status: [''],
+      createdAfter: [''],
+      createdBefore: [''],
+      rejectionReason: [''],
+    });
   }
 
-  reject(id: number) {
-    console.log(`Document #${id} rejected`);
+  applyFilters() {
+    this.currentPage = 0;
+    this.loadDocuments();
+  }
+
+  resetFilters() {
+    this.filterForm.reset({
+      status: '',
+    });
+    this.applyFilters();
+  }
+
+  loadDocuments() {
+    const rawFormValue = this.filterForm.value;
+
+    const activeFilters: IdentityDocsFilter = {
+      page: this.currentPage,
+      size: this.pageSize,
+    };
+
+    Object.keys(rawFormValue).forEach((key) => {
+      const value = rawFormValue[key];
+      if (value !== null && value !== undefined && value !== '') {
+        (activeFilters as any)[key] = value;
+      }
+    });
+
+    this.store.dispatch(
+      identityVerificationActions.loadAllDocuments({
+        filter: activeFilters,
+      }),
+    );
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadDocuments();
+  }
+
+  approve(id: string) {
+    this.store.dispatch(
+      identityVerificationActions.verifyDocument({
+        documentId: id,
+        request: { status: VerificationStatus.APPROVED },
+      }),
+    );
+  }
+
+  openRejectModal(id: string) {
+    this.documentToRejectId = id;
+    this.rejectionReasonCtrl.reset();
+    this.isRejectModalOpen = true;
+  }
+
+  closeRejectModal() {
+    this.isRejectModalOpen = false;
+    this.documentToRejectId = null;
+    this.rejectionReasonCtrl.reset();
+  }
+
+  confirmReject() {
+    if (this.rejectionReasonCtrl.invalid || !this.documentToRejectId) {
+      this.rejectionReasonCtrl.markAsTouched();
+      return;
+    }
+
+    this.store.dispatch(
+      identityVerificationActions.verifyDocument({
+        documentId: this.documentToRejectId,
+        request: {
+          status: VerificationStatus.REJECTED,
+          rejectionReason: this.rejectionReasonCtrl.value,
+        },
+      }),
+    );
+
+    this.closeRejectModal();
+  }
+
+  openInspectModal(doc: any) {
+    this.inspectedDoc = doc;
+    this.isInspectModalOpen = true;
+  }
+
+  closeInspectModal() {
+    this.isInspectModalOpen = false;
+    setTimeout(() => {
+      this.inspectedDoc = null;
+    }, 200);
   }
 }
