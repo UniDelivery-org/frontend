@@ -58,8 +58,8 @@ export class MainLayoutComponent implements OnInit {
   getAvatar(): string {
     const prof = this.profile();
     if (!prof) return 'https://api.dicebear.com/7.x/avataaars/svg?seed=User';
-    if (prof.avatarUrl) {
-      return 'http://localhost:8081' + prof.avatarUrl;
+    else if (prof.avatarUrl) {
+      return prof.avatarUrl;
     }
     const namePart = prof.fullName.includes(' ')
       ? prof.fullName.substring(0, prof.fullName.indexOf(' '))
