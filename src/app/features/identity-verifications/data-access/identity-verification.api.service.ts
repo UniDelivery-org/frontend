@@ -68,8 +68,8 @@ export class IdentityVerificationApiService {
    * Delete a document by its ID.
    * @param id The document ID.
    */
-  deleteDocument(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteDocument(id: string): Observable<IdentityDocumentResponseDTO> {
+    return this.http.delete<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`);
   }
 
   /**
