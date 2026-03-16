@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, CheckCircle, Clock, FileUp, Upload, Eye, AlertCircle, ShieldCheck } from 'lucide-angular';
-import { VerificationStatus } from '../../../../core/models/models';
+import { VerificationStatus, IdentityType } from '../../../../core/models/models';
+import { Store } from '@ngrx/store';
+import { identityVerificationActions } from '../../../identity-verifications/store/identity-verification.actions';
+import { selectMyDocuments, selectIsLoading } from '../../../identity-verifications/store/identity-verification.reducer';
 
-interface DocItem {
-  id: number;
+interface DocRequirement {
+  type: IdentityType;
   title: string;
   description: string;
-  status: VerificationStatus | 'MISSING';
 }
 
 @Component({
@@ -16,7 +18,9 @@ interface DocItem {
   imports: [CommonModule, LucideAngularModule],
   templateUrl: './documents.html'
 })
-export class DocumentsComponent {
+export class DocumentsComponent implements OnInit {
+  private store = inject(Store);
+
   // Icons
   readonly CheckCircle = CheckCircle;
   readonly Clock = Clock;
@@ -28,41 +32,74 @@ export class DocumentsComponent {
 
   // Expose Enum
   readonly VerificationStatus = VerificationStatus;
+  readonly IdentityType = IdentityType;
 
-  // Mock Data
-  documents: DocItem[] = [
+  // NgRx State
+  myDocuments = this.store.selectSignal(selectMyDocuments);
+  isLoading = this.store.selectSignal(selectIsLoading);
+
+  // Requirements defined by types supported in the store
+  requirements: DocRequirement[] = [
     { 
-      id: 1, 
+      type: IdentityType.CIN, 
       title: 'National ID (CIN)', 
-      description: 'Front and back photo of your ID card.', 
-      status: VerificationStatus.APPROVED 
+      description: 'Front and back photo of your ID card.'
     },
     { 
-      id: 2, 
+      type: IdentityType.DRIVERS_LICENSE, 
       title: 'Driver License', 
-      description: 'Valid Permis B or C.', 
-      status: VerificationStatus.PENDING 
+      description: 'Valid Permis B or C.'
     },
     { 
-      id: 3, 
-      title: 'Vehicle Registration (Carte Grise)', 
-      description: 'Must match your license plate.', 
-      status: 'MISSING' 
-    },
-    { 
-      id: 4, 
-      title: 'Insurance Paper', 
-      description: 'Valid at least for next 3 months.', 
-      status: VerificationStatus.REJECTED 
+      type: IdentityType.PASSPORT, 
+      title: 'Passport', 
+      description: 'Optional if CIN is provided, but recommended.'
     }
   ];
 
-  getProgress() {
-    const approved = this.documents.filter(d => d.status === VerificationStatus.APPROVED).length;
-    return Math.round((approved / this.documents.length) * 100);
+  ngOnInit() {
+    this.store.dispatch(identityVerificationActions.loadMyDocuments({ filter: {} }));
   }
 
-  uploadFile(id: number) {
-    console.log('Open file picker for doc:', id);
+  // Helper to find document in store by type
+  getDocByType(type: IdentityType) {
+    return this.myDocuments().find(d => d.type === type);
+  }
+
+  getDocStatus(type: IdentityType): VerificationStatus | 'MISSING' {
+    const doc = this.getDocByType(type);
+    return doc ? doc.verificationStatus : 'MISSING';
+  }
+
+  getProgress = computed(() => {
+    const docs = this.myDocuments();
+    if (this.requirements.length === 0) return 0;
+    const approved = this.requirements.filter(req => {
+      const doc = docs.find(d => d.type === req.type);
+      return doc?.verificationStatus === VerificationStatus.APPROVED;
+    }).length;
+    return Math.round((approved / this.requirements.length) * 100);
+  });
+
+  triggerUpload(type: IdentityType) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*,application/pdf';
+    input.onchange = (event: any) => {
+      const file = event.target.files[0];
+      if (file) {
+        this.store.dispatch(identityVerificationActions.uploadDocument({
+          payload: {
+            identityDocType: type,
+            file: file
+          }
+        }));
+      }
+    };
+    input.click();
+  }
+
+  viewDocument(url: string) {
+    window.open(url, '_blank');
   }
 }

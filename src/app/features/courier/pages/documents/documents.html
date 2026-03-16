@@ -28,12 +28,12 @@
        ======================= -->
   <div class="space-y-4">
     
-    <div *ngFor="let doc of documents" 
+    <div *ngFor="let req of requirements" 
          class="group relative rounded-2xl p-5 border transition-all duration-300"
          [ngClass]="{
-           'bg-gray-900/50 border-uni-500/30 shadow-[0_0_20px_rgba(101,214,84,0.05)]': doc.status === 'APPROVED',
-           'bg-gray-900 border-uni-white/10': doc.status === 'PENDING',
-           'bg-gray-900/80 border-dashed border-gray-700 hover:border-uni-500/50 hover:bg-gray-800': doc.status === 'MISSING' || doc.status === 'REJECTED'
+           'bg-gray-900/50 border-uni-500/30 shadow-[0_0_20px_rgba(101,214,84,0.05)]': getDocStatus(req.type) === VerificationStatus.APPROVED,
+           'bg-gray-900 border-uni-white/10': getDocStatus(req.type) === VerificationStatus.PENDING,
+           'bg-gray-900/80 border-dashed border-gray-700 hover:border-uni-500/50 hover:bg-gray-800': getDocStatus(req.type) === 'MISSING' || getDocStatus(req.type) === VerificationStatus.REJECTED
          }">
 
       <div class="flex items-center justify-between gap-4">
@@ -44,35 +44,35 @@
           <!-- Status Icon Box -->
           <div class="w-12 h-12 rounded-xl flex items-center justify-center border transition-colors shrink-0"
                [ngClass]="{
-                 'bg-uni-500/10 border-uni-500/20 text-uni-500': doc.status === 'APPROVED',
-                 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500': doc.status === 'PENDING',
-                 'bg-gray-800 border-gray-700 text-gray-500 group-hover:text-uni-500 group-hover:border-uni-500/30': doc.status === 'MISSING' || doc.status === 'REJECTED'
+                 'bg-uni-500/10 border-uni-500/20 text-uni-500': getDocStatus(req.type) === VerificationStatus.APPROVED,
+                 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500': getDocStatus(req.type) === VerificationStatus.PENDING,
+                 'bg-gray-800 border-gray-700 text-gray-500 group-hover:text-uni-500 group-hover:border-uni-500/30': getDocStatus(req.type) === 'MISSING' || getDocStatus(req.type) === VerificationStatus.REJECTED
                }">
              
              <!-- Icons -->
-             <lucide-icon *ngIf="doc.status === 'APPROVED'" [img]="CheckCircle" [size]="20"></lucide-icon>
-             <lucide-icon *ngIf="doc.status === 'PENDING'" [img]="Clock" [size]="20" class="animate-pulse"></lucide-icon>
-             <lucide-icon *ngIf="doc.status === 'MISSING' || doc.status === 'REJECTED'" [img]="FileUp" [size]="20"></lucide-icon>
+             <lucide-icon *ngIf="getDocStatus(req.type) === VerificationStatus.APPROVED" [img]="CheckCircle" [size]="20"></lucide-icon>
+             <lucide-icon *ngIf="getDocStatus(req.type) === VerificationStatus.PENDING" [img]="Clock" [size]="20" class="animate-pulse"></lucide-icon>
+             <lucide-icon *ngIf="getDocStatus(req.type) === 'MISSING' || getDocStatus(req.type) === VerificationStatus.REJECTED" [img]="FileUp" [size]="20"></lucide-icon>
           </div>
 
           <!-- Text Details -->
           <div>
             <div class="flex items-center gap-2">
-              <h3 class="font-bold text-uni-white text-base">{{doc.title}}</h3>
+              <h3 class="font-bold text-uni-white text-base">{{req.title}}</h3>
               
               <!-- Status Badge (Small Pill) -->
               <span class="text-[10px] font-uni-black uppercase tracking-wider px-1.5 py-0.5 rounded border"
                 [ngClass]="{
-                  'bg-uni-500/10 border-uni-500/20 text-uni-500': doc.status === 'APPROVED',
-                  'bg-yellow-500/10 border-yellow-500/20 text-yellow-500': doc.status === 'PENDING',
-                  'bg-gray-800 border-gray-700 text-gray-500': doc.status === 'MISSING',
-                  'bg-red-500/10 border-red-500/20 text-red-500': doc.status === 'REJECTED'
+                  'bg-uni-500/10 border-uni-500/20 text-uni-500': getDocStatus(req.type) === VerificationStatus.APPROVED,
+                  'bg-yellow-500/10 border-yellow-500/20 text-yellow-500': getDocStatus(req.type) === VerificationStatus.PENDING,
+                  'bg-gray-800 border-gray-700 text-gray-500': getDocStatus(req.type) === 'MISSING',
+                  'bg-red-500/10 border-red-500/20 text-red-500': getDocStatus(req.type) === VerificationStatus.REJECTED
                 }">
-                {{ doc.status }}
+                {{ getDocStatus(req.type) }}
               </span>
             </div>
             <p class="text-xs text-gray-500 mt-0.5 line-clamp-1">
-              {{ doc.description }}
+              {{ req.description }}
             </p>
           </div>
         </div>
@@ -80,21 +80,22 @@
         <!-- RIGHT: Action Button -->
         <div>
           <!-- Upload Button (Primary) -->
-          <button *ngIf="doc.status === 'MISSING' || doc.status === 'REJECTED'" 
-            (click)="uploadFile(doc.id)"
+          <button *ngIf="getDocStatus(req.type) === 'MISSING' || getDocStatus(req.type) === VerificationStatus.REJECTED" 
+            (click)="triggerUpload(req.type)"
             class="flex items-center gap-2 bg-uni-white text-uni-950 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-uni-500 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-uni-black/20">
             <lucide-icon [img]="Upload" [size]="16"></lucide-icon>
             <span class="hidden sm:inline">Upload</span>
           </button>
 
           <!-- Disabled States -->
-          <button *ngIf="doc.status === 'PENDING'" disabled
+          <button *ngIf="getDocStatus(req.type) === VerificationStatus.PENDING" disabled
             class="bg-uni-white/5 text-gray-500 px-4 py-2.5 rounded-xl font-bold text-sm border border-uni-white/5 cursor-not-allowed">
             Reviewing...
           </button>
 
           <!-- View Button (If Approved) -->
-          <button *ngIf="doc.status === 'APPROVED'" 
+          <button *ngIf="getDocStatus(req.type) === VerificationStatus.APPROVED" 
+            (click)="viewDocument(getDocByType(req.type)!.fileUrl)"
             class="text-gray-500 hover:text-uni-white p-2 transition-colors">
             <lucide-icon [img]="Eye" [size]="20"></lucide-icon>
           </button>
@@ -103,9 +104,9 @@
       </div>
       
       <!-- Error Message (Only if Rejected) -->
-      <div *ngIf="doc.status === 'REJECTED'" class="mt-3 pt-3 border-t border-uni-white/5 flex items-start gap-2 text-red-400 text-xs">
+      <div *ngIf="getDocStatus(req.type) === VerificationStatus.REJECTED && getDocByType(req.type)?.rejectionReason" class="mt-3 pt-3 border-t border-uni-white/5 flex items-start gap-2 text-red-400 text-xs">
          <lucide-icon [img]="AlertCircle" [size]="14" class="mt-0.5 shrink-0"></lucide-icon>
-         <span>Image was blurry. Please upload a clearer photo.</span>
+         <span>{{ getDocByType(req.type)?.rejectionReason }}</span>
       </div>
 
     </div>
@@ -119,4 +120,4 @@
     </p>
   </div>
 
-</div>
+</div>
