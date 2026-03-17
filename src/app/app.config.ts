@@ -18,10 +18,12 @@ import * as CourierDeliveryEffects from './features/courier/store/courier-delive
 import * as AdminDeliveryEffects from './features/admin/store/admin-delivery.effects';
 import * as IdentityVerificationEffects from './features/identity-verifications/store/identity-verification.effects';
 import { AdminUserEffects } from './features/admin/store/admin-users.effects';
+import * as VehicleEffects from './features/courier/store/vehicle.effects';
 import { authFeature } from './features/auth/store/auth.reducer';
 import { profileFeature } from './features/profile/store/profile.reducer';
 import { senderDeliveryFeature } from './features/sender/store/sender-delivery.reducer';
 import { courierDeliveryFeature } from './features/courier/store/courier-delivery.reducer';
+import { vehicleFeature } from './features/courier/store/vehicle.reducer';
 import { adminDeliveryFeature } from './features/admin/store/admin-delivery.reducer';
 import { adminUsersFeature } from './features/admin/store/admin-users.reducer';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -38,6 +40,7 @@ export const appConfig: ApplicationConfig = {
     provideState(profileFeature),
     provideState(senderDeliveryFeature),
     provideState(courierDeliveryFeature),
+    provideState(vehicleFeature),
     provideState(adminDeliveryFeature),
     provideState(adminUsersFeature),
     provideState(identityVerificationFeature),
@@ -47,6 +50,7 @@ export const appConfig: ApplicationConfig = {
       ProfileEffects,
       SenderDeliveryEffects,
       CourierDeliveryEffects,
+      VehicleEffects,
       AdminDeliveryEffects,
       AdminUserEffects,
       IdentityVerificationEffects,
