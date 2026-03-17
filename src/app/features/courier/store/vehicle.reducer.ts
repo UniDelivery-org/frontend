@@ -98,6 +98,28 @@ export const vehicleFeature = createFeature({
       isLoading: false,
       error,
     })),
+
+    // Verify Vehicle
+    on(vehicleActions.verifyVehicle, (state) => ({
+      ...state,
+      isLoading: true,
+      error: null,
+    })),
+    on(vehicleActions.verifyVehicleSuccess, (state, { vehicle }) => ({
+      ...state,
+      searchResults: state.searchResults.map((v) =>
+        v.id === vehicle.id ? vehicle : v
+      ),
+      myVehicles: state.myVehicles.map((v) =>
+        v.id === vehicle.id ? vehicle : v
+      ),
+      isLoading: false,
+    })),
+    on(vehicleActions.verifyVehicleFailure, (state, { error }) => ({
+      ...state,
+      isLoading: false,
+      error,
+    })),
   ),
 });
 

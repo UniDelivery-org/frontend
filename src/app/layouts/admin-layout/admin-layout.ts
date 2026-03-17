@@ -137,7 +137,21 @@ import { signal } from '@angular/core';
               <!-- Notification Dot -->
               <span class="absolute -top-1 -right-1 w-2 h-2 bg-yellow-500 rounded-full"></span>
             </div>
-            <span class="font-bold text-sm tracking-wide">Verifications</span>
+            <span class="font-bold text-sm tracking-wide">ID Verifications</span>
+          </a>
+
+          <!-- Vehicles Audit -->
+          <a
+            routerLink="/vehicle-verifications"
+            routerLinkActive="bg-uni-500/10 text-uni-500 border-uni-500"
+            class="group flex items-center gap-4 px-4 py-3.5 rounded-xl border-l-[3px] border-transparent hover:bg-uni-white/5 transition-all duration-300"
+          >
+            <lucide-icon
+              [img]="Truck"
+              [size]="20"
+              class="group-hover:scale-110 transition-transform"
+            ></lucide-icon>
+            <span class="font-bold text-sm tracking-wide">Vehicles Audit</span>
           </a>
 
           <!-- Settings -->

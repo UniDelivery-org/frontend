@@ -277,7 +277,7 @@ import { selectProfile } from '../../../profile/store/profile.reducer';
                 <button 
                   type="submit"
                   [disabled]="addVehicleForm.invalid || isLoading()"
-                  class="flex-[2] px-6 py-4 bg-uni-500 disabled:opacity-50 disabled:cursor-not-allowed text-uni-950 font-uni-black rounded-2xl hover:bg-uni-400 transition-all shadow-lg shadow-uni-500/10">
+                  class="flex-2 px-6 py-4 bg-uni-500 disabled:opacity-50 disabled:cursor-not-allowed text-uni-950 font-uni-black rounded-2xl hover:bg-uni-400 transition-all shadow-lg shadow-uni-500/10">
                   {{ isLoading() ? 'Registering...' : 'Register Vehicle' }}
                 </button>
               </div>

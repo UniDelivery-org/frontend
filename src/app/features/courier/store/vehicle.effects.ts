@@ -74,3 +74,17 @@ export const searchVehiclesEffect = createEffect(
     ),
   { functional: true }
 );
+
+export const verifyVehicleEffect = createEffect(
+  (actions$ = inject(Actions), vehicleApiService = inject(VehicleApiService)) =>
+    actions$.pipe(
+      ofType(vehicleActions.verifyVehicle),
+      mergeMap(({ vehicleId, request }) =>
+        vehicleApiService.verifyVehicle(vehicleId, request).pipe(
+          map((vehicle) => vehicleActions.verifyVehicleSuccess({ vehicle })),
+          catchError((error: ApiError) => of(vehicleActions.verifyVehicleFailure({ error })))
+        )
+      )
+    ),
+  { functional: true }
+);

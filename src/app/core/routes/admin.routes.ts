@@ -22,6 +22,15 @@ export const ADMIN_ROUTES: Routes = [
     data: { role: Role.ADMIN },
   },
   {
+    path: 'vehicle-verifications',
+    loadComponent: () =>
+      import('../../features/admin/pages/vehicle-verifications/vehicle-verifications').then(
+        (m) => m.VehicleVerificationsComponent,
+      ),
+
+    data: { role: Role.ADMIN },
+  },
+  {
     path: 'users',
     loadComponent: () => import('../../features/admin/pages/users/users').then((m) => m.Users),
 

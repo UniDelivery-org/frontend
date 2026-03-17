@@ -9,6 +9,7 @@ export interface VehicleResponseDTO {
   color?: string;
   verificationStatus: VerificationStatus;
   isActive: boolean;
+  ownerEmail?: string;
   createdAt: string; // Instant
   updatedAt: string; // Instant
 }

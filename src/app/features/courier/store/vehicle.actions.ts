@@ -6,6 +6,7 @@ import {
   VehicleResponseDTO, 
   VehicleSearchFilter 
 } from '../data-access/vehicle.dto';
+import { VerificationStatus } from '../../../core/models/models';
 
 export const vehicleActions = createActionGroup({
   source: 'Vehicle',
@@ -29,5 +30,9 @@ export const vehicleActions = createActionGroup({
     'Search Vehicles': props<{ filter: VehicleSearchFilter }>(),
     'Search Vehicles Success': props<{ response: Page<VehicleResponseDTO> }>(),
     'Search Vehicles Failure': props<{ error: ApiError }>(),
+
+    'Verify Vehicle': props<{ vehicleId: string; request: { status: VerificationStatus; rejectionReason?: string } }>(),
+    'Verify Vehicle Success': props<{ vehicle: VehicleResponseDTO }>(),
+    'Verify Vehicle Failure': props<{ error: ApiError }>(),
   },
 });

@@ -8,6 +8,7 @@ import {
   VehicleResponseDTO,
   VehicleSearchFilter,
 } from './vehicle.dto';
+import { VerificationStatus } from '../../../core/models/models';
 
 @Injectable({
   providedIn: 'root',
@@ -75,6 +76,21 @@ export class VehicleApiService {
    */
   setActiveVehicle(vehicleId: string): Observable<VehicleResponseDTO> {
     return this.http.put<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}/active`, {});
+  }
+
+  /**
+   * Verify a vehicle (Admin).
+   * @param vehicleId The ID of the vehicle to verify.
+   * @param request The verification status and optional rejection reason.
+   */
+  verifyVehicle(
+    vehicleId: string,
+    request: { status: VerificationStatus; rejectionReason?: string }
+  ): Observable<VehicleResponseDTO> {
+    return this.http.patch<VehicleResponseDTO>(
+      `${this.apiUrl}/${vehicleId}/verify`,
+      request
+    );
   }
 
   /**
