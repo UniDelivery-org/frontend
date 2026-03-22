@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Page } from '../../../shared/models/api.page.model';
 import {
@@ -9,6 +9,7 @@ import {
   VehicleSearchFilter,
 } from './vehicle.dto';
 import { VerificationStatus } from '../../../core/models/models';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,13 +17,20 @@ import { VerificationStatus } from '../../../core/models/models';
 export class VehicleApiService {
   private http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/${environment.apiVersion}/vehicle`;
+  private toast = inject(ToastService);
 
   /**
    * Create a new vehicle.
    * @param payload The vehicle creation data.
    */
   createVehicle(payload: VehicleCreateDTO): Observable<VehicleResponseDTO> {
-    return this.http.post<VehicleResponseDTO>(this.apiUrl, payload);
+    return this.http.post<VehicleResponseDTO>(this.apiUrl, payload).pipe(
+      tap(() => this.toast.show('Véhicule créé avec succès', 'success')),
+      catchError((error) => {
+        this.toast.showError('Erreur de création', error.error?.message || 'Impossible de créer le véhicule');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -30,7 +38,12 @@ export class VehicleApiService {
    * @param vehicleId The UUID of the vehicle.
    */
   getVehicleById(vehicleId: string): Observable<VehicleResponseDTO> {
-    return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}`);
+    return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}`).pipe(
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de charger le véhicule');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -39,7 +52,12 @@ export class VehicleApiService {
    */
   searchVehicles(filter: VehicleSearchFilter): Observable<Page<VehicleResponseDTO>> {
     const params = this.buildHttpParams(filter);
-    return this.http.get<Page<VehicleResponseDTO>>(`${this.apiUrl}/search`, { params });
+    return this.http.get<Page<VehicleResponseDTO>>(`${this.apiUrl}/search`, { params }).pipe(
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de rechercher les véhicules');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -60,14 +78,23 @@ export class VehicleApiService {
       .set('size', size.toString())
       .set('sortBy', sortBy)
       .set('sortDir', sortDir);
-    return this.http.get<Page<VehicleResponseDTO>>(`${this.apiUrl}/me`, { params });
+    return this.http.get<Page<VehicleResponseDTO>>(`${this.apiUrl}/me`, { params }).pipe(
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de charger vos véhicules');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
    * Get the active vehicle for the current user.
    */
   getMyActiveVehicle(): Observable<VehicleResponseDTO> {
-    return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/me/active`);
+    return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/me/active`).pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -75,7 +102,13 @@ export class VehicleApiService {
    * @param vehicleId The UUID of the vehicle to activate.
    */
   setActiveVehicle(vehicleId: string): Observable<VehicleResponseDTO> {
-    return this.http.put<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}/active`, {});
+    return this.http.put<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}/active`, {}).pipe(
+      tap(() => this.toast.show('Véhicule activé', 'success')),
+      catchError((error) => {
+        this.toast.showError("Erreur d'activation", error.error?.message || "Impossible d'activer le véhicule");
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -90,6 +123,12 @@ export class VehicleApiService {
     return this.http.patch<VehicleResponseDTO>(
       `${this.apiUrl}/${vehicleId}/verify`,
       request
+    ).pipe(
+      tap(() => this.toast.show('Véhicule vérifié', 'success')),
+      catchError((error) => {
+        this.toast.showError('Erreur de vérification', error.error?.message || 'Impossible de vérifier le véhicule');
+        return throwError(() => error);
+      })
     );
   }
 
