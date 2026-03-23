@@ -51,4 +51,12 @@ export const SENDER_ROUTES: Routes = [
       ),
     data: { role: Role.SENDER }
   },
+  {
+    path: 'payment',
+    loadComponent: () =>
+      import('../../features/payment/pages/payment').then(
+        (m) => m.PaymentPageComponent,
+      ),
+    data: { role: Role.SENDER }
+  },
 ];
