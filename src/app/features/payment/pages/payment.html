@@ -1,0 +1,40 @@
+<div class="max-w-xl mx-auto w-full p-4 sm:p-6 mt-8">
+  <div class="relative w-full bg-gray-900 border border-uni-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+    
+    <button (click)="cancelPayment()" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
+      <lucide-icon [img]="X" [size]="20"></lucide-icon>
+    </button>
+
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-uni-500/10 flex items-center justify-center text-uni-500">
+        <lucide-icon [img]="CreditCard" [size]="20"></lucide-icon>
+      </div>
+      <h3 class="text-2xl font-uni-black text-white">Secure Payment</h3>
+    </div>
+    
+    <p class="text-sm text-gray-400 mb-8 pl-1">Complete your transaction securely with Stripe Checkout. All details are heavily encrypted.</p>
+    
+    <!-- Loading State -->
+    <div *ngIf="isInitializing" class="flex flex-col items-center justify-center min-h-[220px] bg-gray-800/50 rounded-xl border border-gray-800">
+      <div class="w-8 h-8 border-4 border-uni-500/30 border-t-uni-500 rounded-full animate-spin mb-4"></div>
+      <span class="text-sm font-bold text-gray-400">Loading Secure Payment...</span>
+    </div>
+
+    <!-- Stripe Element Container -->
+    <div [hidden]="isInitializing" id="payment-element" class="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-8 min-h-[220px] shadow-inner">
+       <!-- Stripe injects iframe here -->
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex gap-3 mt-2">
+      <button (click)="cancelPayment()" [disabled]="isConfirmingPayment" class="flex-1 py-4 px-4 rounded-xl font-bold text-gray-400 border border-gray-700 hover:bg-gray-800 transition disabled:opacity-50">
+        Cancel
+      </button>
+      <button (click)="confirmPayment()" [disabled]="isConfirmingPayment || isInitializing" class="flex-2 flex items-center justify-center py-4 px-4 rounded-xl font-bold text-uni-950 bg-uni-500 hover:bg-uni-400 transition disabled:opacity-50 shadow-[0_4px_14px_rgba(101,214,84,0.2)]">
+        <span *ngIf="isConfirmingPayment" class="w-5 h-5 border-2 border-uni-950/30 border-t-uni-950 rounded-full animate-spin mr-2"></span>
+        {{ isConfirmingPayment ? 'Processing...' : 'Pay Now' }}
+      </button>
+    </div>
+    
+  </div>
+</div>

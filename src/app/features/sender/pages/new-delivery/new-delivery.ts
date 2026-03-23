@@ -20,6 +20,7 @@ import {
   Map,
   Navigation,
   X,
+  Image,
 } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { Map as MapComponent } from '../../../shared/pages/map/map';
@@ -58,6 +59,7 @@ export class NewDeliveryComponent implements OnDestroy {
   readonly Map = Map;
   readonly Navigation = Navigation;
   readonly X = X;
+  readonly Image = Image;
 
   @ViewChild('bookingPanel') bookingPanel!: ElementRef;
   @ViewChild(MapComponent) mapComponent!: MapComponent;
@@ -96,6 +98,8 @@ export class NewDeliveryComponent implements OnDestroy {
   routePoints: L.LatLng[] = [];
   geocodeTimer: any;
 
+  packageImages: { url: string | ArrayBuffer | null; file: File }[] = [];
+
   constructor(
     private geolocationService: GeolocationService,
     private cdr: ChangeDetectorRef,
@@ -103,6 +107,15 @@ export class NewDeliveryComponent implements OnDestroy {
 
   setPrice(price: number) {
     this.offerPrice = price;
+  }
+
+  onVehicleChange(vehicle: string) {
+    this.selectedVehicle = vehicle;
+    this.calculateSuggestedPrice();
+  }
+
+  onWeightChange() {
+    this.calculateSuggestedPrice();
   }
 
   onLocationChange(type: 'pickup' | 'dropoff') {
@@ -154,7 +167,81 @@ export class NewDeliveryComponent implements OnDestroy {
     if (this.dropoffLatLng) points.push(this.dropoffLatLng);
 
     this.routePoints = points;
+    this.calculateSuggestedPrice();
     this.cdr.detectChanges();
+  }
+
+  calculateSuggestedPrice() {
+    if (!this.pickupLatLng || !this.dropoffLatLng) {
+      if (!this.offerPrice) this.suggestedPrices = [30, 45, 60, 80];
+      return;
+    }
+
+    const distanceInMeters = this.pickupLatLng.distanceTo(this.dropoffLatLng);
+    const distanceInKm = distanceInMeters / 1000;
+
+    let basePrice = 0;
+    let pricePerKm = 0;
+    let weightSurcharge = 0;
+    
+    const weight = this.weightKg || 1;
+
+    switch (this.selectedVehicle) {
+      case 'MOTO':
+        basePrice = 15;
+        pricePerKm = 3;
+        if (weight > 5) weightSurcharge = (weight - 5) * 1;
+        break;
+      case 'CAR':
+        basePrice = 30;
+        pricePerKm = 5;
+        if (weight > 20) weightSurcharge = (weight - 20) * 2;
+        break;
+      case 'TRUCK':
+        basePrice = 100;
+        pricePerKm = 10;
+        if (weight > 100) weightSurcharge = (weight - 100) * 5;
+        break;
+    }
+
+    let calculatedPrice = basePrice + (distanceInKm * pricePerKm) + weightSurcharge;
+    
+    // Round to nearest 5 MAD
+    calculatedPrice = Math.ceil(calculatedPrice / 5) * 5;
+    
+    this.offerPrice = calculatedPrice;
+
+    this.suggestedPrices = [
+      calculatedPrice,
+      calculatedPrice + 10,
+      calculatedPrice + 20,
+      calculatedPrice + 50
+    ];
+  }
+
+  onImageSelected(event: any) {
+    const files: FileList = event.target.files;
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        if (this.packageImages.length >= 4) break;
+        
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.packageImages.push({
+            url: e.target?.result || null,
+            file: file
+          });
+          this.cdr.detectChanges();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    event.target.value = '';
+  }
+
+  removeImage(index: number) {
+    this.packageImages.splice(index, 1);
   }
 
   private formatAddress(data: any): string {

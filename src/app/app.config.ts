@@ -28,6 +28,8 @@ import { adminDeliveryFeature } from './features/admin/store/admin-delivery.redu
 import { adminUsersFeature } from './features/admin/store/admin-users.reducer';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { identityVerificationFeature } from './features/identity-verifications/store/identity-verification.reducer';
+import * as PaymentEffects from './features/payment/store/payment.effect';
+import { paymentFeature } from './features/payment/store/payment.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     provideState(adminDeliveryFeature),
     provideState(adminUsersFeature),
     provideState(identityVerificationFeature),
+    provideState(paymentFeature),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects(
       AuthEffects,
@@ -54,6 +57,7 @@ export const appConfig: ApplicationConfig = {
       AdminDeliveryEffects,
       AdminUserEffects,
       IdentityVerificationEffects,
+      PaymentEffects,
     ),
   ],
 };

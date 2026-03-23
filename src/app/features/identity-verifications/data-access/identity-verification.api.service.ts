@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Page } from '../../../shared/models/api.page.model';
 import {
@@ -9,6 +9,7 @@ import {
   IdUploadDTO,
   VerificationDTO,
 } from '../data-access/identity-verification.dto';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ import {
 export class IdentityVerificationApiService {
   private http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/${environment.apiVersion}/identitydocs`;
+  private toast = inject(ToastService);
 
   /**
    * Get all documents with optional filtering.
@@ -31,6 +33,10 @@ export class IdentityVerificationApiService {
           fileUrl: `http://localhost:8084${doc.fileUrl}`,
         })),
       })),
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de charger les documents');
+        return throwError(() => error);
+      })
     );
   }
 
@@ -42,7 +48,12 @@ export class IdentityVerificationApiService {
     const params = this.buildHttpParams(filter);
     return this.http.get<Page<IdentityDocumentResponseDTO>>(`${this.apiUrl}/my-documents`, {
       params,
-    });
+    }).pipe(
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de charger vos documents');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -54,7 +65,13 @@ export class IdentityVerificationApiService {
     formData.append('IdentityDocType', payload.identityDocType);
     formData.append('file', payload.file);
 
-    return this.http.post<IdentityDocumentResponseDTO>(this.apiUrl, formData);
+    return this.http.post<IdentityDocumentResponseDTO>(this.apiUrl, formData).pipe(
+      tap(() => this.toast.show('Document téléchargé avec succès', 'success')),
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de télécharger le document');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -62,7 +79,12 @@ export class IdentityVerificationApiService {
    * @param id The document ID.
    */
   getDocumentById(id: string): Observable<IdentityDocumentResponseDTO> {
-    return this.http.get<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`);
+    return this.http.get<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`).pipe(
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de charger le document');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -77,6 +99,12 @@ export class IdentityVerificationApiService {
     return this.http.put<IdentityDocumentResponseDTO>(
       `${this.apiUrl}/${documentId}/verifiy`,
       request,
+    ).pipe(
+      tap(() => this.toast.show('Document vérifié', 'success')),
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de vérifier le document');
+        return throwError(() => error);
+      })
     );
   }
 
@@ -85,7 +113,13 @@ export class IdentityVerificationApiService {
    * @param id The document ID.
    */
   deleteDocument(id: string): Observable<IdentityDocumentResponseDTO> {
-    return this.http.delete<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`);
+    return this.http.delete<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => this.toast.show('Document supprimé', 'success')),
+      catchError((error) => {
+        this.toast.showError('Erreur', error.error?.message || 'Impossible de supprimer le document');
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
