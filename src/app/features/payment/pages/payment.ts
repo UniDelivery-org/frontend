@@ -86,11 +86,15 @@ export class PaymentPageComponent implements OnInit {
     } else {
       this.toast.show('Paiement réussi!', 'success');
       
-      this.store.select(selectProfile).pipe(take(1)).subscribe(profile => {
-        if(profile) this.store.dispatch(paymentActions.loadWallet({ ownerId: profile.id }));
-      });
+      // Deliberately wait to allow the asynchronous Stripe Webhook to hit the backend 
+      // and successfully increment the wallet balance before we re-fetch the data.
+      setTimeout(() => {
+        this.store.select(selectProfile).pipe(take(1)).subscribe(profile => {
+          if(profile) this.store.dispatch(paymentActions.loadWallet({ ownerId: profile.id }));
+        });
 
-      this.router.navigate(['/wallet']);
+        this.router.navigate(['/wallet']);
+      }, 1500);
     }
   }
 }

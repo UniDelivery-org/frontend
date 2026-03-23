@@ -38,7 +38,7 @@
           <p class="text-sm font-medium text-gray-400 mb-1">Total Balance</p>
           <h1 class="text-4xl sm:text-5xl font-uni-black text-uni-white tracking-tight flex items-baseline gap-2">
             {{ wallet.balance | number:'1.2-2' }} 
-            <span class="text-lg sm:text-2xl font-bold text-uni-500">DH</span>
+            <span class="text-lg sm:text-2xl font-bold text-uni-500">UniCoins</span>
           </h1>
         </div>
 
@@ -125,7 +125,7 @@
       <div class="text-right">
         <span class="block font-uni-black text-sm sm:text-base" 
               [ngClass]="tx.type === 'DEPOSIT' || tx.type === 'EARNING' || tx.type === 'REFUND' ? 'text-uni-500' : 'text-white'">
-          {{ tx.amount > 0 ? '+' : '' }}{{ tx.amount }} DH
+          {{ tx.amount > 0 ? '+' : '' }}{{ tx.amount }} UniCoins
         </span>
         <span class="text-[10px] font-bold text-gray-600 uppercase">{{ tx.type }}</span>
       </div>

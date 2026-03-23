@@ -70,7 +70,7 @@ export class WalletComponent {
 
       const result = await this.toast.promptNumber(
         'Recharger le portefeuille', 
-        'Montant en DH (ex: 500)', 
+        'Montant en UniCoins (ex: 500)', 
         'Continuer vers le paiement'
       );
 
