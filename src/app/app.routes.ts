@@ -22,6 +22,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/legal/pages/privacy').then((m) => m.PrivacyComponent),
+  },
+  {
+    path: 'terms',
+    loadComponent: () =>
+      import('./features/legal/pages/terms').then((m) => m.TermsComponent),
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./layouts/main-layout/main-layout').then((m) => m.MainLayoutComponent),

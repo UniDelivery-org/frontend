@@ -7,7 +7,7 @@ import gsap from 'gsap';
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, LucideAngularModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, LucideAngularModule],
   template: `
     <div class="min-h-screen flex bg-uni-950 text-uni-white font-sans overflow-hidden selection:bg-uni-500 selection:text-uni-950">
       
@@ -89,7 +89,7 @@ import gsap from 'gsap';
 
         <!-- Footer / Legal -->
         <div class="p-6 text-center lg:text-left lg:pl-12 text-xs text-gray-600 relative z-10">
-          &copy; 2026 UniDelivery Maroc. <a href="#" class="hover:text-gray-400 transition-colors">Privacy</a> &bull; <a href="#" class="hover:text-gray-400 transition-colors">Terms</a>
+          &copy; 2026 UniDelivery Maroc. <a routerLink="/privacy" class="hover:text-gray-400 transition-colors pointer-events-auto">Privacy</a> &bull; <a routerLink="/terms" class="hover:text-gray-400 transition-colors pointer-events-auto">Terms</a>
         </div>
       </div>
 

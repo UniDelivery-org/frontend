@@ -1,0 +1,55 @@
+<div class="h-screen w-full bg-uni-950 text-gray-300 font-sans p-6 md:p-12 relative overflow-x-hidden overflow-y-auto">
+  
+  <!-- Decorative Elements -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-uni-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="max-w-4xl mx-auto relative z-10">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-12">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-uni-500/10 rounded-xl flex items-center justify-center text-uni-500 border border-uni-500/20">
+          <lucide-icon [img]="FileText" [size]="20"></lucide-icon>
+        </div>
+        <div>
+          <h1 class="text-2xl font-uni-black text-white leading-none tracking-tight">Terms of Service</h1>
+          <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Effective: March 2026</p>
+        </div>
+      </div>
+
+      <button (click)="goBack()" class="flex items-center gap-2 text-sm font-bold bg-uni-white/5 hover:bg-uni-white/10 px-4 py-2 rounded-xl transition-colors text-white border border-uni-white/5">
+        <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon> Back
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-gray-900 border border-uni-white/10 rounded-3xl p-8 md:p-12 shadow-2xl space-y-8 prose prose-invert prose-green max-w-none">
+      
+      <section>
+        <h2 class="text-xl font-bold text-white mb-4">1. Introduction</h2>
+        <p>By registering for and utilizing the UniDelivery platform, you agree to comply strictly with the terms outlined in this agreement. Operating as either a Sender or a Courier carries specific legal obligations.</p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-white mb-4">2. Courier Obligations</h2>
+        <p class="mb-4">Couriers must ensure packages are safely transported from pickup to destination without tampering. You agree to:</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-400">
+          <li>Maintain required transport documentation and legally permitted vehicles.</li>
+          <li>Never open, alter, or damage packages submitted by Senders.</li>
+          <li>Update delivery statuses accurately within the UniDelivery mobile and web interfaces.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-white mb-4">3. Payment and Escrow</h2>
+        <p>UniDelivery utilizes a proprietary Wallet Ecosystem (UniCoins). Sender funds are placed in a secure Escrow mechanism the moment a Courier accepts a delivery payload. The funds are instantly released into the Courier's wallet minus transparent commission fees only when both parties digitally verify the successful handoff of the physical package.</p>
+        <p class="mt-4 text-sm bg-uni-500/10 border border-uni-500/20 p-4 rounded-xl text-uni-500">
+          <strong>Notice:</strong> Fraudulent reporting of deliveries or chargeback abuse will result in an immediate permanent ban and localized legal action.
+        </p>
+      </section>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="h-screen w-full bg-uni-950 text-gray-300 font-sans p-6 md:p-12 relative overflow-x-hidden overflow-y-auto">
+  
+  <!-- Decorative Elements -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-uni-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="max-w-4xl mx-auto relative z-10">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-12">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-uni-500/10 rounded-xl flex items-center justify-center text-uni-500 border border-uni-500/20">
+          <lucide-icon [img]="ShieldCheck" [size]="20"></lucide-icon>
+        </div>
+        <div>
+          <h1 class="text-2xl font-uni-black text-white leading-none tracking-tight">Privacy Policy</h1>
+          <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Last Updated: March 2026</p>
+        </div>
+      </div>
+
+      <button (click)="goBack()" class="flex items-center gap-2 text-sm font-bold bg-uni-white/5 hover:bg-uni-white/10 px-4 py-2 rounded-xl transition-colors text-white border border-uni-white/5">
+        <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon> Back
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-gray-900 border border-uni-white/10 rounded-3xl p-8 md:p-12 shadow-2xl space-y-8 prose prose-invert prose-green max-w-none">
+      
+      <section>
+        <h2 class="text-xl font-bold text-white mb-4">1. Information We Collect</h2>
+        <p class="mb-4">At UniDelivery, your privacy is our priority. We collect personal data explicitly provided by you when creating an account, including your full name, phone number, and ID credentials for courier verification.</p>
+        <p>To facilitate accurate logistics, we continuously process your live GPS coordinates while you are marked as actively delivering a package or searching for couriers.</p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-white mb-4">2. How We Use Your Data</h2>
+        <ul class="list-disc pl-5 space-y-2 text-gray-400">
+          <li><strong>Service Execution:</strong> Matching Sender requests with the nearest available Courier.</li>
+          <li><strong>Security:</strong> Verifying courier identities to prevent fraud and ensure package safety.</li>
+          <li><strong>Financial Processing:</strong> Facilitating payments and withdrawals via your integrated UniCoins wallet through compliant third-party gateways (Stripe/Clover).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-white mb-4">3. Data Sharing and Protection</h2>
+        <p>We do NOT sell your personal data to third parties. Information is only shared symmetrically (e.g., sharing your current live location with the Sender of the package you are holding) for the duration of the delivery objective.</p>
+        <p class="mt-4">All traffic is secured via end-to-end HTTPS encryption, and sensitive data like ID photos are stored securely on our enterprise blob networks.</p>
+      </section>
+
+    </div>
+
+  </div>
+</div>
