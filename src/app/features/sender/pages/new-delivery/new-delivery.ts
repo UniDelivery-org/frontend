@@ -30,9 +30,10 @@ import { GeolocationService } from '../../../../core/services/geoloaction.servic
 import { AnimatedTitleDirective } from '../../../../core/directives/animated-title.directive';
 import { Store } from '@ngrx/store';
 import { selectProfile } from '../../../profile/store/profile.reducer';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { senderDeliveryActions } from '../../../sender/store/sender-delivery.actions';
 import { DeliveryRequestDTO } from '../../data-access/delivery.dto';
+import { selectIsLoading } from '../../store/sender-delivery.reducer';
 
 @Component({
   selector: 'app-new-delivery',
@@ -91,7 +92,7 @@ export class NewDeliveryComponent implements OnDestroy {
 
   offerPrice: number | null = null;
   selectedVehicle = 'MOTO';
-  isSearching = false;
+  isSearching = this.store.select(selectIsLoading);
 
   suggestedPrices = [30, 45, 60, 80];
 
@@ -386,8 +387,6 @@ export class NewDeliveryComponent implements OnDestroy {
   }
 
   findDriver() {
-    this.isSearching = true;
-
     this.store
       .select(selectProfile)
       .pipe(take(1))
@@ -410,7 +409,6 @@ export class NewDeliveryComponent implements OnDestroy {
           payerType: this.payerType as any,
         };
 
-        console.log('Dispatching action with payload:', requestDTO);
         this.store.dispatch(senderDeliveryActions.createDelivery({ deliveryRequest: requestDTO }));
       });
   }
