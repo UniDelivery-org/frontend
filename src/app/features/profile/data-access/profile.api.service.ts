@@ -45,6 +45,10 @@ export class ProfileService {
       formData.append('isOnline', payload.isOnline.toString());
 
     return this.http.put<Profile>(`${this.apiUrl}/${this.apiVersion}/users/update`, formData).pipe(
+      map((profile) => ({
+        ...profile,
+        avatarUrl: profile.avatarUrl && !profile.avatarUrl.startsWith('http') ? 'http://localhost:8081' + profile.avatarUrl : profile.avatarUrl,
+      })),
       tap(() => this.toast.show('Profil mis à jour', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur de mise à jour', error.error?.message || 'Impossible de mettre à jour le profil');

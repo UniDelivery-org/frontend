@@ -18,6 +18,13 @@ export class AdminUserApiService {
 
   constructor(private http: HttpClient) {}
 
+  private mapProfileAvatar(profile: Profile): Profile {
+    if (profile && profile.avatarUrl && !profile.avatarUrl.startsWith('http')) {
+      profile.avatarUrl = `http://localhost:8081${profile.avatarUrl}`;
+    }
+    return profile;
+  }
+
   getAllUsers(
     search?: string,
     role?: Role,
@@ -36,10 +43,7 @@ export class AdminUserApiService {
     return this.http.get<Page<Profile>>(this.apiUrl, { params }).pipe(
       map((page) => ({
         ...page,
-        content: page.content.map((profile) => ({
-          ...profile,
-          avatarUrl: profile.avatarUrl ? 'http://localhost:8081' + profile.avatarUrl : null,
-        })),
+        content: page.content.map(p => this.mapProfileAvatar(p)),
       })),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de charger les utilisateurs');
@@ -50,6 +54,7 @@ export class AdminUserApiService {
 
   blockUser(userId: string, reason?: string): Observable<Profile> {
     return this.http.put<Profile>(`${this.apiUrl}/${userId}/block`, reason ? { reason } : {}).pipe(
+      map(p => this.mapProfileAvatar(p)),
       tap(() => this.toast.show('Utilisateur bloqué avec succès', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur de blocage', error.error?.message || "Impossible de bloquer l'utilisateur");
@@ -60,6 +65,7 @@ export class AdminUserApiService {
 
   unblockUser(userId: string): Observable<Profile> {
     return this.http.put<Profile>(`${this.apiUrl}/${userId}/unblock`, {}).pipe(
+      map(p => this.mapProfileAvatar(p)),
       tap(() => this.toast.show('Utilisateur débloqué avec succès', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur de déblocage', error.error?.message || "Impossible de débloquer l'utilisateur");

@@ -19,6 +19,20 @@ export class IdentityVerificationApiService {
   private readonly apiUrl = `${environment.apiUrl}/${environment.apiVersion}/identitydocs`;
   private toast = inject(ToastService);
 
+  private mapIdentityDocument(doc: IdentityDocumentResponseDTO): IdentityDocumentResponseDTO {
+    if (doc && doc.fileUrl && !doc.fileUrl.startsWith('http')) {
+      doc.fileUrl = `http://localhost:8084${doc.fileUrl}`;
+    }
+    return doc;
+  }
+
+  private mapIdentityPage(page: Page<IdentityDocumentResponseDTO>): Page<IdentityDocumentResponseDTO> {
+    if (page && page.content) {
+      page.content = page.content.map(doc => this.mapIdentityDocument(doc));
+    }
+    return page;
+  }
+
   /**
    * Get all documents with optional filtering.
    * @param filter The filter criteria.
@@ -26,13 +40,7 @@ export class IdentityVerificationApiService {
   getAllDocuments(filter: IdentityDocsFilter): Observable<Page<IdentityDocumentResponseDTO>> {
     const params = this.buildHttpParams(filter);
     return this.http.get<Page<IdentityDocumentResponseDTO>>(this.apiUrl, { params }).pipe(
-      map((page) => ({
-        ...page,
-        content: page.content.map((doc) => ({
-          ...doc,
-          fileUrl: `http://localhost:8084${doc.fileUrl}`,
-        })),
-      })),
+      map(page => this.mapIdentityPage(page)),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de charger les documents');
         return throwError(() => error);
@@ -49,6 +57,7 @@ export class IdentityVerificationApiService {
     return this.http.get<Page<IdentityDocumentResponseDTO>>(`${this.apiUrl}/my-documents`, {
       params,
     }).pipe(
+      map(page => this.mapIdentityPage(page)),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de charger vos documents');
         return throwError(() => error);
@@ -66,6 +75,7 @@ export class IdentityVerificationApiService {
     formData.append('file', payload.file);
 
     return this.http.post<IdentityDocumentResponseDTO>(this.apiUrl, formData).pipe(
+      map(doc => this.mapIdentityDocument(doc)),
       tap(() => this.toast.show('Document téléchargé avec succès', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de télécharger le document');
@@ -80,6 +90,7 @@ export class IdentityVerificationApiService {
    */
   getDocumentById(id: string): Observable<IdentityDocumentResponseDTO> {
     return this.http.get<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`).pipe(
+      map(doc => this.mapIdentityDocument(doc)),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de charger le document');
         return throwError(() => error);
@@ -100,6 +111,7 @@ export class IdentityVerificationApiService {
       `${this.apiUrl}/${documentId}/verifiy`,
       request,
     ).pipe(
+      map(doc => this.mapIdentityDocument(doc)),
       tap(() => this.toast.show('Document vérifié', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de vérifier le document');
@@ -114,6 +126,7 @@ export class IdentityVerificationApiService {
    */
   deleteDocument(id: string): Observable<IdentityDocumentResponseDTO> {
     return this.http.delete<IdentityDocumentResponseDTO>(`${this.apiUrl}/${id}`).pipe(
+      map(doc => this.mapIdentityDocument(doc)),
       tap(() => this.toast.show('Document supprimé', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de supprimer le document');
