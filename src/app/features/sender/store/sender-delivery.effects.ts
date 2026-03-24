@@ -24,7 +24,10 @@ export const createDeliveryEffect = createEffect(
       ofType(senderDeliveryActions.createDelivery),
       mergeMap(({ deliveryRequest }) =>
         apiService.createDelivery(deliveryRequest).pipe(
-          map((delivery) => senderDeliveryActions.createDeliverySuccess({ delivery })),
+          map((delivery) => {
+            location.replace('/dashboard');
+            return senderDeliveryActions.createDeliverySuccess({ delivery })
+          }),
           catchError((error) => of(senderDeliveryActions.createDeliveryFailure({ error }))),
         ),
       ),
@@ -52,7 +55,10 @@ export const deleteDeliveryEffect = createEffect(
       ofType(senderDeliveryActions.deleteDelivery),
       mergeMap(({ id }) =>
         apiService.deleteDelivery(id).pipe(
-          map(() => senderDeliveryActions.deleteDeliverySuccess()),
+          map(() => {
+            location.replace('/activity');
+            return senderDeliveryActions.deleteDeliverySuccess()
+          }),
           catchError((error) => of(senderDeliveryActions.deleteDeliveryFailure({ error }))),
         ),
       ),

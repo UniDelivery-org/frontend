@@ -16,6 +16,7 @@ import {
   CircleCheckBig,
   Play,
   RotateCcw,
+  Trash,
 } from 'lucide-angular';
 import { interval, startWith, switchMap } from 'rxjs';
 import { DeliveryResponseDTO } from '../../../sender/data-access/delivery.dto';
@@ -59,6 +60,7 @@ export class DeliveryDetailsComponent implements OnInit, OnDestroy {
 
   readonly Role = UserRole;
   readonly Status = DeliveryStatus;
+  readonly Trash = Trash;
 
   delivery: DeliveryResponseDTO | null = null;
   isLoading = false;
@@ -169,6 +171,14 @@ export class DeliveryDetailsComponent implements OnInit, OnDestroy {
           .sort((a, b) => new Date(a.timestamp!).getTime() - new Date(b.timestamp!).getTime())
           .map((log) => L.latLng(log.lat, log.lon));
       });
+  }
+
+  cancelDelivery() {
+    if (this.delivery) {
+      this.store.dispatch(
+        senderDeliveryActions.deleteDelivery({ id: this.delivery.id }),
+      );
+    }
   }
 
   ngOnDestroy() {

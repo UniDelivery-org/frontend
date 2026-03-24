@@ -150,14 +150,23 @@
                             class="group-hover:scale-110 transition-transform"></lucide-icon>
                         MARK AS DELIVERED
                     </button>
-                </div>
 
+                </div>
+                
                 <!-- Action Main Button (Shared) -->
                 <button
-                    class="w-full bg-uni-500/10 hover:bg-uni-500/20 text-uni-500 border border-uni-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
-                    <lucide-icon [img]="FileText" [size]="18"
-                        class="group-hover:-translate-y-0.5 transition-transform"></lucide-icon> Download Receipt
-                </button>
+                class="w-full bg-uni-500/10 hover:bg-uni-500/20 text-uni-500 border border-uni-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
+                <lucide-icon [img]="FileText" [size]="18"
+                class="group-hover:-translate-y-0.5 transition-transform"></lucide-icon> Download Receipt
+            </button>
+            <!-- Cancel Delivery Action -->
+            <button *ngIf="delivery.status === Status.PENDING && delivery.senderId === currentUserId"
+                (click)="cancelDelivery()"
+                class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 rounded-2xl py-4 font-bold transition-all flex items-center justify-center gap-2 group shadow-lg">
+                <lucide-icon [img]="Trash" [size]="20"
+                    class="group-hover:scale-110 transition-transform"></lucide-icon>
+                CANCEL DELIVERY
+            </button>
 
                 <!-- Package Specifications -->
                 <div
