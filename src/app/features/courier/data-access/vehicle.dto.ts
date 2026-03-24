@@ -10,7 +10,7 @@ export interface VehicleResponseDTO {
   verificationStatus: VerificationStatus;
   isActive: boolean;
   ownerEmail?: string;
-  imageUrl?: string;
+  image?: string;
   createdAt: string; // Instant
   updatedAt: string; // Instant
 }

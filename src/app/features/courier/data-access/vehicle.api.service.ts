@@ -20,9 +20,9 @@ export class VehicleApiService {
   private toast = inject(ToastService);
 
   private mapVehicleImage(vehicle: VehicleResponseDTO): VehicleResponseDTO {
-    if (vehicle && vehicle.imageUrl && !vehicle.imageUrl.startsWith('http')) {
+    if (vehicle && vehicle.image && !vehicle.image.startsWith('http')) {
       // Mapping raw static directory endpoints to the Vehicle Microservice Port bindings
-      vehicle.imageUrl = `http://localhost:8083${vehicle.imageUrl}`;
+      vehicle.image = `http://localhost:8083${vehicle.image}`;
     }
     return vehicle;
   }

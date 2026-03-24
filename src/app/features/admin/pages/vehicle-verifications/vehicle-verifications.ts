@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -125,62 +125,81 @@ import { VehicleSearchFilter } from '../../../courier/data-access/vehicle.dto';
 
         <!-- Vehicle Audit Cards -->
         @for (vehicle of vehicles(); track vehicle.id) {
-          <div class="group bg-gray-900 rounded-[32px] border border-uni-white/5 overflow-hidden hover:border-uni-500/30 transition-all duration-500 shadow-2xl relative">
+          <div class="group bg-gray-900 rounded-[32px] border border-uni-white/5 overflow-hidden hover:border-uni-500/30 transition-all duration-500 shadow-2xl relative flex flex-col">
             
-            <!-- Type Icon & Status Badge -->
-            <div class="p-6 pb-0 flex justify-between items-start">
-              <div class="w-14 h-14 rounded-2xl bg-uni-white/5 flex items-center justify-center text-uni-500 group-hover:scale-110 transition-transform duration-500">
-                <lucide-icon [img]="getVehicleIcon(vehicle.type)" [size]="28"></lucide-icon>
+            <!-- Picture Header -->
+            <div class="relative h-56 bg-gray-800 overflow-hidden shrink-0 group/img cursor-pointer" (click)="vehicle.image ? openImage(vehicle.image) : null">
+              @if(vehicle.image) {
+                <img [src]="vehicle.image" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700" alt="Car">
+                <!-- Magnify Hint Overlay -->
+                <div class="absolute inset-0 bg-uni-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm">
+                  <span class="px-5 py-2.5 bg-gray-900 border border-uni-white/10 rounded-full text-white font-uni-black text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-2xl drop-shadow-2xl hover:scale-105 transition-transform">
+                    <lucide-icon [img]="Search" [size]="14" class="text-uni-500"></lucide-icon> Inspect Document
+                  </span>
+                </div>
+              } @else {
+                <div class="absolute inset-0 flex items-center justify-center text-gray-700 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[16px_16px]">
+                  <lucide-icon [img]="getVehicleIcon(vehicle.type)" [size]="64" class="group-hover/img:scale-110 transition-transform duration-700 text-gray-600 drop-shadow-2xl"></lucide-icon>
+                </div>
+              }
+              
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-linear-to-t from-gray-950 via-gray-900/50 to-transparent z-0 opacity-80 pointer-events-none"></div>
+              
+              <!-- Status Badge (Floating) -->
+              <div class="absolute top-4 right-4 z-10 pointer-events-none">
+                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-uni-black uppercase tracking-widest border backdrop-blur-md shadow-lg"
+                  [ngClass]="{
+                    'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 backdrop-blur-md shadow-[0_4px_20px_rgba(234,179,8,0.2)]': vehicle.verificationStatus === VerificationStatus.PENDING,
+                    'bg-uni-500/10 text-uni-500 border-uni-500/20 backdrop-blur-md shadow-[0_4px_20px_rgba(101,214,84,0.2)]': vehicle.verificationStatus === VerificationStatus.APPROVED,
+                    'bg-red-500/10 text-red-500 border-red-500/20 backdrop-blur-md shadow-[0_4px_20px_rgba(239,68,68,0.2)]': vehicle.verificationStatus === VerificationStatus.REJECTED
+                  }">
+                  <lucide-icon [img]="getStatusIcon(vehicle.verificationStatus)" [size]="12"></lucide-icon>
+                  {{ vehicle.verificationStatus }}
+                 </span>
               </div>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-uni-black uppercase tracking-widest border"
-                [ngClass]="{
-                  'bg-yellow-500/10 text-yellow-500 border-yellow-500/20': vehicle.verificationStatus === VerificationStatus.PENDING,
-                  'bg-uni-500/10 text-uni-500 border-uni-500/20': vehicle.verificationStatus === VerificationStatus.APPROVED,
-                  'bg-red-500/10 text-red-500 border-red-500/20': vehicle.verificationStatus === VerificationStatus.REJECTED
-                }">
-                <lucide-icon [img]="getStatusIcon(vehicle.verificationStatus)" [size]="10"></lucide-icon>
-                {{ vehicle.verificationStatus }}
-              </span>
             </div>
 
             <!-- Details -->
-            <div class="p-6">
-              <div class="mb-4">
-                <h3 class="text-lg font-uni-black text-uni-white leading-tight group-hover:text-uni-500 transition-colors">{{ vehicle.model }}</h3>
-                <p class="text-xs font-mono text-gray-500 mt-1 uppercase tracking-widest border-b border-uni-white/5 pb-3">Plate: {{ vehicle.plateNumber }}</p>
-              </div>
-
-              <div class="space-y-2 mb-6">
-                <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                  <span>Owner Email:</span>
-                  <span class="text-uni-white">{{ vehicle.ownerEmail || 'N/A' }}</span>
+            <div class="p-6 flex flex-col flex-1 relative z-10 bg-gray-900 border-t border-uni-white/5">
+              
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="text-xl font-uni-black text-white leading-tight mb-1 group-hover:text-uni-500 transition-colors">{{ vehicle.model }}</h3>
+                  <p class="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Plate | <span class="text-uni-white font-bold">{{ vehicle.plateNumber }}</span></p>
                 </div>
-                <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                  <span>Registered:</span>
-                  <span class="text-gray-400">{{ vehicle.createdAt | date:'shortDate' }}</span>
+                <div class="w-10 h-10 rounded-xl bg-gray-950 flex items-center justify-center text-uni-500 border border-uni-white/5 shadow-inner">
+                  <lucide-icon [img]="getVehicleIcon(vehicle.type)" [size]="20"></lucide-icon>
                 </div>
               </div>
 
-              <!-- Admin Actions -->
-              <div class="flex gap-3 mt-auto">
+              <!-- Meta Grid -->
+              <div class="grid pr-4 space-y-2.5 mb-6 border-l-2 border-uni-white/10 pl-4 py-1">
+                <div class="flex justify-between items-center text-[10px] font-uni-black uppercase tracking-wider text-gray-500">
+                  <span>Courier Submitter</span>
+                  <span class="text-white truncate max-w-[150px] font-mono tracking-tight">{{ vehicle.ownerEmail || 'Unknown Identity' }}</span>
+                </div>
+                <div class="flex justify-between items-center text-[10px] font-uni-black uppercase tracking-wider text-gray-500">
+                  <span>Date Registered</span>
+                  <span class="text-gray-400">{{ vehicle.createdAt | date:'mediumDate' }}</span>
+                </div>
+              </div>
+
+             <!-- Admin Actions -->
+              <div class="flex gap-2.5 mt-auto">
                 <button 
                   (click)="openRejectModal(vehicle.id)"
-                  class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500/20 text-red-500 font-bold hover:bg-red-500/10 active:scale-95 transition-all text-[11px] uppercase tracking-widest group/btn">
-                  <lucide-icon [img]="X" [size]="16"></lucide-icon>
+                  class="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl border border-uni-white/10 bg-gray-800 text-gray-400 font-uni-black hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-500 active:scale-95 transition-all text-[10px] uppercase tracking-widest group/btn hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+                  <lucide-icon [img]="X" [size]="14" class="group-hover/btn:scale-125 transition-transform"></lucide-icon>
                   Reject
                 </button>
                 <button 
                   (click)="approve(vehicle.id)"
-                  class="flex-2 flex items-center justify-center gap-2 py-3 rounded-xl bg-uni-500 text-uni-950 font-bold hover:bg-uni-400 active:scale-95 transition-all text-[11px] uppercase tracking-widest group/btn shadow-lg shadow-uni-500/10">
-                  <lucide-icon [img]="Check" [size]="16"></lucide-icon>
-                  Approve
+                  class="flex-2 flex items-center justify-center gap-1.5 py-3 rounded-xl bg-uni-500 text-uni-950 font-uni-black hover:bg-uni-400 active:scale-95 transition-all text-[10px] uppercase tracking-widest group/btn shadow-[0_10px_30px_rgba(101,214,84,0.2)]">
+                  <lucide-icon [img]="Check" [size]="14" class="group-hover/btn:scale-125 transition-transform"></lucide-icon>
+                  Verify Access
                 </button>
               </div>
-            </div>
-
-            <!-- Vehicle Preview Decoration -->
-            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-700 pointer-events-none">
-                <lucide-icon [img]="getVehicleIcon(vehicle.type)" [size]="120"></lucide-icon>
             </div>
           </div>
         }
@@ -233,6 +252,32 @@ import { VehicleSearchFilter } from '../../../courier/data-access/vehicle.dto';
         </div>
       </div>
     </div>
+
+    <!-- LIGHTBOX INSPECTION MODAL -->
+    @if (selectedImageUrl()) {
+      <div 
+        class="fixed inset-0 z-9999 flex items-center justify-center bg-gray-950/90 backdrop-blur-2xl animate-in fade-in duration-300 p-4 sm:p-8" 
+        (click)="closeImage()">
+        
+        <button 
+          class="absolute top-6 right-6 lg:top-10 lg:right-10 z-50 p-4 text-gray-400 hover:text-white bg-gray-900 border border-uni-white/10 hover:border-uni-white/30 rounded-full transition-all hover:scale-110 shadow-2xl" 
+          (click)="closeImage()">
+           <lucide-icon [img]="X" [size]="28"></lucide-icon>
+        </button>
+        
+        <div class="relative max-w-[90vw] max-h-[90vh]">
+           <img 
+             [src]="selectedImageUrl()" 
+             class="w-full h-full object-contain rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] border border-uni-white/10 animate-in zoom-in-95 duration-500" 
+             alt="Full Resolution Courier Document Verification" 
+             (click)="$event.stopPropagation()">
+             
+           <div class="absolute -bottom-16 left-1/2 -translate-x-1/2 w-max px-6 py-3 bg-gray-900 border border-uni-white/10 rounded-2xl text-[10px] font-uni-black text-white uppercase tracking-widest shadow-xl flex items-center gap-2 opacity-50">
+             <lucide-icon [img]="Eye" [size]="14" class="text-uni-500"></lucide-icon> Authenticity Verification Scan Phase
+           </div>
+        </div>
+      </div>
+    }
   `
 })
 export class VehicleVerificationsComponent implements OnInit {
@@ -275,6 +320,17 @@ export class VehicleVerificationsComponent implements OnInit {
   isRejectModalOpen = false;
   vehicleToRejectId: string | null = null;
   rejectionReasonCtrl = new FormControl('', [Validators.required, Validators.minLength(5)]);
+
+  // Lightbox Inspection State
+  selectedImageUrl = signal<string | null>(null);
+
+  openImage(url: string) {
+    this.selectedImageUrl.set(url);
+  }
+
+  closeImage() {
+    this.selectedImageUrl.set(null);
+  }
 
   ngOnInit() {
     this.initFilterForm();
