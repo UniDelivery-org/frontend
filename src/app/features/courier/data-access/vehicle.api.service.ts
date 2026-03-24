@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap, catchError, throwError } from 'rxjs';
+import { Observable, tap, catchError, throwError, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Page } from '../../../shared/models/api.page.model';
 import {
@@ -19,12 +19,42 @@ export class VehicleApiService {
   private readonly apiUrl = `${environment.apiUrl}/${environment.apiVersion}/vehicle`;
   private toast = inject(ToastService);
 
+  private mapVehicleImage(vehicle: VehicleResponseDTO): VehicleResponseDTO {
+    if (vehicle && vehicle.imageUrl && !vehicle.imageUrl.startsWith('http')) {
+      // Mapping raw static directory endpoints to the Vehicle Microservice Port bindings
+      vehicle.imageUrl = `http://localhost:8083${vehicle.imageUrl}`;
+    }
+    return vehicle;
+  }
+
+  private mapPageImages(page: Page<VehicleResponseDTO>): Page<VehicleResponseDTO> {
+    if (page && page.content) {
+      page.content = page.content.map(v => this.mapVehicleImage(v));
+    }
+    return page;
+  }
+
   /**
    * Create a new vehicle.
-   * @param payload The vehicle creation data.
+   * @param payload The vehicle creation data including optional image.
    */
   createVehicle(payload: VehicleCreateDTO): Observable<VehicleResponseDTO> {
-    return this.http.post<VehicleResponseDTO>(this.apiUrl, payload).pipe(
+    const formData = new FormData();
+    formData.append('ownerId', payload.ownerId);
+    formData.append('type', payload.type);
+    formData.append('model', payload.model);
+    formData.append('plateNumber', payload.plateNumber);
+    if (payload.color) {
+      formData.append('color', payload.color);
+    }
+    if (payload.image) {
+      // Image must be a Blob/File. The backend expects 'image'.
+      formData.append('image', payload.image as Blob);
+    }
+
+    // Pass FormData directly; HttpClient automatically sets Content-Type to multipart/form-data.
+    return this.http.post<VehicleResponseDTO>(this.apiUrl, formData).pipe(
+      map(v => this.mapVehicleImage(v)),
       tap(() => this.toast.show('Véhicule créé avec succès', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur de création', error.error?.message || 'Impossible de créer le véhicule');
@@ -39,6 +69,7 @@ export class VehicleApiService {
    */
   getVehicleById(vehicleId: string): Observable<VehicleResponseDTO> {
     return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}`).pipe(
+      map(v => this.mapVehicleImage(v)),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de charger le véhicule');
         return throwError(() => error);
@@ -53,6 +84,7 @@ export class VehicleApiService {
   searchVehicles(filter: VehicleSearchFilter): Observable<Page<VehicleResponseDTO>> {
     const params = this.buildHttpParams(filter);
     return this.http.get<Page<VehicleResponseDTO>>(`${this.apiUrl}/search`, { params }).pipe(
+      map(page => this.mapPageImages(page)),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de rechercher les véhicules');
         return throwError(() => error);
@@ -79,6 +111,7 @@ export class VehicleApiService {
       .set('sortBy', sortBy)
       .set('sortDir', sortDir);
     return this.http.get<Page<VehicleResponseDTO>>(`${this.apiUrl}/me`, { params }).pipe(
+      map(page => this.mapPageImages(page)),
       catchError((error) => {
         this.toast.showError('Erreur', error.error?.message || 'Impossible de charger vos véhicules');
         return throwError(() => error);
@@ -91,6 +124,7 @@ export class VehicleApiService {
    */
   getMyActiveVehicle(): Observable<VehicleResponseDTO> {
     return this.http.get<VehicleResponseDTO>(`${this.apiUrl}/me/active`).pipe(
+      map(v => this.mapVehicleImage(v)),
       catchError((error) => {
         return throwError(() => error);
       })
@@ -103,6 +137,7 @@ export class VehicleApiService {
    */
   setActiveVehicle(vehicleId: string): Observable<VehicleResponseDTO> {
     return this.http.put<VehicleResponseDTO>(`${this.apiUrl}/${vehicleId}/active`, {}).pipe(
+      map(v => this.mapVehicleImage(v)),
       tap(() => this.toast.show('Véhicule activé', 'success')),
       catchError((error) => {
         this.toast.showError("Erreur d'activation", error.error?.message || "Impossible d'activer le véhicule");
@@ -124,6 +159,7 @@ export class VehicleApiService {
       `${this.apiUrl}/${vehicleId}/verify`,
       request
     ).pipe(
+      map(v => this.mapVehicleImage(v)),
       tap(() => this.toast.show('Véhicule vérifié', 'success')),
       catchError((error) => {
         this.toast.showError('Erreur de vérification', error.error?.message || 'Impossible de vérifier le véhicule');

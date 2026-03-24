@@ -1,0 +1,325 @@
+<div class="relative pb-24">
+
+  <!-- Subtle Header Background Glow -->
+  <div class="absolute top-0 inset-x-0 h-96 bg-linear-to-b from-uni-500/5 to-transparent pointer-events-none"></div>
+
+  <div class="space-y-8 max-w-7xl mx-auto p-4 md:p-8 relative z-10 animate-in fade-in duration-500">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+      <div class="max-w-xl">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-uni-500/10 border border-uni-500/20 text-uni-500 text-xs font-bold uppercase tracking-widest mb-4">
+          <lucide-icon [img]="ShieldCheck" [size]="14"></lucide-icon> Fleet Management
+        </div>
+        <h1 class="text-4xl md:text-5xl font-uni-black text-white tracking-tight leading-none mb-3">Your Vehicles</h1>
+        <p class="text-gray-400 font-medium">Manage your delivery fleet. Vehicles require active insurance and clear
+          photography to be approved by administrators.</p>
+      </div>
+
+      <button (click)="openModal()"
+        class="flex items-center gap-2 px-8 py-4 bg-uni-500 text-uni-950 font-uni-black rounded-2xl hover:bg-uni-400 transition-all hover:scale-105 active:scale-95 shadow-[0_10px_40px_rgba(101,214,84,0.2)] whitespace-nowrap">
+        <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+        <span class="tracking-wide">Add Vehicle</span>
+      </button>
+    </div>
+
+    <!-- ACTIVE VEHICLE BANNER -->
+    @if (activeVehicle()) {
+    <div class="relative overflow-hidden bg-gray-900 border border-uni-white/10 rounded-[32px] p-1 shadow-2xl group">
+      <!-- Animated border effect -->
+      <div class="absolute inset-0 bg-linear-to-r from-uni-500 via-transparent to-transparent opacity-20"></div>
+
+      <div
+        class="relative bg-gray-950/80 backdrop-blur-3xl rounded-[28px] p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 overflow-hidden">
+
+        <!-- Background Image of Active Vehicle -->
+        @if(activeVehicle()!.imageUrl) {
+        <div class="absolute inset-0 z-0 opacity-30 mix-blend-screen overflow-hidden">
+          <img [src]="activeVehicle()!.imageUrl" class="w-full h-full object-cover blur-md scale-110" alt="bg">
+        </div>
+        <div class="absolute inset-0 bg-linear-to-r from-gray-950 via-gray-950/90 to-transparent z-0"></div>
+        }
+
+        <!-- Vehicle Image Preview -->
+        <div
+          class="relative z-10 w-full md:w-64 h-48 rounded-2xl bg-gray-900 border shrink-0 border-uni-white/10 overflow-hidden shadow-2xl flex items-center justify-center">
+          @if(activeVehicle()!.imageUrl) {
+          <img [src]="activeVehicle()!.imageUrl" class="w-full h-full object-cover" alt="Active Vehicle">
+          } @else {
+          <lucide-icon [img]="getVehicleIcon(activeVehicle()!.type)" [size]="64" class="text-gray-700"></lucide-icon>
+          }
+          <div
+            class="absolute top-3 left-3 px-3 py-1 rounded-full bg-uni-950/80 backdrop-blur-md border border-uni-500/30 text-uni-500 text-[10px] font-uni-black uppercase tracking-widest flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-uni-500 rounded-full animate-pulse"></span> Active
+          </div>
+        </div>
+
+        <div class="relative z-10 flex-1 w-full text-center md:text-left">
+          <h2 class="text-3xl font-uni-black text-white mb-2">{{ activeVehicle()?.model }}</h2>
+          <div
+            class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm font-mono text-gray-400 mb-6">
+            <span
+              class="px-3 py-1.5 rounded-lg bg-gray-900 border border-uni-white/5 uppercase tracking-wider text-white">{{
+              activeVehicle()?.plateNumber }}</span>
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full border border-uni-white/20"
+                [style.background-color]="activeVehicle()?.color || '#333'"></div>
+              <span>{{ activeVehicle()?.color }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-10 hidden md:block border-l border-uni-white/10 pl-8 space-y-2">
+          <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Status</p>
+          <div class="flex items-center gap-2 text-uni-500">
+            <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
+            <span class="font-uni-black tracking-wide">Ready for Delivery</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- VEHICLE GRID -->
+    <div>
+      <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+        <lucide-icon [img]="Box" [size]="18" class="text-gray-500"></lucide-icon> All Registered Vehicles
+      </h3>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+        <!-- Loading State -->
+        @if (isLoading() && vehicles().length === 0) {
+        @for (n of [1,2,3,4]; track n) {
+        <div class="bg-gray-900 border border-uni-white/5 rounded-[32px] overflow-hidden animate-pulse">
+          <div class="h-48 bg-gray-800"></div>
+          <div class="p-5 space-y-3">
+            <div class="w-2/3 h-5 bg-gray-800 rounded"></div>
+            <div class="w-1/2 h-4 bg-gray-800 rounded"></div>
+          </div>
+        </div>
+        }
+        }
+
+        <!-- Empty State -->
+        @if (!isLoading() && vehicles().length === 0) {
+        <div
+          class="col-span-full py-24 bg-gray-900/50 border-2 border-dashed border-uni-white/10 rounded-[40px] flex flex-col items-center justify-center text-center px-4">
+          <div class="w-24 h-24 rounded-full bg-uni-white/5 flex items-center justify-center mb-6 text-gray-500">
+            <lucide-icon [img]="Image" [size]="40"></lucide-icon>
+          </div>
+          <h3 class="text-2xl font-uni-black text-white mb-3">No Vehicles in Garage</h3>
+          <p class="text-gray-500 max-w-sm font-medium mb-8">Upload beautiful photos of your available delivery vehicles
+            to get verified instantly.</p>
+          <button (click)="openModal()"
+            class="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white font-uni-black rounded-2xl transition-all shadow-xl border border-uni-white/10">
+            Register First Vehicle
+          </button>
+        </div>
+        }
+
+        <!-- Vehicle Cards (Masonry-ish) -->
+        @for (vehicle of vehicles(); track vehicle.id) {
+        <div
+          class="group bg-gray-900 border rounded-[32px] overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl flex flex-col"
+          [ngClass]="{
+              'border-uni-500/40 shadow-[0_10px_30px_rgba(101,214,84,0.1)]': vehicle.isActive,
+              'border-uni-white/5 hover:border-uni-white/20': !vehicle.isActive
+            }">
+
+          <!-- Picture Header -->
+          <div class="relative h-48 bg-gray-800 overflow-hidden shrink-0">
+            @if(vehicle.imageUrl) {
+            <img [src]="vehicle.imageUrl"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Car">
+            } @else {
+            <div
+              class="absolute inset-0 flex items-center justify-center text-gray-700 group-hover:scale-110 transition-transform duration-700">
+              <lucide-icon [img]="getVehicleIcon(vehicle.type)" [size]="64"></lucide-icon>
+            </div>
+            }
+
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-transparent to-transparent"></div>
+
+            <!-- Status Badge -->
+            <div class="absolute top-4 right-4">
+              <span
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-uni-black uppercase tracking-widest border backdrop-blur-md shadow-lg"
+                [ngClass]="{
+                    'bg-uni-500/20 text-uni-500 border-uni-500/30': vehicle.verificationStatus === VerificationStatus.APPROVED,
+                    'bg-yellow-500/20 text-yellow-400 border-yellow-500/30': vehicle.verificationStatus === VerificationStatus.PENDING,
+                    'bg-red-500/20 text-red-500 border-red-500/30': vehicle.verificationStatus === VerificationStatus.REJECTED
+                  }">
+                <lucide-icon [img]="getStatusIcon(vehicle.verificationStatus)" [size]="12"></lucide-icon>
+                {{ vehicle.verificationStatus }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-xl font-uni-black text-white leading-tight mb-1">{{ vehicle.model }}</h3>
+                <p class="text-xs font-mono text-gray-400 uppercase tracking-widest">{{ vehicle.plateNumber }}</p>
+              </div>
+              <div
+                class="w-10 h-10 rounded-xl bg-uni-white/5 flex items-center justify-center text-gray-400 border border-uni-white/5">
+                <lucide-icon [img]="getVehicleIcon(vehicle.type)" [size]="20"></lucide-icon>
+              </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="mt-auto pt-4 border-t border-uni-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full border border-uni-white/20"
+                  [style.background-color]="vehicle.color || '#333'"></div>
+                <span class="text-xs text-gray-500 font-bold capitalize">{{ vehicle.color || 'Unknown' }}</span>
+              </div>
+
+              @if (!vehicle.isActive && vehicle.verificationStatus === VerificationStatus.APPROVED) {
+              <button (click)="setActive(vehicle.id)"
+                class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white text-[10px] font-uni-black rounded-xl transition-all uppercase tracking-widest">
+                Set Active
+              </button>
+              } @else if (vehicle.isActive) {
+              <div class="flex items-center gap-1.5 text-uni-500">
+                <span class="relative flex h-2 w-2">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-uni-500 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-uni-500"></span>
+                </span>
+                <span class="text-[10px] font-uni-black uppercase tracking-widest">Active</span>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD VEHICLE MODAL (Gorgeous Redesign) -->
+  @if (isModalOpen()) {
+  <div
+    class="fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 bg-uni-950/40 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
+
+    <div
+      class="bg-gray-900 border border-uni-white/10 rounded-[40px] w-full max-w-4xl shadow-2xl animate-in zoom-in-95 duration-300 overflow-hidden flex flex-col lg:flex-row relative">
+
+      <button (click)="closeModal()"
+        class="absolute top-6 right-6 z-9999 p-2 text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-full transition-all">
+        <lucide-icon [img]="X" [size]="20"></lucide-icon>
+      </button>
+
+      <!-- Left Side: Image Upload Dropzone -->
+      <div
+        class="lg:w-1/2 p-6 lg:p-8 bg-gray-950/50 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-uni-white/5 relative min-h-[300px]">
+        <h2 class="text-2xl font-uni-black text-white mb-2">Upload Photo</h2>
+        <p class="text-xs text-gray-500 font-medium mb-6">A clear side-profile photo of your vehicle is strictly
+          required for identity verification.</p>
+
+        <div
+          class="relative flex-1 rounded-[32px] border-2 border-dashed transition-all duration-300 overflow-hidden flex flex-col items-center justify-center group"
+          [ngClass]="imagePreview() ? 'border-uni-500/50 bg-gray-900' : 'border-uni-white/10 hover:border-uni-500/50 bg-gray-800/30 hover:bg-gray-800/50'">
+
+          <!-- Hidden Input -->
+          <input type="file" accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+
+          @if(imagePreview()) {
+          <img [src]="imagePreview()" class="absolute inset-0 w-full h-full object-cover z-10" alt="Preview">
+          <div
+            class="absolute inset-0 bg-black/40 z-10 opacity-0 rounded-[32px] group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+            <span
+              class="px-6 py-3 bg-white/10 border border-white/20 rounded-full text-white font-bold text-sm tracking-wide">Change
+              Image</span>
+          </div>
+          } @else {
+          <div
+            class="w-16 h-16 rounded-full bg-uni-white/5 flex items-center justify-center text-gray-400 mb-4 group-hover:scale-110 group-hover:text-uni-500 transition-all">
+            <lucide-icon [img]="Image" [size]="24"></lucide-icon>
+          </div>
+          <span class="text-sm font-bold text-white mb-1">Click to Upload</span>
+          <span class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">JPG, PNG (Max 5MB)</span>
+          }
+        </div>
+      </div>
+
+      <!-- Right Side: Details Form -->
+      <form [formGroup]="addVehicleForm" (ngSubmit)="onSubmit()" class="lg:w-1/2 p-6 lg:p-10 space-y-6 flex flex-col">
+
+        <div>
+          <h2 class="text-2xl font-uni-black text-white mb-1">Vehicle Details</h2>
+          <p class="text-xs text-gray-500 font-medium">Please enter exact documentation details.</p>
+        </div>
+
+        <!-- Type Selection -->
+        <div class="space-y-3">
+          <label class="text-[10px] font-uni-black text-gray-400 uppercase tracking-widest ml-1">Type of Vehicle</label>
+          <div class="grid grid-cols-4 gap-3">
+            @for (type of vehicleTypes; track type) {
+            <button type="button" (click)="addVehicleForm.patchValue({ type })"
+              [class]="addVehicleForm.get('type')?.value === type 
+                             ? 'bg-uni-500 border-uni-500 text-uni-950 shadow-[0_4px_14px_rgba(101,214,84,0.3)]' 
+                             : 'bg-gray-800/50 border-uni-white/5 text-gray-400 hover:border-uni-white/20 hover:bg-gray-800'"
+              class="flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all duration-300">
+              <lucide-icon [img]="getVehicleIcon(type)" [size]="20"></lucide-icon>
+              <span class="text-[10px] font-uni-black uppercase tracking-tight">{{ type }}</span>
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4">
+          <div class="space-y-1.5">
+            <label class="text-[10px] font-uni-black text-gray-400 uppercase tracking-widest ml-1">Vehicle Model</label>
+            <input type="text" formControlName="model" placeholder="e.g. Dacia Logan"
+              class="w-full bg-gray-950 border border-uni-white/10 rounded-xl px-4 py-4 text-sm font-bold text-white placeholder:text-gray-600 focus:outline-hidden focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-[10px] font-uni-black text-gray-400 uppercase tracking-widest ml-1">Plate Number</label>
+            <input type="text" formControlName="plateNumber" placeholder="e.g. 1234-A-56"
+              class="w-full bg-gray-950 border border-uni-white/10 rounded-xl px-4 py-4 text-sm font-mono text-white placeholder:text-gray-600 focus:outline-hidden focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all uppercase">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-[10px] font-uni-black text-gray-400 uppercase tracking-widest ml-1">Paint Color
+              (Hex/Name)</label>
+            <input type="text" formControlName="color" placeholder="e.g. Matte Black or #000000"
+              class="w-full bg-gray-950 border border-uni-white/10 rounded-xl px-4 py-4 text-sm font-bold text-white placeholder:text-gray-600 focus:outline-hidden focus:border-uni-500 focus:ring-1 focus:ring-uni-500 transition-all">
+          </div>
+        </div>
+
+        <!-- Error Notification -->
+        @if (addVehicleForm.invalid && addVehicleForm.touched) {
+        <div
+          class="flex items-center gap-2 text-red-400 text-[10px] font-bold uppercase tracking-wide bg-red-400/5 p-3 rounded-xl border border-red-400/10">
+          <lucide-icon [img]="CircleAlert" [size]="14"></lucide-icon>
+          Please verify all required fields. Image is required.
+        </div>
+        }
+
+        <div class="flex-1"></div>
+
+        <!-- Submit -->
+        <button type="submit" [disabled]="addVehicleForm.invalid || !imageFile() || isLoading()"
+          class="w-full flex items-center justify-center gap-2 px-6 py-5 bg-uni-500 disabled:opacity-50 disabled:cursor-not-allowed text-uni-950 font-uni-black rounded-2xl hover:bg-uni-400 transition-all shadow-[0_10px_30px_rgba(101,214,84,0.3)] mt-6">
+          @if(isLoading()) {
+          <span class="w-5 h-5 border-2 border-uni-950/30 border-t-uni-950 rounded-full animate-spin"></span>
+          Processing...
+          } @else {
+          <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
+          Register Vehicle For Review
+          }
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+  }
+</div>

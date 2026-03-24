@@ -10,6 +10,7 @@ export interface VehicleResponseDTO {
   verificationStatus: VerificationStatus;
   isActive: boolean;
   ownerEmail?: string;
+  imageUrl?: string;
   createdAt: string; // Instant
   updatedAt: string; // Instant
 }
@@ -20,6 +21,7 @@ export interface VehicleCreateDTO {
   model: string;
   plateNumber: string;
   color?: string;
+  image: File | null;
 }
 
 export interface VehicleSearchFilter {
