@@ -412,11 +412,6 @@ export class NewDeliveryComponent implements OnDestroy {
 
         console.log('Dispatching action with payload:', requestDTO);
         this.store.dispatch(senderDeliveryActions.createDelivery({ deliveryRequest: requestDTO }));
-
-        // Simulate searching UI spinner before redirect (can be refactored into success effect later)
-        setTimeout(() => {
-          this.isSearching = false;
-        }, 3000);
       });
   }
 
