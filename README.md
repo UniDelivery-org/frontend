@@ -192,10 +192,10 @@ To run the application with full functionality, create a `./src/environments/env
 ```typescript
 export const environment = {
   production: false,
-  apiUrl: 'https://api.unidelivery.com/v1',
-  stripePublicKey: 'pk_test_your_key_here',
-  mapboxToken: 'your_mapbox_or_leaflet_token',
-  environmentName: 'development'
+  apiUrl: 'http://localhost:8080/api',
+  apiVersion: 'api version (v1)',
+  stripePublicKey:
+    'pk_test_your_key_here',
 };
 ```
 
