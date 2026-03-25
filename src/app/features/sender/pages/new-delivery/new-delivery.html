@@ -210,10 +210,12 @@
           Searching Drivers...
         </span>
         <!-- Normal State -->
-        <span *ngIf="!isSearching" class="flex items-center gap-2">
+        @if (!searching) {
+        <span class="flex items-center gap-2">
           Find a Driver <lucide-icon [img]="Search" [size]="20"
             class="group-hover:scale-110 transition-transform"></lucide-icon>
         </span>
+        }
       </button>
     </div>
 
